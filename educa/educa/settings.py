@@ -48,7 +48,7 @@ if DEBUG:
         "debug_toolbar",
     )
     MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")
-    INTERNAL_IPS = ["127.0.0.1", "localhost"]
+    INTERNAL_IPS = ["0.0.0.0", "127.0.0.1", "localhost", "web"]
 
 ROOT_URLCONF = "educa.urls"
 
@@ -118,3 +118,8 @@ MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+DEBUG_TOOLBAR_CONFIG = {
+    "IS_RUNNING_TESTS": False,
+    "SHOW_TOOLBAR_CALLBACK": lambda request: True,
+}

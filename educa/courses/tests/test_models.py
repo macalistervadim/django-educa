@@ -42,7 +42,8 @@ class TestsSubjectModel(TestCase):
         """Тест ограничения уникальности поля slug."""
         with self.assertRaises(Exception) as context:
             Subject.objects.create(
-                title="Duplicate Slug Test", slug=self.data["slug"],
+                title="Duplicate Slug Test",
+                slug=self.data["slug"],
             )
         self.assertIn("UNIQUE constraint", str(context.exception))
 
@@ -53,7 +54,8 @@ class TestsSubjectModel(TestCase):
         subjects = Subject.objects.all()
         titles = [subject.title for subject in subjects]
         self.assertEqual(
-            titles, ["A Course", "Python Programming", "Z Course"],
+            titles,
+            ["A Course", "Python Programming", "Z Course"],
         )
 
 

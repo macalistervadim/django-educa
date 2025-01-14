@@ -6,10 +6,16 @@ services:
     working_dir: /app
     volumes:
       - .:/app
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
     command: >
       bash -c "
+        cd educa &&
         poetry run black . &&
         poetry run flake8 . &&
-        poetry run pytest &&
-        poetry run python manage.py runserver
+        poetry run mypy . &&
+        poetry run python manage.py test &&
+        poetry run python manage.py runserver 0.0.0.0:8000
       "
