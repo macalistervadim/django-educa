@@ -1,0 +1,44 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check out the code
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Build Docker image
+      run: |
+        docker-compose -f docker-compose.yml build
+
+    - name: Run flake8
+      run: |
+        docker-compose run web poetry run flake8 .
+
+    - name: Run black
+      run: |
+        docker-compose run web poetry run black .
+
+    - name: Run mypy
+      run: |
+        docker-compose run web poetry run mypy .
+
+    - name: Run tests
+      run: |
+        docker-compose run web poetry run python manage.py test
+
+    - name: Clean up Docker
+      run: |
+        docker-compose down
