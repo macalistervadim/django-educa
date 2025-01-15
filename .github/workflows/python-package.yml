@@ -11,7 +11,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: .env
 
     steps:
     - name: Check out the code
@@ -26,23 +25,47 @@ jobs:
         sudo apt-get install -y docker-compose
 
     - name: Build and run tests with docker-compose
+      env:
+        DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+        DJANGO_DEBUG: ${{ secrets.DJANGO_DEBUG }}
+        DJANGO_ALLOWED_HOSTS: ${{ secrets.DJANGO_ALLOWED_HOSTS }}
+        DJANGO_SETTINGS_MODULE: educa.settings
       run: |
-        docker-compose -f docker-compose.yml build
-        docker-compose -f docker-compose.yml run web pytest
+        docker-compose -f docker-compose.yml build --no-cache
 
     - name: Run flake8
+      env:
+        DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+        DJANGO_DEBUG: ${{ secrets.DJANGO_DEBUG }}
+        DJANGO_ALLOWED_HOSTS: ${{ secrets.DJANGO_ALLOWED_HOSTS }}
+        DJANGO_SETTINGS_MODULE: educa.settings
       run: |
         docker-compose run web poetry run flake8 .
 
     - name: Run black
+      env:
+        DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+        DJANGO_DEBUG: ${{ secrets.DJANGO_DEBUG }}
+        DJANGO_ALLOWED_HOSTS: ${{ secrets.DJANGO_ALLOWED_HOSTS }}
+        DJANGO_SETTINGS_MODULE: educa.settings
       run: |
         docker-compose run web poetry run black .
 
     - name: Run mypy
+      env:
+        DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+        DJANGO_DEBUG: ${{ secrets.DJANGO_DEBUG }}
+        DJANGO_ALLOWED_HOSTS: ${{ secrets.DJANGO_ALLOWED_HOSTS }}
+        DJANGO_SETTINGS_MODULE: educa.settings
       run: |
-        docker-compose run web poetry run mypy .
+        docker-compose run web poetry run mypy --config-file mypy.ini --explicit-package-bases .
 
     - name: Run tests
+      env:
+        DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+        DJANGO_DEBUG: ${{ secrets.DJANGO_DEBUG }}
+        DJANGO_ALLOWED_HOSTS: ${{ secrets.DJANGO_ALLOWED_HOSTS }}
+        DJANGO_SETTINGS_MODULE: educa.settings
       run: |
         docker-compose run web poetry run python manage.py test
 
