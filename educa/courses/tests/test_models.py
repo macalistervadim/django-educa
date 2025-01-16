@@ -45,7 +45,10 @@ class TestsSubjectModel(TestCase):
                 title="Duplicate Slug Test",
                 slug=self.data["slug"],
             )
-        self.assertIn("UNIQUE constraint", str(context.exception))
+        self.assertIn(
+            "duplicate key value violates unique constraint",
+            str(context.exception),
+        )
 
     def test_ordering(self) -> None:
         """Тест сортировки объектов по полю title."""
@@ -129,7 +132,10 @@ class TestsCourseModel(TestCase):
                 slug=self.course_data["slug"],
                 overview="Another overview",
             )
-        self.assertIn("UNIQUE constraint", str(context.exception))
+        self.assertIn(
+            "duplicate key value violates unique constraint",
+            str(context.exception),
+        )
 
     def test_ordering(self) -> None:
         """Тест сортировки объектов по полю created (убывание)."""
