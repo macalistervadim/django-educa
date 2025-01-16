@@ -24,7 +24,7 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y docker-compose
 
-    - name: Build and run tests with docker-compose
+    - name: Build, run containers, and run checks
       env:
         DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
         DJANGO_DEBUG: ${{ secrets.DJANGO_DEBUG }}
@@ -35,18 +35,8 @@ jobs:
         DJANGO_SETTINGS_MODULE: educa.settings
       run: |
         docker-compose -f docker-compose.yml build --no-cache
-
-    - name: Run all checks
-      env:
-        DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
-        DJANGO_DEBUG: ${{ secrets.DJANGO_DEBUG }}
-        DJANGO_ALLOWED_HOSTS: ${{ secrets.DJANGO_ALLOWED_HOSTS }}
-        POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-        POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-        POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-        DJANGO_SETTINGS_MODULE: educa.settings
-      run: |
-        docker-compose run web bash -c "
+        docker-compose up -d
+        docker-compose exec -T web bash -c "
           poetry run flake8 . &&
           poetry run black . &&
           poetry run mypy --config-file mypy.ini --explicit-package-bases . &&
@@ -55,4 +45,4 @@ jobs:
 
     - name: Clean up Docker
       run: |
-        docker-compose down
+        docker-compose down -v
