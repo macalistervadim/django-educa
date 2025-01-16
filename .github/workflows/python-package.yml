@@ -24,12 +24,7 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y docker-compose
 
-    - name: Build and run containers
-      run: |
-        docker-compose -f docker-compose.yml build --no-cache
-        docker-compose up -d
-
-    - name: Run checks and tests
+    - name: Build, run containers, and run checks
       env:
         DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
         DJANGO_DEBUG: ${{ secrets.DJANGO_DEBUG }}
@@ -39,6 +34,8 @@ jobs:
         POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
         DJANGO_SETTINGS_MODULE: educa.settings
       run: |
+        docker-compose -f docker-compose.yml build --no-cache
+        docker-compose up -d
         docker-compose exec -T web bash -c "
           poetry run flake8 . &&
           poetry run black . &&
