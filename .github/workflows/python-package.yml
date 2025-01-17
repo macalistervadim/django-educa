@@ -32,7 +32,7 @@ jobs:
         POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
         POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
         POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-        DJANGO_SETTINGS_MODULE: educa.settings
+        DJANGO_SETTINGS_MODULE: config.settings
       run: |
         docker-compose -f docker-compose.yml build --no-cache
         docker-compose up -d

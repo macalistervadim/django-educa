@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django.utils import timezone
 
-from courses.models import Course, Subject
+from apps.courses.models import Course, Subject
 
 
 class TestsSubjectModel(TestCase):

@@ -24,7 +24,7 @@ DEBUG = load_bool("DJANGO_DEBUG", False)
 ALLOWED_HOSTS = load_list("DJANGO_ALLOWED_HOSTS", "*")
 
 INSTALLED_APPS = [
-    "courses.apps.CoursesConfig",
+    "apps.courses.apps.CoursesConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -50,7 +50,7 @@ if DEBUG:
     MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")
     INTERNAL_IPS = ["0.0.0.0", "127.0.0.1", "localhost", "web"]
 
-ROOT_URLCONF = "educa.urls"
+ROOT_URLCONF = "config.urls"
 
 TEMPLATES_DIRS = BASE_DIR / "templates"
 TEMPLATES = [
@@ -69,7 +69,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "educa.wsgi.application"
+WSGI_APPLICATION = "config.wsgi.application"
 
 DATABASES = {
     "default": {
@@ -117,6 +117,8 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_DIRS = [BASE_DIR / "static"]
 
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
@@ -126,4 +128,18 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 DEBUG_TOOLBAR_CONFIG = {
     "IS_RUNNING_TESTS": False,
     "SHOW_TOOLBAR_CALLBACK": lambda request: True,
+}
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "DEBUG",
+    },
 }

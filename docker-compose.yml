@@ -1,7 +1,7 @@
 services:
   web:
     build: .
-    working_dir: /app/educa
+    working_dir: /app
     volumes:
       - .:/app
     ports:
@@ -12,16 +12,16 @@ services:
       DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
       DJANGO_DEBUG: ${DJANGO_DEBUG}
       DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS}
-      DJANGO_SETTINGS_MODULE: educa.settings
+      DJANGO_SETTINGS_MODULE: config.settings
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     command: >
       bash -c "
-        cd /app/educa &&
+        poetry install --no-root &&
         poetry run black . &&
         poetry run flake8 . &&
-        poetry run mypy . &&
+        poetry run mypy apps/ &&
         poetry run python manage.py migrate &&
         poetry run python manage.py test &&
         poetry run python manage.py runserver 0.0.0.0:8000
