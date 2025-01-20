@@ -35,4 +35,4 @@ class Course(models.Model):
             f"{self.slug!r}, "
             f"{self.overview!r}, "
             f"{self.created!r})"
-        )
+        )  # todo: исправить

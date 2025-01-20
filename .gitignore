@@ -176,7 +176,7 @@ cython_debug/
 *.key
 
 #fixtures
-*.json
+#*.json
 
 #media-files
 media/

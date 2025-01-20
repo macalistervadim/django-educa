@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django.utils import timezone
 
-from apps.courses.models import Course, Subject
+from apps.courses.models import Course, Module, Subject
 
 
 class TestsSubjectModel(TestCase):
@@ -172,3 +172,76 @@ class TestsCourseModel(TestCase):
         )
         self.assertIsInstance(course.created, datetime)
         self.assertTrue(course.created <= timezone.now())
+
+
+class TestModuleModel(TestCase):
+    owner: User
+    subject: Subject
+    course: Course
+    module: Module
+    owner_data: dict[str, str]
+    subject_data: dict[str, str]
+    course_data: dict[str, str]
+    module_data: dict[str, str]
+
+    @classmethod
+    def setUpTestData(cls) -> None:
+        cls.owner_data = {  # TODO: DRY
+            "username": "user",
+            "email": "user@mail.ru",
+        }
+        cls.owner = User.objects.create_user(**cls.owner_data)
+
+        cls.subject_data = {
+            "title": "Python Programming",
+            "slug": "python-programming",
+        }
+        cls.subject = Subject.objects.create(**cls.subject_data)
+
+        cls.course_data = {
+            "owner": cls.owner,  # type: ignore
+            "subject": cls.subject,  # type: ignore
+            "title": "Python",
+            "slug": "python",
+            "overview": "A comprehensive Python course.",
+        }
+        cls.course = Course.objects.create(**cls.course_data)
+
+        cls.module_data = {
+            "course": cls.course,  # type: ignore
+            "title": "Math",
+            "description": "desc",
+        }
+        cls.module = Module.objects.create(**cls.module_data)
+
+    def test_module_creation(self) -> None:
+        """
+        Тест создания модуля.
+        """
+        self.assertEqual(Module.objects.count(), 1)
+        module = Module.objects.first()
+        if module is not None:
+            self.assertEqual(module.course, self.module_data["course"])
+            self.assertEqual(module.title, self.module_data["title"])
+            self.assertEqual(
+                module.description,
+                self.module_data["description"],
+            )
+
+    def test_str_module(self) -> None:
+        """
+        Тест возвращаемого значения __str__
+        """
+        self.assertEqual(str(self.module), self.module_data["title"])
+
+    def test_repr_module(self) -> None:
+        """
+        Тест возвращаемого значения __repr__
+        """
+        expected_repr = (
+            f"Module("
+            f"course={self.module_data['course']!r}, "
+            f"title={self.module_data['title']!r}, "
+            f"description={self.module_data['description']!r})"
+        )
+        self.assertEqual(repr(self.module), expected_repr)
