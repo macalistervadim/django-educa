@@ -13,5 +13,7 @@ class Subject(models.Model):
 
     def __repr__(self) -> str:
         return (
-            f"{self.__class__.__name__}(" f"{self.title!r}, " f"{self.slug!r})"
-        )  # TODO: исправить
+            f"{self.__class__.__name__}("
+            f"title={self.title!r}, "
+            f"slug={self.slug!r})"
+        )

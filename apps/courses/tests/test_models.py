@@ -34,7 +34,8 @@ class TestsSubjectModel(TestCase):
     def test_repr_method(self) -> None:
         """Тест метода __repr__."""
         expected_repr = (
-            f"Subject({self.data['title']!r}, {self.data['slug']!r})"
+            f"Subject(title={self.data['title']!r}, "
+            f"slug={self.data['slug']!r})"
         )
         self.assertEqual(repr(self.subject), expected_repr)
 
@@ -62,7 +63,7 @@ class TestsSubjectModel(TestCase):
         )
 
 
-class TestsCourseModel(TestCase):
+class BaseSetUpData(TestCase):
     owner: User
     subject: Subject
     course: Course
@@ -93,6 +94,8 @@ class TestsCourseModel(TestCase):
         }
         cls.course = Course.objects.create(**cls.course_data)
 
+
+class TestsCourseModel(BaseSetUpData):
     def test_course_creation(self) -> None:
         """Тест создания объекта Course."""
         self.assertEqual(Course.objects.count(), 1)
@@ -113,12 +116,12 @@ class TestsCourseModel(TestCase):
         """Тест метода __repr__."""
         expected_repr = (
             f"Course("
-            f"{self.owner!r}, "
-            f"{self.subject!r}, "
-            f"{self.course_data['title']!r}, "
-            f"{self.course_data['slug']!r}, "
-            f"{self.course_data['overview']!r}, "
-            f"{self.course.created!r})"
+            f"owner={self.owner!r}, "
+            f"subject={self.subject!r}, "
+            f"title={self.course_data['title']!r}, "
+            f"slug={self.course_data['slug']!r}, "
+            f"overview={self.course_data['overview']!r}, "
+            f"created={self.course.created!r})"
         )
         self.assertEqual(repr(self.course), expected_repr)
 
@@ -174,39 +177,13 @@ class TestsCourseModel(TestCase):
         self.assertTrue(course.created <= timezone.now())
 
 
-class TestModuleModel(TestCase):
-    owner: User
-    subject: Subject
-    course: Course
+class TestModuleModel(BaseSetUpData):
     module: Module
-    owner_data: dict[str, str]
-    subject_data: dict[str, str]
-    course_data: dict[str, str]
     module_data: dict[str, str]
 
     @classmethod
     def setUpTestData(cls) -> None:
-        cls.owner_data = {  # TODO: DRY
-            "username": "user",
-            "email": "user@mail.ru",
-        }
-        cls.owner = User.objects.create_user(**cls.owner_data)
-
-        cls.subject_data = {
-            "title": "Python Programming",
-            "slug": "python-programming",
-        }
-        cls.subject = Subject.objects.create(**cls.subject_data)
-
-        cls.course_data = {
-            "owner": cls.owner,  # type: ignore
-            "subject": cls.subject,  # type: ignore
-            "title": "Python",
-            "slug": "python",
-            "overview": "A comprehensive Python course.",
-        }
-        cls.course = Course.objects.create(**cls.course_data)
-
+        super().setUpTestData()
         cls.module_data = {
             "course": cls.course,  # type: ignore
             "title": "Math",

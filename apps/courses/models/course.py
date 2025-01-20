@@ -29,10 +29,10 @@ class Course(models.Model):
     def __repr__(self) -> str:
         return (
             f"{self.__class__.__name__}("
-            f"{self.owner!r}, "
-            f"{self.subject!r}, "
-            f"{self.title!r}, "
-            f"{self.slug!r}, "
-            f"{self.overview!r}, "
-            f"{self.created!r})"
-        )  # todo: исправить
+            f"owner={self.owner!r}, "
+            f"subject={self.subject!r}, "
+            f"title={self.title!r}, "
+            f"slug={self.slug!r}, "
+            f"overview={self.overview!r}, "
+            f"created={self.created!r})"
+        )

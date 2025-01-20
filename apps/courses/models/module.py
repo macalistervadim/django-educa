@@ -3,7 +3,7 @@ from django.db import models
 from apps.courses.models import Course
 
 
-class Module(models.Model):  # TODO: test
+class Module(models.Model):
     course = models.ForeignKey(
         Course,
         related_name="modules",
