@@ -1,6 +1,8 @@
 from datetime import datetime
+from typing import Any, Generic, Type, TypeVar
 
 from django.contrib.auth.models import User
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.utils import timezone
 
@@ -228,18 +230,24 @@ class TestModuleModel(BaseSetUpData):
         self.assertEqual(repr(self.module), expected_repr)
 
 
-class BaseContentTestMixin:
+T = TypeVar("T", bound="c_models.ItemBase")
+
+
+class BaseContentTest(Generic[T], TestCase):
     """
-    Базовый тестовый класс для тестирования моделей,
-    унаследованных от ItemBase.
+    Base test class for models inheriting from ItemBase.
     """
+
     owner: User
     owner_data: dict[str, str]
-    model_data: dict[str, str]
+    model_data: dict[str, Any]
+    model_class: Type[T]
+    additional_field: str | None = None
+    additional_value: Any = None
+    instance: T
 
-    model_class = None
-    additional_field = None
-    additional_value = None
+    class Meta:
+        abstract = True
 
     @classmethod
     def setUpTestData(cls) -> None:
@@ -250,7 +258,7 @@ class BaseContentTestMixin:
         cls.owner = User.objects.create_user(**cls.owner_data)
 
         cls.model_data = {
-            "owner": cls.owner,  # type: ignore
+            "owner": cls.owner,
             "title": "test",
         }
 
@@ -260,69 +268,74 @@ class BaseContentTestMixin:
         cls.instance = cls.model_class.objects.create(**cls.model_data)
 
     def test_common_fields(self) -> None:
-        """
-        Тестирование общих полей (owner, title, created, updated).
-        """
         self.assertEqual(self.instance.owner, self.owner)
         self.assertEqual(self.instance.title, self.model_data["title"])
         self.assertIsInstance(self.instance.created, datetime)
         self.assertIsInstance(self.instance.updated, datetime)
 
     def test_additional_field(self) -> None:
-        """
-        Тестирование специфичного поля.
-        """
         if self.additional_field and self.additional_value:
-            self.assertEqual(
-                getattr(self.instance, self.additional_field),
-                self.additional_value,
-            )
+            if isinstance(self.additional_value, SimpleUploadedFile):
+                expected_file_name = self.additional_value.name.split("/")[-1]
+                actual_file_name = getattr(
+                    self.instance,
+                    self.additional_field,
+                ).name.split("/")[-1]
+                self.assertEqual(actual_file_name, expected_file_name)
+            else:
+                self.assertEqual(
+                    getattr(self.instance, self.additional_field),
+                    self.additional_value,
+                )
 
     def test_str_method(self) -> None:
-        """
-        Тестирование метода __str__.
-        """
         self.assertEqual(str(self.instance), self.model_data["title"])
 
     def test_repr_method(self) -> None:
-        """
-        Тестирование метода __repr__.
-        """
         additional_field_value = (
-            f", {self.additional_field}={self.additional_value!r}"
+            f", {self.additional_field}={repr(str(getattr(
+                self.instance, self.additional_field)))}"
             if self.additional_field and self.additional_value
             else ""
         )
         correct_repr = (
             f"{self.model_class.__name__}("
-            f"owner={self.owner!r}, "
-            f"title={self.model_data['title']!r}, "
-            f"created={self.instance.created!r}, "
-            f"updated={self.instance.updated!r}"
+            f"owner={repr(self.owner)}, "
+            f"title={repr(self.model_data['title'])}, "
+            f"created={repr(self.instance.created)}, "
+            f"updated={repr(self.instance.updated)}"
             f"{additional_field_value})"
         )
         self.assertEqual(repr(self.instance), correct_repr)
 
 
-class TestTextModel(BaseContentTestMixin, TestCase):
+class TestTextModel(BaseContentTest):
     model_class = c_models.Text
     additional_field = "content"
     additional_value = "something"
 
 
-class TestFileModel(BaseContentTestMixin, TestCase):
+class TestFileModel(BaseContentTest):
     model_class = c_models.File
     additional_field = "file"
-    additional_value = "test_file.txt"  # todo вставить заглушку
+    additional_value = SimpleUploadedFile(
+        "dynamic_test_file.txt",  # Имя задаётся динамически
+        b"dummy content",
+        content_type="text/plain",
+    )
 
 
-class TestImageModel(BaseContentTestMixin, TestCase):
+class TestImageModel(BaseContentTest):
     model_class = c_models.Image
     additional_field = "file"
-    additional_value = "test_image.jpg"  # todo вставить заглушку
+    additional_value = SimpleUploadedFile(
+        "dynamic_test_image.jpg",  # Имя задаётся динамически
+        b"dummy image data",
+        content_type="image/jpeg",
+    )
 
 
-class TestVideoModel(BaseContentTestMixin, TestCase):
+class TestVideoModel(BaseContentTest):
     model_class = c_models.Video
     additional_field = "url"
     additional_value = "https://example.com/video"
