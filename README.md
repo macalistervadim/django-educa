@@ -1,6 +1,6 @@
 # Django Educa 🎓
 
-![Django](https://img.shields.io/badge/Django-3.2-green)
+![Django](https://img.shields.io/badge/Django-5-green)
 ![Python](https://img.shields.io/badge/Python|3.12-blue)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 ![CI/CD](https://github.com/macalistervadim/django-educa/actions/workflows/python-package.yml/badge.svg)
@@ -52,6 +52,12 @@
    ```bash
    git clone https://github.com/macalistervadim/django-educa
    cd django-educa
+2. **Start Docker containers:**
+    ```bash
+    docker-compose up --build
+3. **Open in your browser:**
+    ```bash
+    http://localhost:8000/
 
 ### Environment Configuration ⚙️
 The project uses a `.env` file to store sensitive data. Copy `.env.example` to `.env` and configure the variables:
