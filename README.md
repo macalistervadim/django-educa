@@ -1,7 +1,7 @@
 # Django Educa 🎓
 
 ![Django](https://img.shields.io/badge/Django-3.2-green)
-![Python](https://img.shields.io/badge/Python%20%20%7C%203.12-blue)
+![Python](https://img.shields.io/badge/Python|3.12-blue)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 ![CI/CD](https://github.com/macalistervadim/django-educa/actions/workflows/python-package.yml/badge.svg)
 
@@ -98,7 +98,7 @@ Below is the ER diagram of the project's database:
 
 ## License 📜
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the MIT License. See the [LICENSE](LICENCE.md) file for details.
 
 ---
 
