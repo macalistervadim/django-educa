@@ -92,7 +92,7 @@ To correctly display static files in production mode, run:
 
 Below is the ER diagram of the project's database:
 
-[ER.png]
+![ER.png](ER.png)
 
 ---
 

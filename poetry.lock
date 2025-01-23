@@ -119,6 +119,17 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-cleanup"
+version = "9.0.0"
+description = "Deletes old files."
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "django_cleanup-9.0.0-py3-none-any.whl", hash = "sha256:19f8b0e830233f9f0f683b17181f414672a0f48afe3ea3cc80ba47ae40ad880c"},
+    {file = "django_cleanup-9.0.0.tar.gz", hash = "sha256:bb9fb560aaf62959c81e31fa40885c36bbd5854d5aa21b90df2c7e4ba633531e"},
+]
+
+[[package]]
 name = "django-debug-toolbar"
 version = "4.4.6"
 description = "A configurable set of panels that display various debug information about the current request/response."
@@ -132,20 +143,6 @@ files = [
 [package.dependencies]
 django = ">=4.2.9"
 sqlparse = ">=0.2"
-
-[[package]]
-name = "django-extensions"
-version = "3.2.3"
-description = "Extensions for Django"
-optional = false
-python-versions = ">=3.6"
-files = [
-    {file = "django-extensions-3.2.3.tar.gz", hash = "sha256:44d27919d04e23b3f40231c4ab7af4e61ce832ef46d610cc650d53e68328410a"},
-    {file = "django_extensions-3.2.3-py3-none-any.whl", hash = "sha256:9600b7562f79a92cbf1fde6403c04fee314608fefbb595502e34383ae8203401"},
-]
-
-[package.dependencies]
-Django = ">=3.2"
 
 [[package]]
 name = "django-stubs"
@@ -595,25 +592,6 @@ files = [
 ]
 
 [[package]]
-name = "pydot"
-version = "3.0.4"
-description = "Python interface to Graphviz's Dot"
-optional = false
-python-versions = ">=3.8"
-files = [
-    {file = "pydot-3.0.4-py3-none-any.whl", hash = "sha256:bfa9c3fc0c44ba1d132adce131802d7df00429d1a79cc0346b0a5cd374dbe9c6"},
-    {file = "pydot-3.0.4.tar.gz", hash = "sha256:3ce88b2558f3808b0376f22bfa6c263909e1c3981e2a7b629b65b451eee4a25d"},
-]
-
-[package.dependencies]
-pyparsing = ">=3.0.9"
-
-[package.extras]
-dev = ["chardet", "parameterized", "ruff"]
-release = ["zest.releaser[recommended]"]
-tests = ["chardet", "parameterized", "pytest", "pytest-cov", "pytest-xdist[psutil]", "ruff", "tox"]
-
-[[package]]
 name = "pyflakes"
 version = "3.2.0"
 description = "passive checker of Python programs"
@@ -623,20 +601,6 @@ files = [
     {file = "pyflakes-3.2.0-py2.py3-none-any.whl", hash = "sha256:84b5be138a2dfbb40689ca07e2152deb896a65c3a3e24c251c5c62489568074a"},
     {file = "pyflakes-3.2.0.tar.gz", hash = "sha256:1c61603ff154621fb2a9172037d84dca3500def8c8b630657d1701f026f8af3f"},
 ]
-
-[[package]]
-name = "pyparsing"
-version = "3.2.1"
-description = "pyparsing module - Classes and methods to define and execute parsing grammars"
-optional = false
-python-versions = ">=3.9"
-files = [
-    {file = "pyparsing-3.2.1-py3-none-any.whl", hash = "sha256:506ff4f4386c4cec0590ec19e6302d3aedb992fdc02c761e90416f158dacf8e1"},
-    {file = "pyparsing-3.2.1.tar.gz", hash = "sha256:61980854fd66de3a90028d679a954d5f2623e83144b5afe5ee86f43d762e5f0a"},
-]
-
-[package.extras]
-diagrams = ["jinja2", "railroad-diagrams"]
 
 [[package]]
 name = "python-dotenv"
@@ -723,4 +687,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "56c04def1cef4541d6367cd2bf31fba54a48d583c2e1201d68a642c1f60e1e14"
+content-hash = "695d5fa992860e68b9c26b14d8c4a257a6e738abc443e5505739df1c1841c0bc"
