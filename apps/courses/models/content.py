@@ -29,7 +29,7 @@ class Content(models.Model):  # todo: test
     def __str__(self) -> str:
         return f"{self.object_id} - {self.item}"
 
-    def __repr(self) -> str:
+    def __repr__(self) -> str:
         return (
             f"{self.__class__.__name__}("
             f"module={self.module!r}, "

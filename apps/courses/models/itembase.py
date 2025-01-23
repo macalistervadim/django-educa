@@ -36,7 +36,7 @@ class Text(ItemBase):
         return f"{base_repr}, content={self.content!r})"
 
 
-class File(ItemBase):  # todo: test
+class File(ItemBase):
     file = models.FileField(upload_to="files")
 
     def __repr__(self) -> str:
@@ -44,7 +44,7 @@ class File(ItemBase):  # todo: test
         return f"{base_repr}, file={self.file!r})"
 
 
-class Image(ItemBase):  # todo: test
+class Image(ItemBase):
     file = models.FileField(upload_to="images")
 
     def __repr__(self) -> str:

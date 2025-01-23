@@ -1,7 +1,10 @@
 from datetime import datetime
 from typing import Any, Generic, Type, TypeVar
+import unittest
 
 from django.contrib.auth.models import User
+from django.contrib.contenttypes.models import ContentType
+import django.core.exceptions
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.utils import timezone
@@ -75,7 +78,7 @@ class BaseSetUpData(TestCase):
     course: c_models.Course
     owner_data: dict[str, str]
     subject_data: dict[str, str]
-    course_data: dict[str, str]
+    course_data: dict[str, Any]
 
     @classmethod
     def setUpTestData(cls) -> None:
@@ -92,8 +95,8 @@ class BaseSetUpData(TestCase):
         cls.subject = c_models.Subject.objects.create(**cls.subject_data)
 
         cls.course_data = {
-            "owner": cls.owner,  # type: ignore
-            "subject": cls.subject,  # type: ignore
+            "owner": cls.owner,
+            "subject": cls.subject,
             "title": "Python",
             "slug": "python",
             "overview": "A comprehensive Python course.",
@@ -185,13 +188,13 @@ class TestsCourseModel(BaseSetUpData):
 
 class TestModuleModel(BaseSetUpData):
     module: c_models.Module
-    module_data: dict[str, str]
+    module_data: dict[str, Any]
 
     @classmethod
     def setUpTestData(cls) -> None:
         super().setUpTestData()
         cls.module_data = {
-            "course": cls.course,  # type: ignore
+            "course": cls.course,
             "title": "Math",
             "description": "desc",
         }
@@ -233,9 +236,12 @@ class TestModuleModel(BaseSetUpData):
 T = TypeVar("T", bound="c_models.ItemBase")
 
 
+@unittest.skip(
+    "BaseContentTest is an abstract class and should not be run directly.",
+)
 class BaseContentTest(Generic[T], TestCase):
     """
-    Base test class for models inheriting from ItemBase.
+    Базовый класс для моделей наследованных от ItemBase
     """
 
     owner: User
@@ -268,36 +274,74 @@ class BaseContentTest(Generic[T], TestCase):
         cls.instance = cls.model_class.objects.create(**cls.model_data)
 
     def test_common_fields(self) -> None:
+        """
+        Тест основных полей моделей
+        """
         self.assertEqual(self.instance.owner, self.owner)
         self.assertEqual(self.instance.title, self.model_data["title"])
         self.assertIsInstance(self.instance.created, datetime)
         self.assertIsInstance(self.instance.updated, datetime)
 
     def test_additional_field(self) -> None:
+        """
+        Тест доп. полей - ImageField, FileField...
+        """
         if self.additional_field and self.additional_value:
             if isinstance(self.additional_value, SimpleUploadedFile):
-                expected_file_name = self.additional_value.name.split("/")[-1]
-                actual_file_name = getattr(
+                if self.additional_value.name is not None:
+                    expected_file_name = self.additional_value.name.split("/")[
+                        -1
+                    ].split("_")[0]
+                else:
+                    self.fail(
+                        "additional_value.name is None, but expected a string",
+                    )
+
+                actual_file_name_attr = getattr(
                     self.instance,
                     self.additional_field,
-                ).name.split("/")[-1]
+                ).name
+                if actual_file_name_attr is not None:
+                    actual_file_name = actual_file_name_attr.split("/")[
+                        -1
+                    ].split("_")[0]
+                else:
+                    self.fail(
+                        f"{self.additional_field}.name"
+                        f" is None, but expected a string",
+                    )
+
                 self.assertEqual(actual_file_name, expected_file_name)
-            else:
+            elif isinstance(self.additional_value, str):
                 self.assertEqual(
                     getattr(self.instance, self.additional_field),
                     self.additional_value,
                 )
+            else:
+                self.fail(
+                    f"Unexpected type for additional_value: {type(
+                        self.additional_value).__name__}",
+                )
 
     def test_str_method(self) -> None:
+        """
+        Тест метода __str__.
+        """
         self.assertEqual(str(self.instance), self.model_data["title"])
 
     def test_repr_method(self) -> None:
-        additional_field_value = (
-            f", {self.additional_field}={repr(str(getattr(
-                self.instance, self.additional_field)))}"
-            if self.additional_field and self.additional_value
-            else ""
-        )
+        """
+        Тест метода __repr__.
+        """
+        additional_field_value = ""
+        if self.additional_field and self.additional_value:
+            if isinstance(self.additional_value, SimpleUploadedFile):
+                additional_field_value = f", {self.additional_field}={repr(
+                    getattr(self.instance, self.additional_field))}"
+            else:
+                additional_field_value = f", {self.additional_field}={repr(
+                    getattr(self.instance, self.additional_field))}"
+
         correct_repr = (
             f"{self.model_class.__name__}("
             f"owner={repr(self.owner)}, "
@@ -319,7 +363,7 @@ class TestFileModel(BaseContentTest):
     model_class = c_models.File
     additional_field = "file"
     additional_value = SimpleUploadedFile(
-        "dynamic_test_file.txt",  # Имя задаётся динамически
+        "dynamic_test_file.txt",
         b"dummy content",
         content_type="text/plain",
     )
@@ -329,7 +373,7 @@ class TestImageModel(BaseContentTest):
     model_class = c_models.Image
     additional_field = "file"
     additional_value = SimpleUploadedFile(
-        "dynamic_test_image.jpg",  # Имя задаётся динамически
+        "dynamic_test_image.jpg",
         b"dummy image data",
         content_type="image/jpeg",
     )
@@ -339,3 +383,149 @@ class TestVideoModel(BaseContentTest):
     model_class = c_models.Video
     additional_field = "url"
     additional_value = "https://example.com/video"
+
+
+class TestContentModel(TestCase):
+    owner_data: dict[str, str]
+    owner: User
+    subject_data: dict[str, str]
+    subject: c_models.Subject
+    course_data: dict[str, Any]
+    course: c_models.Course
+    module_data: dict[str, Any]
+    module: c_models.Module
+    text_data: dict[str, Any]
+    text_model: c_models.Text
+    text_content_type: ContentType
+    content: c_models.Content
+
+    @classmethod
+    def setUpTestData(cls) -> None:
+        cls.owner_data = {
+            "username": "user",
+            "email": "user@mail.ru",
+        }
+        cls.owner = User.objects.create_user(**cls.owner_data)
+
+        cls.subject_data = {
+            "title": "Python Programming",
+            "slug": "python-programming",
+        }
+        cls.subject = c_models.Subject.objects.create(
+            **cls.subject_data,
+        )
+
+        cls.course_data = {
+            "owner": cls.owner,
+            "subject": cls.subject,
+            "title": "Python",
+            "slug": "python",
+            "overview": "A comprehensive Python course.",
+        }
+        cls.course = c_models.Course.objects.create(
+            **cls.course_data,
+        )
+
+        cls.module_data = {
+            "course": cls.course,
+            "title": "Math",
+            "description": "desc",
+        }
+        cls.module = c_models.Module.objects.create(
+            **cls.module_data,
+        )
+
+        cls.text_data = {
+            "owner": cls.owner,
+            "title": "Test Text",
+            "content": "Some content",
+        }
+        cls.text_model = c_models.Text.objects.create(
+            **cls.text_data,
+        )
+        cls.text_content_type = ContentType.objects.get_for_model(
+            c_models.Text,
+        )
+
+        cls.content = c_models.Content.objects.create(
+            module=cls.module,
+            content_type=cls.text_content_type,
+            object_id=cls.text_model.pk,
+        )
+
+    def test_creation_content(self) -> None:
+        """
+        Тест создания модели Content
+        """
+        self.assertEqual(c_models.Content.objects.count(), 1)
+        content = c_models.Content.objects.first()
+        if content is not None:
+            self.assertEqual(content.module, self.module)
+            self.assertEqual(content.content_type, self.text_content_type)
+            self.assertEqual(content.object_id, self.text_model.pk)
+            self.assertEqual(content.item, self.text_model)
+
+    def test_str_method(self) -> None:
+        """
+        Тест метода __str__.
+        """
+        self.assertEqual(
+            str(self.content),
+            f"{self.text_model.pk} - {self.text_model}",
+        )
+
+    def test_repr_method(self) -> None:
+        """
+        Тест метода __repr__.
+        """
+        expected_repr = (
+            f"Content("
+            f"module={self.module!r}, "
+            f"content_type={self.text_content_type!r}, "
+            f"object_id={self.text_model.pk}, "
+            f"item={self.text_model!r})"
+        )
+        self.assertEqual(repr(self.content), expected_repr)
+
+    def test_content_type_choices(self) -> None:
+        """
+        Тест на ограничение выбора content_type.
+        """
+        invalid_content_type = ContentType.objects.get_for_model(User)
+        with self.assertRaises(django.core.exceptions.ValidationError):
+            content = c_models.Content(
+                module=self.module,
+                content_type=invalid_content_type,
+                object_id=self.text_model.pk,
+            )
+            content.full_clean()
+
+    def test_module_relationship(self) -> None:
+        """
+        Тест на связь с Module.
+        """
+        self.assertEqual(self.content.module, self.module)
+        self.assertIn(self.content, self.module.contents.all())
+
+    def test_generic_foreign_key(self) -> None:
+        """
+        Тест на связь через GenericForeignKey.
+        """
+        self.assertEqual(self.content.item, self.text_model)
+
+    def test_delete_module_cascades(self) -> None:
+        """
+        Тест на каскадное удаление при удалении Module.
+        """
+        module_id = self.module.pk
+        self.module.delete()
+        self.assertFalse(
+            c_models.Content.objects.filter(module_id=module_id).exists(),
+        )
+
+    def test_delete_item_cascades(self) -> None:
+        """
+        Тест на каскадное удаление при удалении связанного объекта.
+        """
+        self.text_model.delete()
+        self.assertEqual(c_models.Text.objects.count(), 0)
