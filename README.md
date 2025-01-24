@@ -1,4 +1,4 @@
-# Django Educa 🎓
+## Django Educa 🎓
 
 ![Django](https://img.shields.io/badge/Django-5-green)
 ![Python](https://img.shields.io/badge/Python|3.12-blue)

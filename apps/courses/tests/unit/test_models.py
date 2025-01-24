@@ -218,7 +218,10 @@ class TestModuleModel(BaseSetUpData):
         """
         Тест возвращаемого значения __str__
         """
-        self.assertEqual(str(self.module), self.module_data["title"])
+        self.assertEqual(
+            str(self.module),
+            f'{self.module.order}. {self.module_data["title"]}',
+        )
 
     def test_repr_module(self) -> None:
         """
@@ -228,7 +231,8 @@ class TestModuleModel(BaseSetUpData):
             f"Module("
             f"course={self.module.course!r}, "
             f"title={self.module.title!r}, "
-            f"description={self.module.description!r})"
+            f"description={self.module.description!r}, "
+            f"order={self.module.order!r})"
         )
         self.assertEqual(repr(self.module), expected_repr)
 
@@ -483,7 +487,8 @@ class TestContentModel(TestCase):
             f"module={self.module!r}, "
             f"content_type={self.text_content_type!r}, "
             f"object_id={self.text_model.pk}, "
-            f"item={self.text_model!r})"
+            f"item={self.text_model!r}, "
+            f"order={self.content.order!r})"
         )
         self.assertEqual(repr(self.content), expected_repr)
 
