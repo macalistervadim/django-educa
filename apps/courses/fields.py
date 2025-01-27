@@ -4,7 +4,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 
 
-class OrderField(models.PositiveIntegerField):  # TODO: test this
+class OrderField(models.PositiveIntegerField):
+    """
+    Поле для автоматического определения порядка объектов.
+    """
+
     def __init__(
         self,
         for_fields: Any = None,

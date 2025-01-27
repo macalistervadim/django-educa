@@ -68,7 +68,7 @@ class TestsSubjectModel(TestCase):
         )
 
 
-class BaseSetUpData(TestCase):
+class BaseSetUpData(TestCase):  # TODO: вынести в файл
     """
     Базовый класс setUpData для моделей Course, Module
     """
@@ -243,7 +243,7 @@ T = TypeVar("T", bound="c_models.ItemBase")
 @unittest.skip(
     "BaseContentTest is an abstract class and should not be run directly.",
 )
-class BaseContentTest(Generic[T], TestCase):
+class BaseContentTest(Generic[T], TestCase):  # TODO: вынести в файл
     """
     Базовый класс для моделей наследованных от ItemBase
     """

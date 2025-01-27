@@ -6,7 +6,7 @@ from apps.courses.fields import OrderField
 from apps.courses.models.module import Module
 
 
-class Content(models.Model):  # TODO: test this
+class Content(models.Model):
     module = models.ForeignKey(
         Module,
         related_name="contents",
@@ -29,7 +29,7 @@ class Content(models.Model):  # TODO: test this
     order = OrderField(for_fields=["module"], blank=True)
 
     class Meta:
-        ordering = ["order"]  # TODO: test this
+        ordering = ["order"]
 
     def __str__(self) -> str:
         return f"{self.object_id} - {self.item}"
