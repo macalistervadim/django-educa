@@ -26,4 +26,9 @@ urlpatterns = [  # TODO: test + templates
         manage_course.CourseDeleteView.as_view(),
         name="course_delete",
     ),
+    path(
+        "<pk>/module/",
+        manage_course.CourseModuleUpdateView.as_view(),
+        name="course_module_update",
+    ),
 ]

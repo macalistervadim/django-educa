@@ -14,6 +14,7 @@ My courses
         <p>
           <a href="{% url 'courses:course_edit' courses.pk %}">Edit</a>
           <a href="{% url 'courses:course_delete' courses.pk %}">Delete</a>
+          <a href="{% url 'courses:course_module_update' courses.pk %}">Edit modules</a>
         </p>
       </div>
     {% empty %}
