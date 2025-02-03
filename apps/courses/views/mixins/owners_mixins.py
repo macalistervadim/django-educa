@@ -1,4 +1,8 @@
 from django import forms
+from django.contrib.auth.mixins import (
+    LoginRequiredMixin,
+    PermissionRequiredMixin,
+)
 from django.db.models.query import QuerySet
 from django.http import HttpRequest, HttpResponse
 from django.urls import reverse_lazy
@@ -30,7 +34,9 @@ class OwnerMixin:
         return qs.filter(owner=self.request.user)
 
 
-class OwnerCourseMixin(OwnerMixin):
+class OwnerCourseMixin(
+    OwnerMixin, LoginRequiredMixin, PermissionRequiredMixin,
+):
     """
     Миксин для предоставления общей функциональности для представлений,
     которые обрабатывают объекты Course, принадлежащие конкретному пользователю
