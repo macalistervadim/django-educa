@@ -3,7 +3,7 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.views.generic.list import ListView
 
 from apps.courses.models import Course
-from apps.courses.views.mixins.owner import OwnerCourseEditMixin
+from apps.courses.views.mixins.owners_mixins import OwnerCourseEditMixin
 
 
 class ManageCourseListView(ListView):  # TODO: test
@@ -16,12 +16,28 @@ class ManageCourseListView(ListView):  # TODO: test
 
 
 class CourseCreateView(OwnerCourseEditMixin, CreateView):  # TODO: test
-    pass
+    model = Course
+    template_name = "courses/manage/course/create.html"
+    fields = [
+        Course.subject.field.name,
+        Course.title.field.name,
+        Course.slug.field.name,
+        Course.overview.field.name,
+    ]
 
 
 class CouseUpdateView(OwnerCourseEditMixin, UpdateView):  # TODO: test
-    pass
+    model = Course
+    template_name = "courses/manage/course/update.html"
+    fields = [
+        Course.subject.field.name,
+        Course.title.field.name,
+        Course.slug.field.name,
+        Course.overview.field.name,
+    ]
 
 
 class CourseDeleteView(OwnerCourseEditMixin, DeleteView):  # TODO: test
-    pass
+    model = Course
+    template_name = "courses/manage/course/delete.html"
+    object = Course

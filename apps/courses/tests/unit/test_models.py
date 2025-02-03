@@ -1,10 +1,10 @@
-from datetime import datetime
-from typing import Any, Generic, Type, TypeVar
 import unittest
+from datetime import datetime
+from typing import Any, Generic, TypeVar
 
+import django.core.exceptions
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
-import django.core.exceptions
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.utils import timezone
@@ -251,7 +251,7 @@ class BaseContentTest(Generic[T], TestCase):  # TODO: вынести в файл
     owner: User
     owner_data: dict[str, str]
     model_data: dict[str, Any]
-    model_class: Type[T]
+    model_class: type[T]
     additional_field: str | None = None
     additional_value: Any = None
     instance: T

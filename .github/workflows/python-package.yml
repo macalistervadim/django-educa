@@ -37,8 +37,7 @@ jobs:
         docker-compose -f docker-compose.yml build --no-cache
         docker-compose up -d
         docker-compose exec -T web bash -c "
-          poetry run flake8 . &&
-          poetry run black . &&
+          poetry run ruff check &&
           poetry run mypy --config-file mypy.ini --explicit-package-bases . &&
           poetry run python manage.py test
         "

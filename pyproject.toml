@@ -15,22 +15,26 @@ dj-database-url = "^2.3.0"
 django-cleanup = "^9.0.0"
 
 [tool.poetry.group.dev.dependencies]
-flake8-import-order = "^0.18.2"
-flake8-print = "^5.0.0"
-flake8-quotes = "^3.4.0"
-flake8-use-pathlib = "^0.3.0"
-pep8-naming = "^0.14.1"
-flake8 = "^7.1.1"
-flake8-absolute-import = "^1.0.0.2"
-flake8-commas = "^4.0.0"
-black = "^24.10.0"
 django-debug-toolbar = "^4.4.6"
 mypy = "^1.14.1"
 django-stubs = "^5.1.1"
+ruff = "^0.9.4"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.black]
-line-length=79
+[tool.ruff]
+exclude = [
+    "*/migrations/*",
+    "venv/",
+    "__init__.py",
+    "apps.py",
+]
+line-length = 79
+indent-width = 4
+
+[tool.ruff.lint]
+select = ["E", "W", "C", "F", "N", "COM", "I", "Q", "U", "N", "A", "M"]
+fixable = ["ALL"]
+unfixable = []

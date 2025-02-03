@@ -19,8 +19,7 @@ services:
     command: >
       bash -c "
         poetry install --no-root &&
-        poetry run black . &&
-        poetry run flake8 . &&
+        poetry run ruff check &&
         poetry run mypy apps/ &&
         poetry run python manage.py migrate &&
         poetry run python manage.py test &&

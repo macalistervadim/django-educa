@@ -181,3 +181,5 @@ cython_debug/
 #media-files
 media/
 
+# ruff 
+.ruff_cache/
