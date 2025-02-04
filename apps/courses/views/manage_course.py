@@ -11,7 +11,10 @@ from django.views.generic.list import ListView
 
 from apps.courses.forms import ModuleFormSet
 from apps.courses.models import Course
-from apps.courses.views.mixins.owners_mixins import OwnerCourseEditMixin
+from apps.courses.views.mixins.owners_mixins import (
+    OwnerCourseEditMixin,
+    OwnerCourseMixin,
+)
 
 
 class ManageCourseListView(ListView):
@@ -51,14 +54,14 @@ class CourseUpdateView(OwnerCourseEditMixin, UpdateView):
     ]
 
 
-class CourseDeleteView(OwnerCourseEditMixin, DeleteView):
+class CourseDeleteView(OwnerCourseMixin, DeleteView):
     model = Course
     template_name = "courses/manage/course/delete.html"
     permission_required = "courses.delete_course"
     object = Course
 
 
-class CourseModuleUpdateView(TemplateResponseMixin, View):  # TODO: TEST
+class CourseModuleUpdateView(TemplateResponseMixin, View):
     template_name = "courses/manage/module/formset.html"
     course = None
 

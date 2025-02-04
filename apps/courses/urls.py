@@ -1,11 +1,10 @@
 from django.urls import path
 
-from apps.courses.views import manage_course, views
+from apps.courses.views import manage_course
 
 app_name = "courses"
 
 urlpatterns = [  # TODO: test + templates
-    path("", views.index, name="index"),
     path(
         "mine/",
         manage_course.ManageCourseListView.as_view(),

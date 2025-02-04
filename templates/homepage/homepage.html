@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/landing.css' %}">
+<section id="hero">
+    <div class="container">
+        <h1>Master New Skills Anytime, Anywhere</h1>
+        <p>Join thousands of learners and explore high-quality courses from industry experts.</p>
+        <a href="#" class="button primary">Browse Courses</a>
+    </div>
+</section>
+
+<section id="features">
+    <div class="container">
+        <div class="feature">
+            <h3>Expert Instructors</h3>
+            <p>Learn from industry professionals with real-world experience.</p>
+        </div>
+        <div class="feature">
+            <h3>Flexible Learning</h3>
+            <p>Study at your own pace, on any device, whenever it suits you.</p>
+        </div>
+        <div class="feature">
+            <h3>Certification</h3>
+            <p>Earn certificates to showcase your skills and boost your career.</p>
+        </div>
+    </div>
+</section>
+
+<section id="testimonials">
+    <div class="container">
+        <h2>What Our Students Say</h2>
+        <div class="testimonial">
+            <p>"Educa has completely transformed the way I learn. The courses are top-notch!"</p>
+            <h4>- Alex Johnson</h4>
+        </div>
+        <div class="testimonial">
+            <p>"Thanks to Educa, I got certified and landed my dream job. Highly recommend!"</p>
+            <h4>- Sarah Williams</h4>
+        </div>
+    </div>
+</section>
+
+<section id="cta">
+    <div class="container">
+        <h2>Start Your Learning Journey Today</h2>
+        <p>Join thousands of students worldwide and unlock your potential.</p>
+        <a href="{% url 'users:login' %}" class="button primary">Get Started Now</a>
+    </div>
+</section>
+{% endblock %}
