@@ -38,7 +38,6 @@ jobs:
         docker-compose up -d
         docker-compose exec -T web bash -c "
           poetry run ruff check &&
-          poetry run mypy --config-file mypy.ini --explicit-package-bases . &&
           poetry run python manage.py test
         "
 

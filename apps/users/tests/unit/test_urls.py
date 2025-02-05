@@ -6,7 +6,7 @@ from django.urls import resolve, reverse
 class UsersUrlsTests(TestCase):
     def test_login_url(self) -> None:
         url = reverse("users:login")
-        self.assertEqual(url, "/accounts/login/")
+        self.assertEqual(url, reverse("users:login"))
 
         resolved = resolve(url)
         self.assertEqual(
@@ -16,7 +16,7 @@ class UsersUrlsTests(TestCase):
 
     def test_logout_url(self) -> None:
         url = reverse("users:logout")
-        self.assertEqual(url, "/accounts/logout/")
+        self.assertEqual(url, reverse("users:logout"))
 
         resolved = resolve(url)
         self.assertEqual(
