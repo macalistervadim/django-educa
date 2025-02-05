@@ -4,11 +4,11 @@
 
 This section informs users which versions of your project are currently supported with security updates. This helps users understand if they need to upgrade to a newer version to receive fixes.
 
-| Version | Supported          | Notes                                |
-| ------- | ------------------ | ------------------------------------ |
-| 1.1.x   | :white_check_mark: | Latest version, full support.        |
-| 1.0   | :white_check_mark: | Critical fixes only.                 |
-| < 0.1   | :x:                | No longer supported.                 |
+| Version | Supported          | Notes                        |
+|---------|--------------------|------------------------------|
+| 2.0     | :white_check_mark: | Latest version, full support |
+| 1.0     | :x:                | No longer supported.         |
+| < 0.1   | :x:                | No longer supported.         |
 
 **Note:** Users are encouraged to upgrade to the latest stable version to receive all fixes and improvements.
 

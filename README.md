@@ -98,7 +98,7 @@ To correctly display static files in production mode, run:
 
 Below is the ER diagram of the project's database:
 
-![ER.png](ER.png)
+![docs/ER.png](docs/ER.png)
 
 ---
 
@@ -117,12 +117,6 @@ This project is licensed under the MIT License. See the [LICENSE](LICENCE.md) fi
 **Course Page**
 
 [Course Page]
-
----
-
-## Contributing 🤝
-
-If you'd like to contribute to the project, please read the Contributing Guidelines.
 
 ---
 

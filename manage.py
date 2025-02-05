@@ -6,7 +6,8 @@ from typing import Any
 
 def main() -> Any:
     """Run administrative tasks."""
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
+    os.environ.setdefault(
+        "DJANGO_SETTINGS_MODULE", "src.config.settings.settings")
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

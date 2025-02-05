@@ -7,12 +7,13 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
-django = "^5.1.4"
+django = "5.1.5"
 pillow = "^11.1.0"
 python-dotenv = "^1.0.1"
 psycopg2-binary = "^2.9.10"
 dj-database-url = "^2.3.0"
 django-cleanup = "^9.0.0"
+django-cors-headers = "^4.6.0"
 
 [tool.poetry.group.dev.dependencies]
 django-debug-toolbar = "^4.4.6"
@@ -36,5 +37,6 @@ indent-width = 4
 
 [tool.ruff.lint]
 select = ["E", "W", "C", "F", "N", "COM", "I", "Q", "U", "N", "A", "M"]
+ignore = ["F405"]
 fixable = ["ALL"]
 unfixable = []

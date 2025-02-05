@@ -179,7 +179,7 @@ cython_debug/
 #*.json
 
 #media-files
-media/
+src/media/
 
 # ruff 
 .ruff_cache/
