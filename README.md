@@ -52,29 +52,18 @@
    ```bash
    git clone https://github.com/macalistervadim/django-educa
    cd django-educa
-2. **Start Docker containers:**
+2. **Start Docker containers for development: To run the development environment with debugging, linting, and testing, use:**
     ```bash
-    docker-compose up --build
+    docker-compose -f docker-compose-dev.yml up --build
+3. **Start Docker containers for production: For a production environment with a production-grade server (e.g., Gunicorn), use:**
+   ```bash
+   docker-compose -f docker-compose.yml up --build
 3. **Open in your browser:**
     ```bash
     http://localhost:8000/
 
 ### Environment Configuration ⚙️
-The project uses a `.env` file to store sensitive data. Copy `.env.example` to `.env` and configure the variables:
-
-```plaintext
-# Example .env file
-
-# Django
-DJANGO_SECRET_KEY=your_secret_key_here
-DJANGO_DEBUG=True
-DJANGO_ALLOWED_HOSTS=127.0.0.1,localhost
-
-# Database
-POSTGRES_DB=educa
-POSTGRES_USER=educa_user
-POSTGRES_PASSWORD=educa_password
-```
+The project uses a `.env` file to store sensitive data. Copy `.env.example` to `.env` and configure variables
 
 ### Database 🗄️
 

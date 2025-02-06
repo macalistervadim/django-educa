@@ -5,7 +5,7 @@ from django.contrib.auth.models import Permission, User
 from django.test import TestCase
 from django.urls import reverse
 
-import apps.courses.models as c_models
+import src.apps.courses.models as c_models
 
 
 class TestManageCourseListView(TestCase):

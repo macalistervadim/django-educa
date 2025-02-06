@@ -5,7 +5,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 
-class UsersViewsTests(TestCase):
+class AccountsViewsTests(TestCase):
     user_data: dict[str, str]
     user: User
 

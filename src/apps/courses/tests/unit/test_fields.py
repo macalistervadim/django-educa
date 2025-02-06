@@ -2,15 +2,22 @@ from django.apps import apps
 from django.db import connection, models
 from django.test import TestCase
 
-from apps.courses.fields import OrderField
+from src.apps.courses.fields import OrderField
+
+
+class TestModel(models.Model):
+    name = models.CharField(max_length=100)
+    category = models.CharField(max_length=100, null=True, blank=True)
+    order = OrderField(for_fields=["category"])
+
+    class Meta:
+        app_label = "courses"
 
 
 class OrderFieldTests(TestCase):
     """
     Тесты для OrderField.
     """
-
-    TestModel: type[models.Model]
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -19,19 +26,10 @@ class OrderFieldTests(TestCase):
         """
         super().setUpClass()
 
-        class TestModel(models.Model):
-            name = models.CharField(max_length=100)
-            category = models.CharField(max_length=100, null=True, blank=True)
-            order = OrderField(for_fields=["category"])
-
-            class Meta:
-                app_label = "courses"
-
-        cls.TestModel = TestModel
         apps.all_models["courses"]["testmodel"] = TestModel
 
         with connection.schema_editor() as schema_editor:
-            schema_editor.create_model(cls.TestModel)
+            schema_editor.create_model(TestModel)
 
     @classmethod
     def tearDownClass(cls) -> None:
@@ -39,7 +37,7 @@ class OrderFieldTests(TestCase):
         Удаляем временную модель после завершения всех тестов.
         """
         with connection.schema_editor() as schema_editor:
-            schema_editor.delete_model(cls.TestModel)
+            schema_editor.delete_model(TestModel)
 
         del apps.all_models["courses"]["testmodel"]
 
@@ -49,9 +47,9 @@ class OrderFieldTests(TestCase):
         """
         Проверяет, что поле order корректно работает без for_fields.
         """
-        obj1 = self.TestModel(name="Object 1")
+        obj1 = TestModel(name="Object 1")
         obj1.save()
-        obj2 = self.TestModel(name="Object 2")
+        obj2 = TestModel(name="Object 2")
         obj2.save()
 
         self.assertIsInstance(obj1.order, int)
@@ -64,11 +62,11 @@ class OrderFieldTests(TestCase):
         """
         Проверяет работу order при наличии for_fields.
         """
-        obj1 = self.TestModel(name="Object 1", category="A")
+        obj1 = TestModel(name="Object 1", category="A")
         obj1.save()
-        obj2 = self.TestModel(name="Object 2", category="A")
+        obj2 = TestModel(name="Object 2", category="A")
         obj2.save()
-        obj3 = self.TestModel(name="Object 3", category="B")
+        obj3 = TestModel(name="Object 3", category="B")
         obj3.save()
 
         self.assertIsInstance(obj1.order, int)
@@ -83,7 +81,7 @@ class OrderFieldTests(TestCase):
         """
         Проверяет, что если order установлен, он не изменяется.
         """
-        obj1 = self.TestModel(name="Object 1", order=10)
+        obj1 = TestModel(name="Object 1", order=10)
         obj1.save()
 
         self.assertIsInstance(obj1.order, int)
@@ -94,7 +92,7 @@ class OrderFieldTests(TestCase):
         """
         Проверяет, что order = 0, если queryset пуст.
         """
-        obj1 = self.TestModel(name="Object 1")
+        obj1 = TestModel(name="Object 1")
         obj1.save()
 
         self.assertIsInstance(obj1.order, int)

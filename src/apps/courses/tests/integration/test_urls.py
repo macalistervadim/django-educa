@@ -4,7 +4,7 @@ from django.contrib.auth.models import Permission, User
 from django.test import TestCase
 from django.urls import resolve, reverse
 
-import apps.courses.views.manage_course as c_views
+import src.apps.courses.views.manage_course as c_views
 
 
 class CoursesUrlsTests(TestCase):

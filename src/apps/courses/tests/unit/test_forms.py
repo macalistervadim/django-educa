@@ -4,8 +4,8 @@ from django.contrib.auth.models import User
 from django.forms import BaseInlineFormSet
 from django.test import TestCase
 
-import apps.courses.forms as c_forms
-import apps.courses.models as c_models
+import src.apps.courses.forms as c_forms
+import src.apps.courses.models as c_models
 
 
 class ModuleFormSetTest(TestCase):

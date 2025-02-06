@@ -1,4 +1,4 @@
-from typing import Any, cast
+from typing import Any
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
@@ -28,11 +28,11 @@ class OrderField(models.PositiveIntegerField):
                         for field in self.for_fields
                     }
                     qs = qs.filter(**query)
-                last_item = cast(
-                    models.Model,
-                    qs.latest(self.attname),
-                )
-                value = last_item.order + 1  # type: ignore
+                last_item = qs.latest(self.attname) if qs.exists() else None
+                if last_item:
+                    value = getattr(last_item, self.attname) + 1
+                else:
+                    value = 0
             except ObjectDoesNotExist:
                 value = 0
             setattr(model_instance, self.attname, value)

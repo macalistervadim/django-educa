@@ -5,22 +5,33 @@ import dotenv
 
 dotenv.load_dotenv()
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
+
 def load_bool(key: str, default: bool) -> bool:
-    return (os.getenv(key, str(default)).lower() in
-            ("true", "1", "t", "y", "yes"))
+    return os.getenv(key, str(default)).lower() in (
+        "true",
+        "1",
+        "t",
+        "y",
+        "yes",
+    )
+
 
 def load_list(key: str, default: str | list) -> list:
-    return os.getenv(key, ",".join(default) if
-                    isinstance(default, list) else default).split(",")
+    return os.getenv(
+        key,
+        ",".join(default) if isinstance(default, list) else default,
+    ).split(",")
+
 
 ALLOWED_HOSTS = load_list("DJANGO_ALLOWED_HOSTS", "*")
 
 INSTALLED_APPS = [
     "src.apps.courses.apps.CoursesConfig",
-    "src.apps.accounts.apps.UsersConfig",
+    "src.apps.accounts.apps.AccountsConfig",
     "src.apps.homepage.apps.HomepageConfig",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -80,19 +91,17 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         "NAME": (
-            "django.contrib.auth.password_validation." "MinimumLengthValidator"
+            "django.contrib.auth.password_validation.MinimumLengthValidator"
         ),
     },
     {
         "NAME": (
-            "django.contrib.auth.password_validation."
-            "CommonPasswordValidator"
+            "django.contrib.auth.password_validation.CommonPasswordValidator"
         ),
     },
     {
         "NAME": (
-            "django.contrib.auth.password_validation."
-            "NumericPasswordValidator"
+            "django.contrib.auth.password_validation.NumericPasswordValidator"
         ),
     },
 ]

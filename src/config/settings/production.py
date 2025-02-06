@@ -7,8 +7,7 @@ dotenv.load_dotenv()
 
 DEBUG = False
 
-ALLOWED_HOSTS = load_list(
-    "DJANGO_ALLOWED_HOSTS", "your-domain.com")
+ALLOWED_HOSTS = load_list("DJANGO_ALLOWED_HOSTS", "your-domain.com")
 
 SECURE_SSL_REDIRECT = True
 CSRF_COOKIE_SECURE = True
@@ -22,43 +21,28 @@ LOGGING = {
     "disable_existing_loggers": False,
     "formatters": {
         "verbose": {
-            "format": "%(levelname)s %(asctime)s %(module)s"
-            " %(process)d %(thread)d %(message)s",
-        },
-        "simple": {
-            "format": "%(levelname)s %(message)s",
+            "format": "{levelname} {asctime} {module} {message}",
+            "style": "{",
         },
     },
     "handlers": {
-        "console": {
-            "level": "DEBUG",
-            "class": "logging.StreamHandler",
-            "formatter": "simple",
-        },
         "file": {
             "level": "ERROR",
             "class": "logging.FileHandler",
-            "filename": (
-                    BASE_DIR / "logs" / "backend" / "errors.log"
-            ),
+            "filename": "logs/backend/django_error.log",
+            "formatter": "verbose",
+        },
+        "console": {
+            "level": "ERROR",
+            "class": "logging.StreamHandler",
             "formatter": "verbose",
         },
     },
     "loggers": {
         "django": {
-            "handlers": ["console"],
-            "level": "INFO",
-            "propagate": True,
-        },
-        "django.request": {
-            "handlers": ["file"],
+            "handlers": ["file", "console"],
             "level": "ERROR",
-            "propagate": False,
-        },
-        "django.server": {
-            "handlers": ["console"],
-            "level": "INFO",
-            "propagate": False,
+            "propagate": True,
         },
     },
 }

@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import resolve, reverse
 
-import apps.homepage.views.homepage as h_views
+import src.apps.homepage.views.homepage as h_views
 
 
 class TestHomepageUrls(TestCase):

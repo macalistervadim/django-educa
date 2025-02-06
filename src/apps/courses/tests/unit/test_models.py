@@ -10,7 +10,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.utils import timezone
 
-import apps.courses.models as c_models
+import src.apps.courses.models as c_models
 
 
 class TestsSubjectModel(TestCase):
