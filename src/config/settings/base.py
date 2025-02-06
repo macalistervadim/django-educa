@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     "src.apps.courses.apps.CoursesConfig",
     "src.apps.accounts.apps.AccountsConfig",
     "src.apps.homepage.apps.HomepageConfig",
+    "grappelli",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

@@ -7,6 +7,7 @@ urlpatterns = [
     path("", include("src.apps.homepage.urls")),
     path("courses/", include("src.apps.courses.urls")),
     path("accounts/", include("src.apps.accounts.urls")),
+    path("grappelli/", include("grappelli.urls")),
     path("admin/", admin.site.urls),
 ]
 
