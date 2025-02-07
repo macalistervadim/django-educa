@@ -33,7 +33,7 @@ INSTALLED_APPS = [
     "src.apps.courses.apps.CoursesConfig",
     "src.apps.accounts.apps.AccountsConfig",
     "src.apps.homepage.apps.HomepageConfig",
-    "grappelli",
+    "jazzmin",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -120,3 +120,31 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+JAZZMIN_SETTINGS = {
+    "site_title": "Educa Admin",
+    "site_header": "Edica Admin",
+    "site_brand": "Educa",
+    "welcome_sign": "Добро пожаловать в Educa!",
+    "copyright": "Educa",
+    "show_sidebar": True,
+    "navigation_expanded": True,
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+    },
+    "topmenu_links": [
+        {
+            "name": "🏠 Главная",
+            "url": "admin:index",
+            "permissions": ["auth.view_user"],
+        },
+        {"name": "Курсы", "url": "/admin/courses/"},
+        {
+            "name": "💬 Поддержка",
+            "url": "https://github.com/macalistervadim/django-educa",
+            "new_window": True,
+        },
+    ],
+}

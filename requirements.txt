@@ -6,3 +6,5 @@ psycopg2-binary==2.9.10
 dj-database-url==2.3.0
 django-cleanup==9.0.0
 django-cors-headers==4.6.0
+django-jazzmin==3.0.1
+django-debug-toolbar==4.4.6
