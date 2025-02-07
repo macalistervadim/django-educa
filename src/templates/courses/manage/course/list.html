@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load course %}
 
 {% block title %}
 My courses
@@ -15,6 +16,9 @@ My courses
           <a href="{% url 'courses:course_edit' courses.pk %}">Edit</a>
           <a href="{% url 'courses:course_delete' courses.pk %}">Delete</a>
           <a href="{% url 'courses:course_module_update' courses.pk %}">Edit modules</a>
+          {% if courses.modules.count > 0 %}
+            <a href="{% url 'courses:module_content_list' courses.modules.first.id %}">Manage contents</a>
+          {% endif %}
         </p>
       </div>
     {% empty %}
