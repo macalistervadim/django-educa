@@ -98,7 +98,7 @@ class ContentCreateUpdateView(
         return self.render_to_response({"form": form, "object": self.obj})
 
 
-class ContentDeleteView(ContentOwnerMixin, View):  # TODO: test
+class ContentDeleteView(ContentOwnerMixin, View):
     def post(
         self,
         request: HttpRequest,
