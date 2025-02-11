@@ -13,9 +13,14 @@ from src.apps.courses.models import (
     Content,
     Module,
 )
+from src.apps.courses.views.mixins.content_owner import ContentOwnerMixin
 
 
-class ContentCreateUpdateView(TemplateResponseMixin, View):  # TODO: test
+class ContentCreateUpdateView(
+    ContentOwnerMixin,
+    TemplateResponseMixin,
+    View,
+):
     content: Content
     module: Module | None = None
     model: type[models.Model] | None = None
@@ -93,14 +98,16 @@ class ContentCreateUpdateView(TemplateResponseMixin, View):  # TODO: test
         return self.render_to_response({"form": form, "object": self.obj})
 
 
-class ContentDeleteView(View):  # TODO: test
+class ContentDeleteView(ContentOwnerMixin, View):  # TODO: test
     def post(
         self,
         request: HttpRequest,
         pk: int,
     ) -> HttpResponseBase:
         content = get_object_or_404(
-            Content, id=pk, module__course__owner=request.user,
+            Content,
+            id=pk,
+            module__course__owner=request.user,
         )
         module = content.module
         if content.item:

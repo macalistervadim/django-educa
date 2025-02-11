@@ -87,8 +87,12 @@ class TestCourseCreateView(TestCase):
         self.client.force_login(self.owner)
         response = self.client.post(url, self.course_data)
         self.assertEqual(response.status_code, HTTPStatus.FOUND)
-        self.assertTrue(c_models.Course.objects.filter(
-            owner=self.owner, title="New Course").exists())
+        self.assertTrue(
+            c_models.Course.objects.filter(
+                owner=self.owner,
+                title="New Course",
+            ).exists(),
+        )
 
     def test_create_course_anonymous(self) -> None:
         """
@@ -216,8 +220,9 @@ class TestCourseDeleteView(TestCase):
         self.client.force_login(self.owner)
         response = self.client.post(url)
         self.assertEqual(response.status_code, HTTPStatus.FOUND)
-        self.assertFalse(c_models.Course.objects.filter(
-            pk=self.course.pk).exists())
+        self.assertFalse(
+            c_models.Course.objects.filter(pk=self.course.pk).exists(),
+        )
 
     def test_delete_course_anonymous(self) -> None:
         """
@@ -234,8 +239,177 @@ class TestCourseDeleteView(TestCase):
         не может удалить курс.
         """
         no_permission_user = User.objects.create_user(
-            username="no_permission_user", email="no_permission@mail.ru")
+            username="no_permission_user",
+            email="no_permission@mail.ru",
+        )
         self.client.force_login(no_permission_user)
         url = reverse("courses:course_delete", args=[self.course.pk])
         response = self.client.post(url)
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
+
+
+class TestContentCreateUpdateView(TestCase):
+    subject: c_models.Subject
+    user: User
+    user_data: dict[str, str]
+    course: c_models.Course
+    module: c_models.Module
+    text_content: c_models.Text
+    text_content_data: dict[str, Any]
+
+    @classmethod
+    def setUpTestData(cls) -> None:
+        cls.user_data = {
+            "username": "test_user",
+            "email": "user@mail.com",
+            "password": "password123",
+        }
+        cls.user = User.objects.create_user(**cls.user_data)
+        permissions_codenames = [
+            "delete_course",
+            "change_course",
+            "add_course",
+        ]
+        permissions = Permission.objects.filter(
+            codename__in=permissions_codenames,
+        )
+        cls.user.user_permissions.add(*permissions)
+
+        cls.subject = c_models.Subject.objects.create(title="Python")
+
+        cls.course = c_models.Course.objects.create(
+            owner=cls.user,
+            subject=cls.subject,
+            title="Course to delete",
+            slug="course-to-delete",
+            overview="Course description.",
+        )
+
+        cls.module = c_models.Module.objects.create(
+            course=cls.course,
+            title="Test Module",
+            description="Test Description",
+        )
+
+        cls.text_content_data = {
+            "owner": cls.user,
+            "content": "initial content",
+        }
+
+        cls.text_content = c_models.Text.objects.create(
+            **cls.text_content_data,
+        )
+
+    def test_get_request_create_content(self) -> None:
+        """
+        Тест GET-запроса для создания нового контента.
+        """
+        self.client.force_login(self.user)
+        url = reverse(
+            "courses:module_content_create",
+            args=[self.module.pk, "text"],
+        )
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertIn("form", response.context)
+        self.assertIsNone(response.context["object"])
+
+    def test_post_request_create_content_valid(self) -> None:
+        """
+        Тест POST-запроса для создания нового контента с валидными данными.
+        """
+        self.assertEqual(c_models.Content.objects.count(), 0)
+        self.client.force_login(self.user)
+        url = reverse(
+            "courses:module_content_create",
+            args=[self.module.pk, "text"],
+        )
+        data = {"title": "test", "content": "NEW content"}
+
+        response = self.client.post(url, data)
+        self.assertEqual(
+            response.status_code,
+            HTTPStatus.FOUND,
+        )
+
+        self.assertEqual(c_models.Content.objects.count(), 1)
+
+    def test_post_request_create_content_invalid(self) -> None:
+        """
+        Тест POST-запроса с невалидными данными (пустое поле).
+        """
+        self.client.force_login(self.user)
+        url = reverse(
+            "courses:module_content_create",
+            args=[self.module.pk, "text"],
+        )
+        data = {"content": ""}
+
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        form = response.context["form"]
+        self.assertFormError(
+            form,
+            "content",
+            "This field is required.",
+        )
+
+    def test_get_request_update_content(self) -> None:
+        """
+        Тест GET-запроса для редактирования существующего контента.
+        """
+        self.client.force_login(self.user)
+        url = reverse(
+            "courses:module_content_update",
+            args=[self.module.pk, "text", self.text_content.pk],
+        )
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertIn("form", response.context)
+        self.assertEqual(response.context["object"], self.text_content)
+
+    def test_post_request_update_content_valid(self) -> None:
+        """
+        Тест POST-запроса для обновления контента с валидными данными.
+        """
+        self.client.force_login(self.user)
+        url = reverse(
+            "courses:module_content_update",
+            args=[self.module.pk, "text", self.text_content.pk],
+        )
+        data = {"title": "test", "content": "Updated content"}
+
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
+
+        self.text_content.refresh_from_db()
+        self.assertEqual(self.text_content.content, "Updated content")
+
+    def test_get_request_invalid_model(self) -> None:
+        """
+        Тест GET-запроса с несуществующей моделью.
+        """
+        self.client.force_login(self.user)
+        url = reverse(
+            "courses:module_content_create",
+            args=[self.module.pk, "invalid_model"],
+        )
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertIsNone(response.context["form"])
+
+    def test_anonymous_user_access(self) -> None:
+        """
+        Тест, что анонимный пользователь не может получить доступ к
+        созданию/редактированию контента.
+        """
+        url = reverse(
+            "courses:module_content_create",
+            args=[self.module.pk, "text"],
+        )
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
