@@ -18,11 +18,7 @@ DEBUG_TOOLBAR_CONFIG = {
     "INTERCEPT_REDIRECTS": False,
 }
 
-STATICFILES_DIRS = [BASE_DIR / "static"]
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
-
-TEMPLATES[0]["OPTIONS"]["debug"] = True
+TEMPLATES[0]["OPTIONS"]["debug"] = True  # type: ignore
 
 INSTALLED_APPS += ["corsheaders"]
 MIDDLEWARE.insert(0, "corsheaders.middleware.CorsMiddleware")

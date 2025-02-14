@@ -1,22 +1,33 @@
+# Stage 1: Build (Poetry, зависимости)
 FROM python:3.12-slim as builder
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential curl && \
-    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-COPY requirements.txt /app/
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential curl git gettext && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN pip install --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+RUN msguniq --version
 
+
+RUN pip install --no-cache-dir poetry
+
+COPY pyproject.toml poetry.lock /app/
+
+RUN poetry config virtualenvs.create false \
+    && poetry install --no-root
+
+# Stage 2: Production
 FROM python:3.12-slim
 
 WORKDIR /app
 
+RUN apt-get update && apt-get install -y --no-install-recommends locales gettext && \
+    rm -rf /var/lib/apt/lists/*
+
 COPY --from=builder /usr/local /usr/local
 COPY . /app/
+
 
 EXPOSE 8000
 

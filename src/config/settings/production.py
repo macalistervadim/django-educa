@@ -4,17 +4,36 @@ from src.config.settings.base import *  # noqa: F403
 
 dotenv.load_dotenv()
 
-
 DEBUG = False
-
-ALLOWED_HOSTS = load_list("DJANGO_ALLOWED_HOSTS", "your-domain.com")
 
 SECURE_SSL_REDIRECT = True
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
-X_FRAME_OPTIONS = "DENY"
-SECURE_BROWSER_XSS_FILTER = True
-SECURE_CONTENT_TYPE_NOSNIFF = True
+CSRF_COOKIE_SAMESITE = "None"
+CORS_ALLOW_CREDENTIALS = True
+X_FRAME_OPTIONS = "SAMEORIGIN"
+SECURE_BROWSER_XSS_FILTER = False
+SECURE_CONTENT_TYPE_NOSNIFF = False
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+INSTALLED_APPS += ["corsheaders"]
+MIDDLEWARE.insert(0, "corsheaders.middleware.CorsMiddleware")
+CORS_ALLOWED_ORIGINS = load_list(
+    "DJANGO_CORS_ALLOWED_ORIGINS",
+    ["https://my-domain.ru"],
+)
+CSRF_TRUSTED_ORIGINS = load_list(
+    "DJANGO_CSRF_TRUSTED_ORIGINS",
+    ["https://my-domain.ru"],
+)
+CORS_ALLOW_HEADERS = [
+    "content-type",
+    "accept",
+    "origin",
+    "authorization",
+    "x-csrftoken",
+    "cross-origin-opener-policy",
+]
 
 LOGGING = {
     "version": 1,
