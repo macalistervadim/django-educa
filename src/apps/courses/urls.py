@@ -35,17 +35,17 @@ urlpatterns = [
         manage_course.CourseModuleUpdateView.as_view(),
         name="course_module_update",
     ),
-    path(  # TODO: test
+    path(
         "module/<int:module_id>/content/<model_name>/create/",
         content_create_update.ContentCreateUpdateView.as_view(),
         name="module_content_create",
     ),
-    path(  # TODO: test
+    path(
         "module/<int:module_id>/content/<model_name>/<pk>/",
         content_create_update.ContentCreateUpdateView.as_view(),
         name="module_content_update",
     ),
-    path(  # TODO: test
+    path(
         "content/<int:pk>/delete/",
         content_create_update.ContentDeleteView.as_view(),
         name="module_content_delete",

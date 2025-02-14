@@ -4,9 +4,12 @@ from django.views.generic import View
 from django.views.generic.base import TemplateResponseMixin
 
 from src.apps.courses.models import Module
+from src.apps.courses.views.mixins.content_owner import ContentOwnerMixin
 
 
-class ModuleContentListView(TemplateResponseMixin, View):  # TODO: test
+class ModuleContentListView(
+    ContentOwnerMixin, TemplateResponseMixin, View,
+):
     module: Module
     template_name = "courses/manage/module/content_list.html"
 

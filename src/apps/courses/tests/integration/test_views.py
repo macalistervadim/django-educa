@@ -538,3 +538,87 @@ class TestContentDeleteView(TestCase):
         self.assertEqual(response.status_code, HTTPStatus.FOUND)
 
         self.assertEqual(c_models.Content.objects.count(), 1)
+
+
+class TestModuleContentListView(TestCase):
+    user: User
+    module: c_models.Module
+    course: c_models.Course
+    user_data: dict[str, str]
+    subject: c_models.Subject
+
+    @classmethod
+    def setUpTestData(cls) -> None:
+        cls.user_data = {
+            "username": "test_user1",
+            "email": "user1@mail.com",
+            "password": "password123",
+        }
+        cls.user = User.objects.create_user(**cls.user_data)
+        permissions_codenames = [
+            "delete_course",
+            "change_course",
+            "add_course",
+        ]
+        permissions = Permission.objects.filter(
+            codename__in=permissions_codenames,
+        )
+        cls.user.user_permissions.add(*permissions)
+
+        cls.subject = c_models.Subject.objects.create(title="Java")
+
+        cls.course = c_models.Course.objects.create(
+            owner=cls.user,
+            subject=cls.subject,
+            title="Course to delete123",
+            slug="course-to-delete123",
+            overview="Course description123.",
+        )
+
+        cls.module = c_models.Module.objects.create(
+            course=cls.course,
+            title="Test Module123",
+            description="Test Description123",
+        )
+
+    def test_get_request_valid(self) -> None:
+        """
+        Тестирование GET запроса на получение контента для владельца курса.
+        """
+        self.client.force_login(self.user)
+        url = reverse("courses:module_content_list", args=[self.module.pk])
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(
+            response,
+            "courses/manage/module/content_list.html",
+        )
+        self.assertEqual(response.context["module"], self.module)
+
+    def test_get_request_unauthorized(self) -> None:
+        """
+        Тестирование GET запроса без авторизации.
+        """
+        url = reverse("courses:module_content_list", args=[self.module.pk])
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
+        self.assertRedirects(
+            response, f"{reverse('accounts:login')}?next={url}",
+        )
+
+    def test_get_request_not_owner(self) -> None:
+        """
+        Тестирование GET запроса с пользователем,
+        не являющимся владельцем курса.
+        """
+        other_user = User.objects.create_user(
+            username="other_user",
+            password="password123",
+        )
+        self.client.force_login(other_user)
+        url = reverse("courses:module_content_list", args=[self.module.pk])
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
