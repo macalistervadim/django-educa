@@ -38,48 +38,23 @@
 
 ---
 
-## Installation and Setup 🚀
+## Technologies ⚙️
 
-### Requirements
+The project was developed using modern technologies:
 
-- Python 3.12+
-- Docker
-- Poetry (for dependency management)
+- **Django 5** — a web application framework for Python, providing a quick start and flexibility.
+- **Python 3.12** — the main programming language.
+- **PostgreSQL** — a database management system used for storing information.
+- **Docker** — for containerizing the application and simplifying the deployment process.
+- **Poetry** — a tool for dependency management and packaging Python projects.
+- **Gunicorn** — a high-performance WSGI server for running the Django application in a production environment.
+- **Nginx** — a web server for handling requests, proxying them to Gunicorn, and ensuring security with SSL.
 
-### Docker Setup
+---
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/macalistervadim/django-educa
-   cd django-educa
-2. **Start Docker containers for development: To run the development environment with debugging, linting, and testing, use:**
-    ```bash
-    docker-compose -f docker-compose-dev.yml up --build
-3. **Start Docker containers for production: For a production environment with a production-grade server (e.g., Gunicorn), use:**
-   ```bash
-   docker-compose -f docker-compose.yml up --build
-3. **Open in your browser:**
-    ```bash
-    http://localhost:8000/
+## Installation
 
-### Environment Configuration ⚙️
-The project uses a `.env` file to store sensitive data. Copy `.env.example` to `.env` and configure variables
-
-### Database 🗄️
-
-The project uses PostgreSQL. To set up the database:
-
-1. Load test data (optional):
-   ```bash
-   python manage.py loaddata fixtures/subjects.json
-
-### Static Files 📂
-
-To correctly display static files in production mode, run:
-   
-   ```bash
-   python manage.py collectstatic
-   ```
+To install the application and run it on your server, follow the [instructions](docs/START.md)
 
 ---
 
