@@ -12,15 +12,10 @@
 ## Table of Contents 📚
 
 - [Features](#features-)
-- [Installation and Setup](#installation-and-setup-)
-  - [Requirements](#requirements)
-  - [Docker Setup](#docker-setup)
-  - [Environment Configuration](#environment-configuration-)
-  - [Database](#database-)
-  - [Static Files](#static-files-)
+- [Technologies](#technologies-️)
+- [Installation and Setup](#installation)
 - [ER Diagram](#er-diagram-)
 - [License](#license-)
-- [Contributing](#contributing-)
 
 ---
 
