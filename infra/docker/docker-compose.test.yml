@@ -1,0 +1,36 @@
+services:
+  backend:
+    build:
+      context: ../../
+      dockerfile: infra/docker/Dockerfile
+    working_dir: /app/backend
+    volumes:
+      - ../../:/app
+    env_file:
+      - ../../.env
+    command: >
+      bash -c "
+        export PYTHONPATH=/app &&
+        poetry install --no-root &&
+        poetry run python manage.py migrate &&
+        poetry run python manage.py test
+      "
+    depends_on:
+      - database
+    networks:
+      - app_network
+
+  database:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: test_db
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_pass123
+    ports:
+      - "5433:5432"
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
