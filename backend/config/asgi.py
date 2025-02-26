@@ -4,7 +4,7 @@ from django.core.asgi import get_asgi_application
 
 settings_module = os.getenv(
     "DJANGO_SETTINGS_MODULE",
-    "backend.config.settings.production",
+    "backend.config.settings.development",
 )
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", settings_module)
 

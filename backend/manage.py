@@ -8,7 +8,7 @@ def main() -> Any:
     """Run administrative tasks."""
     settings_module = os.getenv(
         "DJANGO_SETTINGS_MODULE",
-        "backend.config.settings.production",
+        "backend.config.settings.development",
     )
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", settings_module)
     try:
