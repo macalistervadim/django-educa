@@ -32,11 +32,6 @@ jobs:
         with:
           python-version: 3.12
 
-      - name: Install dependencies via Poetry
-        run: |
-          pip install poetry
-          poetry install --no-root
-
       - name: Run Tests via Docker Compose
         run: |
           docker compose -f infra/docker/docker-compose.test.yml up --abort-on-container-exit
