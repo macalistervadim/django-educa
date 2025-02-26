@@ -75,16 +75,48 @@
 {% block domready %}
   var options = {
     method: 'POST',
-    node: 'same-origin'
-  }
+    credentials: 'same-origin',  // если нужны куки
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
 
   const moduleOrderUrl = '{% url "courses:module_order" %}';
 
   sortable("#modules", {
     forcePlaceholderSize: true,
     placeholderClass: "placeholder",
-  })
+  })[0].addEventListener('sortupdate', function(e) {
+
+    var modulesOrder = {};
+    var modules = document.querySelectorAll('#modules li');
+
+    modules.forEach(function (module, index) {
+      modulesOrder[module.dataset.id] = index;
+      module.querySelector('.order').innerHTML = index + 1;
+    });
+
+    options.body = JSON.stringify(modulesOrder);
+
+    fetch(moduleOrderUrl, options)
+  });
+
+  const contentOrderUrl = '{% url "courses:content_order" %}';
+  sortable("#module-contents", {
+    forcePlaceholderSize: true,
+    placeholderClass: "placeholder",
+  })[0].addEventListener('sortupdate', function(e) {
+
+    var contentsOrder = {};
+    var contents = document.querySelectorAll('#module-contents div');
+
+    contents.forEach(function (content, index) {
+      contentsOrder[content.dataset.id] = index;
+    });
+
+    options.body = JSON.stringify(contentsOrder);
+
+    fetch(contentOrderUrl, options)
+  });
 {% endblock domready %}
-
-
 

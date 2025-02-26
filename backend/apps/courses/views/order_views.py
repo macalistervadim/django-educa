@@ -21,6 +21,7 @@ class ModuleOrderView(
                 ).update(
                     order=order,
                 )
+            print(self.request_json)
         return self.render_json_response({"saved": "OK"})
 
 
