@@ -33,7 +33,7 @@ INSTALLED_APPS = [
     "backend.apps.courses.apps.CoursesConfig",
     "backend.apps.accounts.apps.AccountsConfig",
     "backend.apps.homepage.apps.HomepageConfig",
-    "jazzmin",
+    "unfold",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
