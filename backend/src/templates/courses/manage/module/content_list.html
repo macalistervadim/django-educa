@@ -68,3 +68,23 @@
 {% endwith %}
 {% endblock %}
 
+{% block include_js %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html5sortable/0.13.3/html5sortable.min.js"></script>
+{% endblock include_js %}
+ 
+{% block domready %}
+  var options = {
+    method: 'POST',
+    node: 'same-origin'
+  }
+
+  const moduleOrderUrl = '{% url "courses:module_order" %}';
+
+  sortable("#modules", {
+    forcePlaceholderSize: true,
+    placeholderClass: "placeholder",
+  })
+{% endblock domready %}
+
+
+
