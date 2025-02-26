@@ -1,10 +1,11 @@
 from django.contrib import admin
+from unfold.admin import ModelAdmin, StackedInline
 
 from backend.apps.courses.models import Course, Module, Subject
 
 
 @admin.register(Subject)
-class SubjectAdmin(admin.ModelAdmin):
+class SubjectAdmin(ModelAdmin):
     list_display = [
         Subject.title.field.name,
         Subject.slug.field.name,
@@ -14,12 +15,12 @@ class SubjectAdmin(admin.ModelAdmin):
     }
 
 
-class ModuleInline(admin.StackedInline):
+class ModuleInline(StackedInline):
     model = Module
 
 
 @admin.register(Course)
-class CourseAdmin(admin.ModelAdmin):
+class CourseAdmin(ModelAdmin):
     list_display = [
         Course.title.field.name,
         Course.subject.field.name,
