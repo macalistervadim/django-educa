@@ -1,0 +1,42 @@
+services:
+  backend:
+    build:
+      context: ../../
+      dockerfile: infra/docker/Dockerfile
+    working_dir: /app/backend
+    volumes:
+      - ../../:/app
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+      DJANGO_DEBUG: ${DJANGO_DEBUG}
+    command: >
+      bash -c "
+        export PYTHONPATH=/app &&
+        poetry install --no-root &&
+        poetry run python manage.py migrate &&
+        poetry run python manage.py test
+      "
+    depends_on:
+      - database
+    networks:
+      - app_network
+
+  database:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5433:5432"
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge

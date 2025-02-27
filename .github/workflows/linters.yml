@@ -2,9 +2,15 @@ name: Linters
 
 on:
   push:
-    branches: [main]
+    branches:
+      - prod
+      - dev
+      - 'feature/*'
+      - 'fix/*'
   pull_request:
-    branches: [main]
+    branches:
+      - prod
+      - dev
 
 jobs:
   lint:
@@ -28,4 +34,4 @@ jobs:
         run: poetry run ruff check
 
       - name: Run MyPy
-        run: poetry run mypy src
+        run: poetry run mypy backend/apps
