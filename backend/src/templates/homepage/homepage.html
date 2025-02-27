@@ -1,52 +1,81 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-{% load static %}
 <link rel="stylesheet" href="{% static 'css/landing.css' %}">
-<section id="hero">
-    <div class="container">
-        <h1>Master New Skills Anytime, Anywhere</h1>
-        <p>Join thousands of learners and explore high-quality courses from industry experts.</p>
-        <a href="#" class="button primary">Browse Courses</a>
-    </div>
-</section>
 
-<section id="features">
-    <div class="container">
-        <div class="feature">
-            <h3>Expert Instructors</h3>
-            <p>Learn from industry professionals with real-world experience.</p>
-        </div>
-        <div class="feature">
-            <h3>Flexible Learning</h3>
-            <p>Study at your own pace, on any device, whenever it suits you.</p>
-        </div>
-        <div class="feature">
-            <h3>Certification</h3>
-            <p>Earn certificates to showcase your skills and boost your career.</p>
-        </div>
+<div class="landing-page">
+  <section id="hero">
+    <div class="overlay"></div>
+    <div class="hero-content container">
+      <h1>Unleash Your Potential</h1>
+      <p>Join Educa – the online platform that transforms passion into expertise. Learn from top industry professionals and unlock your future.</p>
+      <a href="{% url 'courses:course_list' %}" class="button primary">Discover Courses</a>
     </div>
-</section>
+  </section>
 
-<section id="testimonials">
+  <section id="features">
     <div class="container">
-        <h2>What Our Students Say</h2>
+      <h2>Why Choose Educa?</h2>
+      <div class="features-grid">
+        <div class="feature">
+          <i class="icon fas fa-chalkboard-teacher"></i>
+          <h3>Expert Instructors</h3>
+          <p>Learn from professionals who bring real-world insights to every lesson.</p>
+        </div>
+        <div class="feature">
+          <i class="icon fas fa-laptop-code"></i>
+          <h3>Interactive Learning</h3>
+          <p>Engage with hands-on projects and dynamic courses designed to boost your skills.</p>
+        </div>
+        <div class="feature">
+          <i class="icon fas fa-award"></i>
+          <h3>Certification</h3>
+          <p>Earn credentials that validate your expertise and propel your career forward.</p>
+        </div>
+        <div class="feature">
+          <i class="icon fas fa-clock"></i>
+          <h3>Flexible Schedule</h3>
+          <p>Study at your own pace, anytime and anywhere – learning that fits your life.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="parallax"></div>
+    <div class="about-content container">
+      <h2>About Educa</h2>
+      <p>Educa is a community of learners, innovators, and experts committed to personal and professional growth. We make top-quality education accessible for everyone.</p>
+    </div>
+  </section>
+
+  <section id="testimonials">
+    <div class="container">
+      <h2>What Our Students Say</h2>
+      <div class="testimonials-slider">
         <div class="testimonial">
-            <p>"Educa has completely transformed the way I learn. The courses are top-notch!"</p>
-            <h4>- Alex Johnson</h4>
+          <p>"Educa changed my life! The courses are engaging and the instructors truly care about your success."</p>
+          <h4>- Alex Johnson</h4>
         </div>
         <div class="testimonial">
-            <p>"Thanks to Educa, I got certified and landed my dream job. Highly recommend!"</p>
-            <h4>- Sarah Williams</h4>
+          <p>"Thanks to Educa, I upgraded my skills and landed my dream job. The hands-on projects are amazing."</p>
+          <h4>- Sarah Williams</h4>
         </div>
+        <div class="testimonial">
+          <p>"The flexibility and quality of the courses are unmatched. Learning has never been so exciting!"</p>
+          <h4>- Michael Smith</h4>
+        </div>
+      </div>
     </div>
-</section>
+  </section>
 
-<section id="cta">
+  <section id="cta">
     <div class="container">
-        <h2>Start Your Learning Journey Today</h2>
-        <p>Join thousands of students worldwide and unlock your potential.</p>
-        <a href="{% url 'accounts:login' %}" class="button primary">Get Started Now</a>
+      <h2>Start Your Journey Today</h2>
+      <p>Join thousands of students who are transforming their futures with Educa.</p>
+      <a href="{% url 'students:student_registration' %}" class="button primary">Get Started Now</a>
     </div>
-</section>
+  </section>
+</div>
 {% endblock %}

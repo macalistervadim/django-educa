@@ -71,11 +71,11 @@ This project is licensed under the MIT License. See the [LICENSE](LICENCE.md) fi
 
 **Home Page**
 
-[Home Page]
+![docs/images/main.png](docs/images/main.png)
 
 **Course Page**
 
-[Course Page]
+![docs/images/courses.png](docs/images/courses.png)
 
 ---
 

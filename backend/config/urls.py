@@ -7,6 +7,7 @@ urlpatterns = [
     path("", include("backend.apps.homepage.urls")),
     path("courses/", include("backend.apps.courses.urls")),
     path("accounts/", include("backend.apps.accounts.urls")),
+    path("students/", include("backend.apps.students.urls")),
     path("admin/", admin.site.urls),
 ]
 
