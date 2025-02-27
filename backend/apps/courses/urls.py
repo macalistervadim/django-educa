@@ -2,6 +2,8 @@ from django.urls import path
 
 from backend.apps.courses.views import (
     content_create_update,
+    course_detail,
+    course_list,
     manage_course,
     module_content_list,
     order_views,
@@ -66,4 +68,19 @@ urlpatterns = [
         order_views.ContentOrderView.as_view(),
         name="content_order",
     ),
+    path(
+        "",
+        course_list.CourseListView.as_view(),
+        name="course_list",
+    ),  # TODO: test
+    path(
+        "subject/<slug:subject>/",
+        course_list.CourseListView.as_view(),
+        name="course_list_subject",
+    ),  # TODO: test
+    path(
+        "<slug:slug>/",
+        course_detail.CourseDetailView.as_view(),
+        name="course_detail",
+    ),  # TODO: test
 ]
