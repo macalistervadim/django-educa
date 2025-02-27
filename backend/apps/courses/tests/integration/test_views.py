@@ -605,7 +605,8 @@ class TestModuleContentListView(TestCase):
 
         self.assertEqual(response.status_code, HTTPStatus.FOUND)
         self.assertRedirects(
-            response, f"{reverse('accounts:login')}?next={url}",
+            response,
+            f"{reverse('accounts:login')}?next={url}",
         )
 
     def test_get_request_not_owner(self) -> None:
@@ -622,3 +623,173 @@ class TestModuleContentListView(TestCase):
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
+
+
+class TestModuleOrderView(TestCase):
+    module1: c_models.Module
+    module2: c_models.Module
+    course: c_models.Course
+    subject: c_models.Subject
+    user: User
+
+    @classmethod
+    def setUpTestData(cls) -> None:
+        cls.user = User.objects.create_user(
+            username="test_user",
+            email="email@email.com",
+        )
+        cls.subject = c_models.Subject.objects.create(title="Python")
+        cls.course = c_models.Course.objects.create(
+            owner=cls.user,
+            subject=cls.subject,
+            title="Test Course",
+            slug="test-course",
+            overview="Test Overview",
+        )
+        cls.module1 = c_models.Module.objects.create(
+            course=cls.course,
+            title="Module 1",
+            description="Description 1",
+            order=1,
+        )
+        cls.module2 = c_models.Module.objects.create(
+            course=cls.course,
+            title="Module 2",
+            description="Description 2",
+            order=2,
+        )
+
+    def test_post_valid(self) -> None:
+        """Тестирование POST запроса к ModuleOrderView с валидными данными."""
+        url = reverse("courses:module_order")
+
+        self.client.force_login(self.user)
+        response = self.client.post(
+            url,
+            {
+                str(self.module1.pk): 2,
+                str(self.module2.pk): 1,
+            },
+            content_type="application/json",
+        )
+        self.module1.refresh_from_db()
+        self.module2.refresh_from_db()
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertEqual(self.module1.order, 2)
+        self.assertEqual(self.module2.order, 1)
+
+    def test_post_invalid(self) -> None:
+        """Тестирование POST запроса к ModuleOrderView
+        с невалидными данными."""
+        url = reverse("courses:module_order")
+
+        self.client.force_login(self.user)
+        response = self.client.post(
+            url,
+            {
+                str(self.module1.pk): 2,
+                str(self.module2.pk): 1,
+                "invalid": 3,
+            },
+            content_type="application/json",
+        )
+        self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
+
+        self.module1.refresh_from_db()
+        self.module2.refresh_from_db()
+        self.assertNotEqual(self.module1.order, 2)
+        self.assertNotEqual(self.module2.order, 1)
+
+
+class TestContentOrderView(TestCase):
+    owner_data: dict[str, str]
+    owner: User
+    subject_data: dict[str, str]
+    subject: c_models.Subject
+    course_data: dict[str, Any]
+    course: c_models.Course
+    module_data: dict[str, Any]
+    module: c_models.Module
+    text_data: dict[str, Any]
+    text_model: c_models.Text
+    text_content_type: ContentType
+    content1: c_models.Content
+    content2: c_models.Content
+
+    @classmethod
+    def setUpTestData(cls) -> None:
+        cls.owner_data = {
+            "username": "user",
+            "email": "user@mail.ru",
+        }
+        cls.owner = User.objects.create_user(**cls.owner_data)
+
+        cls.subject_data = {
+            "title": "Python Programming",
+            "slug": "python-programming",
+        }
+        cls.subject = c_models.Subject.objects.create(
+            **cls.subject_data,
+        )
+
+        cls.course_data = {
+            "owner": cls.owner,
+            "subject": cls.subject,
+            "title": "Python",
+            "slug": "python",
+            "overview": "A comprehensive Python course.",
+        }
+        cls.course = c_models.Course.objects.create(
+            **cls.course_data,
+        )
+
+        cls.module_data = {
+            "course": cls.course,
+            "title": "Math",
+            "description": "desc",
+        }
+        cls.module = c_models.Module.objects.create(
+            **cls.module_data,
+        )
+
+        cls.text_data = {
+            "owner": cls.owner,
+            "title": "Test Text",
+            "content": "Some content",
+        }
+        cls.text_model = c_models.Text.objects.create(
+            **cls.text_data,
+        )
+        cls.text_content_type = ContentType.objects.get_for_model(
+            c_models.Text,
+        )
+
+        cls.content1 = c_models.Content.objects.create(
+            module=cls.module,
+            content_type=cls.text_content_type,
+            object_id=cls.text_model.pk,
+        )
+        cls.content2 = c_models.Content.objects.create(
+            module=cls.module,
+            content_type=cls.text_content_type,
+            object_id=cls.text_model.pk,
+        )
+
+    def test_post_valid(self) -> None:
+        """Тестирование POST запроса к ContentOrderView с валидными данными."""
+        url = reverse("courses:content_order")
+
+        self.client.force_login(self.owner)
+        response = self.client.post(
+            url,
+            {
+                str(self.content1.pk): 2,
+                str(self.content2.pk): 1,
+            },
+            content_type="application/json",
+        )
+        self.content1.refresh_from_db()
+        self.content2.refresh_from_db()
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertEqual(self.content1.order, 2)
+        self.assertEqual(self.content2.order, 1)

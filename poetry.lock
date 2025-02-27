@@ -61,6 +61,21 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-braces"
+version = "1.16.0"
+description = "Reusable, generic mixins for Django"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "django_braces-1.16.0-py3-none-any.whl", hash = "sha256:1c7a83877a2ea0478f051049594dcec215f873f1aecdc4b3ee73121932bf01b4"},
+    {file = "django_braces-1.16.0.tar.gz", hash = "sha256:1de7c2ba92147fc265ec034880aa5f2a714a5d1f1c1280278ca1fdd6f2a08e03"},
+]
+
+[package.dependencies]
+Django = ">=2.2"
+
+[[package]]
 name = "django-cleanup"
 version = "9.0.0"
 description = "Deletes old files."
@@ -716,4 +731,4 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "76c1bcce4de8a52cbab5e776021752b3cedf2e82cdc0da1579dac6c0c163f30d"
+content-hash = "1319fbf7186b31bec0eeee15170a857fc99902948cbc13be6d27a41d078bcc05"

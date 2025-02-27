@@ -4,6 +4,7 @@ from backend.apps.courses.views import (
     content_create_update,
     manage_course,
     module_content_list,
+    order_views,
 )
 
 app_name = "courses"
@@ -54,5 +55,15 @@ urlpatterns = [
         "module/<int:module_id>/",
         module_content_list.ModuleContentListView.as_view(),
         name="module_content_list",
+    ),
+    path(
+        "module/order/",
+        order_views.ModuleOrderView.as_view(),
+        name="module_order",
+    ),
+    path(
+        "content/order/",
+        order_views.ContentOrderView.as_view(),
+        name="content_order",
     ),
 ]
