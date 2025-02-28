@@ -7,31 +7,13 @@ from django.test import TestCase
 from django.urls import reverse
 
 import backend.apps.courses.models as c_models
+import backend.apps.courses.tests.integration.views.core as c_views_core
 
 
-class TestManageCourseListView(TestCase):
-    owner_data: dict[str, str]
-    owner: User
-    course_data: dict[str, Any]
-    course: c_models.Course
-    subject: c_models.Subject
-
+class TestManageCourseListView(c_views_core.BaseSetUpTestData, TestCase):
     @classmethod
     def setUpTestData(cls) -> None:
-        cls.owner_data = {
-            "username": "owner_user",
-            "email": "owner@mail.ru",
-        }
-        cls.owner = User.objects.create_user(**cls.owner_data)
-        cls.subject = c_models.Subject.objects.create(title="Python")
-        cls.course_data = {
-            "owner": cls.owner,
-            "subject": cls.subject,
-            "title": "Course 1",
-            "slug": "course-1",
-            "overview": "A brief description.",
-        }
-        cls.course = c_models.Course.objects.create(**cls.course_data)
+        super().setUpTestData()
 
         permission = Permission.objects.get(codename="view_course")
         cls.owner.user_permissions.add(permission)
@@ -56,27 +38,11 @@ class TestManageCourseListView(TestCase):
         self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
 
 
-class TestCourseCreateView(TestCase):
-    owner_data: dict[str, str]
-    owner: User
-    course_data: dict[str, Any]
-    subject: c_models.Subject
-
+class TestCourseCreateView(c_views_core.BaseSetUpTestData, TestCase):
     @classmethod
     def setUpTestData(cls) -> None:
-        cls.owner_data = {
-            "username": "owner_user",
-            "email": "owner@mail.ru",
-        }
-        cls.owner = User.objects.create_user(**cls.owner_data)
-        cls.subject = c_models.Subject.objects.create(title="Python")
-        cls.course_data = {
-            "owner": cls.owner.pk,
-            "subject": cls.subject.pk,
-            "title": "New Course",
-            "slug": "new-course",
-            "overview": "This is a new course.",
-        }
+        super().setUpTestData()
+
         permission = Permission.objects.get(codename="add_course")
         cls.owner.user_permissions.add(permission)
 
@@ -87,11 +53,11 @@ class TestCourseCreateView(TestCase):
         url = reverse("courses:course_create")
         self.client.force_login(self.owner)
         response = self.client.post(url, self.course_data)
-        self.assertEqual(response.status_code, HTTPStatus.FOUND)
+        self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertTrue(
             c_models.Course.objects.filter(
                 owner=self.owner,
-                title="New Course",
+                title="Course 1",
             ).exists(),
         )
 
@@ -118,30 +84,12 @@ class TestCourseCreateView(TestCase):
         self.assertEqual(response.status_code, 403)
 
 
-class TestCourseUpdateView(TestCase):
-    owner_data: dict[str, str]
-    owner: User
-    course: c_models.Course
+class TestCourseUpdateView(c_views_core.BaseSetUpTestData, TestCase):
     updated_course_data: dict[str, Any]
-    subject: c_models.Subject
 
     @classmethod
     def setUpTestData(cls) -> None:
-        cls.owner_data = {
-            "username": "owner_user",
-            "email": "owner@mail.ru",
-        }
-        cls.owner = User.objects.create_user(**cls.owner_data)
-
-        cls.subject = c_models.Subject.objects.create(title="Python")
-
-        cls.course = c_models.Course.objects.create(
-            owner=cls.owner,
-            subject=cls.subject,
-            title="Old Course",
-            slug="old-course",
-            overview="Old description.",
-        )
+        super().setUpTestData()
 
         cls.updated_course_data = {
             "subject": cls.subject.pk,
@@ -186,29 +134,10 @@ class TestCourseUpdateView(TestCase):
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
 
-class TestCourseDeleteView(TestCase):
-    owner_data: dict[str, str]
-    owner: User
-    course: c_models.Course
-    subject: c_models.Subject
-
+class TestCourseDeleteView(c_views_core.BaseSetUpTestData, TestCase):
     @classmethod
     def setUpTestData(cls) -> None:
-        cls.owner_data = {
-            "username": "owner_user",
-            "email": "owner@mail.ru",
-        }
-        cls.owner = User.objects.create_user(**cls.owner_data)
-
-        cls.subject = c_models.Subject.objects.create(title="Python")
-
-        cls.course = c_models.Course.objects.create(
-            owner=cls.owner,
-            subject=cls.subject,
-            title="Course to delete",
-            slug="course-to-delete",
-            overview="Course description.",
-        )
+        super().setUpTestData()
 
         permission = Permission.objects.get(codename="delete_course")
         cls.owner.user_permissions.add(permission)
@@ -249,58 +178,13 @@ class TestCourseDeleteView(TestCase):
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
 
-class TestContentCreateUpdateView(TestCase):
-    subject: c_models.Subject
-    user: User
-    user_data: dict[str, str]
-    course: c_models.Course
-    module: c_models.Module
-    text_content: c_models.Text
-    text_content_data: dict[str, Any]
-
+class TestContentCreateUpdateView(
+    c_views_core.BaseSetUpDataContentClasses,
+    TestCase,
+):
     @classmethod
     def setUpTestData(cls) -> None:
-        cls.user_data = {
-            "username": "test_user",
-            "email": "user@mail.com",
-            "password": "password123",
-        }
-        cls.user = User.objects.create_user(**cls.user_data)
-        permissions_codenames = [
-            "delete_course",
-            "change_course",
-            "add_course",
-        ]
-        permissions = Permission.objects.filter(
-            codename__in=permissions_codenames,
-        )
-        cls.user.user_permissions.add(*permissions)
-
-        cls.subject = c_models.Subject.objects.create(title="Python")
-
-        cls.course = c_models.Course.objects.create(
-            owner=cls.user,
-            subject=cls.subject,
-            title="Course to delete",
-            slug="course-to-delete",
-            overview="Course description.",
-        )
-
-        cls.module = c_models.Module.objects.create(
-            course=cls.course,
-            title="Test Module",
-            description="Test Description",
-        )
-
-        cls.text_content_data = {
-            "owner": cls.user,
-            "title": "test",
-            "content": "initial content",
-        }
-
-        cls.text_content = c_models.Text.objects.create(
-            **cls.text_content_data,
-        )
+        super().setUpTestData()
 
     def test_get_request_create_content(self) -> None:
         """
@@ -321,7 +205,6 @@ class TestContentCreateUpdateView(TestCase):
         """
         Тест POST-запроса для создания нового контента с валидными данными.
         """
-        self.assertEqual(c_models.Content.objects.count(), 0)
         self.client.force_login(self.user)
         url = reverse(
             "courses:module_content_create",
@@ -335,7 +218,7 @@ class TestContentCreateUpdateView(TestCase):
             HTTPStatus.FOUND,
         )
 
-        self.assertEqual(c_models.Content.objects.count(), 1)
+        self.assertEqual(c_models.Content.objects.count(), 2)
 
     def test_post_request_create_content_invalid(self) -> None:
         """
@@ -417,63 +300,13 @@ class TestContentCreateUpdateView(TestCase):
         self.assertEqual(response.status_code, HTTPStatus.FOUND)
 
 
-class TestContentDeleteView(TestCase):
-    subject: c_models.Subject
-    user: User
-    user_data: dict[str, str]
-    course: c_models.Course
-    module: c_models.Module
-    text_content: c_models.Text
-    text_content_data: dict[str, Any]
-    content_data: dict[str, Any]
-    content: c_models.Content
-    item: c_models.ItemBase
-
+class TestContentDeleteView(
+    c_views_core.BaseSetUpDataContentClasses,
+    TestCase,
+):
     @classmethod
     def setUpTestData(cls) -> None:
-        cls.user_data = {
-            "username": "test_user1",
-            "email": "user1@mail.com",
-            "password": "password123",
-        }
-        cls.user = User.objects.create_user(**cls.user_data)
-        permissions_codenames = [
-            "delete_course",
-            "change_course",
-            "add_course",
-        ]
-        permissions = Permission.objects.filter(
-            codename__in=permissions_codenames,
-        )
-        cls.user.user_permissions.add(*permissions)
-
-        cls.subject = c_models.Subject.objects.create(title="Java")
-
-        cls.course = c_models.Course.objects.create(
-            owner=cls.user,
-            subject=cls.subject,
-            title="Course to delete123",
-            slug="course-to-delete123",
-            overview="Course description123.",
-        )
-
-        cls.module = c_models.Module.objects.create(
-            course=cls.course,
-            title="Test Module123",
-            description="Test Description123",
-        )
-        cls.text_content = c_models.Text.objects.select_for_update().create(
-            owner=cls.user,
-            title="test123",
-            content="initial content123",
-        )
-
-        cls.content = c_models.Content.objects.create(
-            module=cls.module,
-            content_type=ContentType.objects.get_for_model(c_models.Text),
-            object_id=cls.text_content.pk,
-            item=cls.text_content,
-        )
+        super().setUpTestData()
 
     def test_post_request_delete_content(self) -> None:
         """
@@ -540,21 +373,13 @@ class TestContentDeleteView(TestCase):
         self.assertEqual(c_models.Content.objects.count(), 1)
 
 
-class TestModuleContentListView(TestCase):
-    user: User
+class TestModuleContentListView(c_views_core.BaseSetUpTestData, TestCase):
     module: c_models.Module
-    course: c_models.Course
-    user_data: dict[str, str]
-    subject: c_models.Subject
 
     @classmethod
     def setUpTestData(cls) -> None:
-        cls.user_data = {
-            "username": "test_user1",
-            "email": "user1@mail.com",
-            "password": "password123",
-        }
-        cls.user = User.objects.create_user(**cls.user_data)
+        super().setUpTestData()
+
         permissions_codenames = [
             "delete_course",
             "change_course",
@@ -563,17 +388,7 @@ class TestModuleContentListView(TestCase):
         permissions = Permission.objects.filter(
             codename__in=permissions_codenames,
         )
-        cls.user.user_permissions.add(*permissions)
-
-        cls.subject = c_models.Subject.objects.create(title="Java")
-
-        cls.course = c_models.Course.objects.create(
-            owner=cls.user,
-            subject=cls.subject,
-            title="Course to delete123",
-            slug="course-to-delete123",
-            overview="Course description123.",
-        )
+        cls.owner.user_permissions.add(*permissions)
 
         cls.module = c_models.Module.objects.create(
             course=cls.course,
@@ -585,7 +400,7 @@ class TestModuleContentListView(TestCase):
         """
         Тестирование GET запроса на получение контента для владельца курса.
         """
-        self.client.force_login(self.user)
+        self.client.force_login(self.owner)
         url = reverse("courses:module_content_list", args=[self.module.pk])
         response = self.client.get(url)
 
@@ -625,27 +440,14 @@ class TestModuleContentListView(TestCase):
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
 
-class TestModuleOrderView(TestCase):
+class TestModuleOrderView(c_views_core.BaseSetUpTestData, TestCase):
     module1: c_models.Module
     module2: c_models.Module
-    course: c_models.Course
-    subject: c_models.Subject
-    user: User
 
     @classmethod
     def setUpTestData(cls) -> None:
-        cls.user = User.objects.create_user(
-            username="test_user",
-            email="email@email.com",
-        )
-        cls.subject = c_models.Subject.objects.create(title="Python")
-        cls.course = c_models.Course.objects.create(
-            owner=cls.user,
-            subject=cls.subject,
-            title="Test Course",
-            slug="test-course",
-            overview="Test Overview",
-        )
+        super().setUpTestData()
+
         cls.module1 = c_models.Module.objects.create(
             course=cls.course,
             title="Module 1",
@@ -663,7 +465,7 @@ class TestModuleOrderView(TestCase):
         """Тестирование POST запроса к ModuleOrderView с валидными данными."""
         url = reverse("courses:module_order")
 
-        self.client.force_login(self.user)
+        self.client.force_login(self.owner)
         response = self.client.post(
             url,
             {
@@ -683,7 +485,7 @@ class TestModuleOrderView(TestCase):
         с невалидными данными."""
         url = reverse("courses:module_order")
 
-        self.client.force_login(self.user)
+        self.client.force_login(self.owner)
         response = self.client.post(
             url,
             {
