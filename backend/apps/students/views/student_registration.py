@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
 
 
-class StudentRegistrationView(CreateView):
+class StudentRegistrationView(CreateView):  # TODO: test
     template_name = "students/student/registration.html"
     form_class = UserCreationForm
     success_url = reverse_lazy("students:student_course_list")

@@ -7,7 +7,7 @@ from django.views.generic.base import TemplateResponseMixin
 from backend.apps.courses.models import Course, Subject
 
 
-class CourseListView(TemplateResponseMixin, View):  # TODO: test
+class CourseListView(TemplateResponseMixin, View):
     model = Course
     template_name = "courses/course/list.html"
 

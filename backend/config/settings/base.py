@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 
 import dotenv
+from django.urls import reverse_lazy
 
 dotenv.load_dotenv()
 
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_cleanup.apps.CleanupConfig",
+    "embed_video",
 ]
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -121,6 +123,8 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "src" / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+LOGIN_REDIRECT_URL = reverse_lazy("students:student_course_list")
 
 JAZZMIN_SETTINGS = {
     "site_title": "Educa Admin",

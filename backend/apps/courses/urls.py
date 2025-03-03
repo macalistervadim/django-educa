@@ -72,15 +72,15 @@ urlpatterns = [
         "",
         course_list.CourseListView.as_view(),
         name="course_list",
-    ),  # TODO: test
+    ),
     path(
         "subject/<slug:subject>/",
         course_list.CourseListView.as_view(),
         name="course_list_subject",
-    ),  # TODO: test
+    ),
     path(
         "<slug:slug>/",
         course_detail.CourseDetailView.as_view(),
         name="course_detail",
-    ),  # TODO: test
+    ),
 ]

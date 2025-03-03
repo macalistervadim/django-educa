@@ -18,6 +18,7 @@ services:
         poetry install --no-root &&
         poetry run ruff check &&
         poetry run mypy apps/ &&
+        poetry run python manage.py makemigrations &&
         poetry run python manage.py migrate &&
         poetry run python manage.py test &&
         poetry run python manage.py runserver 0.0.0.0:8000

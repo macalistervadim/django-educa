@@ -17,6 +17,7 @@ gunicorn = "^23.0.0"
 django-rest-framework = "^0.1.0"
 django-unfold = "^0.49.1"
 django-braces = "^1.16.0"
+django-embed-video = "^1.4.10"
 
 [tool.poetry.group.dev.dependencies]
 django-debug-toolbar = "^4.4.6"
