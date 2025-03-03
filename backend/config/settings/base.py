@@ -1,4 +1,5 @@
 import os
+import sys
 from pathlib import Path
 
 import dotenv
@@ -10,6 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
+TESTING = "test" in sys.argv
 
 def load_bool(key: str, default: bool) -> bool:
     return os.getenv(key, str(default)).lower() in (
@@ -44,6 +46,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django_cleanup.apps.CleanupConfig",
     "embed_video",
+    "redisboard",
 ]
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -152,4 +155,11 @@ JAZZMIN_SETTINGS = {
             "new_window": True,
         },
     ],
+}
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://redis:6379/0",
+    },
 }

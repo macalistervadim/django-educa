@@ -18,11 +18,6 @@ if settings.DEBUG:
         document_root=settings.MEDIA_ROOT,
     )
 
-    import debug_toolbar
+    from debug_toolbar.toolbar import debug_toolbar_urls
 
-    urlpatterns += [
-        path(
-            "__debug__/",
-            include(debug_toolbar.urls),
-        ),
-    ]
+    urlpatterns += debug_toolbar_urls()
