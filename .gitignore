@@ -187,3 +187,6 @@ src/media/
 
 # vscode
 .vscode/
+
+#staticfiles
+staticfiles/

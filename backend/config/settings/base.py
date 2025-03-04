@@ -13,6 +13,7 @@ SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 
 TESTING = "test" in sys.argv
 
+
 def load_bool(key: str, default: bool) -> bool:
     return os.getenv(key, str(default)).lower() in (
         "true",
@@ -47,6 +48,9 @@ INSTALLED_APPS = [
     "django_cleanup.apps.CleanupConfig",
     "embed_video",
     "redisboard",
+    "drf_spectacular",
+    "drf_spectacular_sidecar",
+    "rest_framework",
 ]
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -162,4 +166,18 @@ CACHES = {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
         "LOCATION": "redis://redis:6379/0",
     },
+}
+
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly",
+    ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Educa API",
+    "DESCRIPTION": "Documentation Educa API",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
 }
