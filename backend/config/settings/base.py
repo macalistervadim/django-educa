@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     "backend.apps.accounts.apps.AccountsConfig",
     "backend.apps.homepage.apps.HomepageConfig",
     "backend.apps.students.apps.StudentsConfig",
+    "daphne",
+    "channels",
     "backend.apps.chat.apps.ChatConfig",
     "unfold",
     "django.contrib.admin",
@@ -52,7 +54,6 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "drf_spectacular_sidecar",
     "rest_framework",
-    "channels",
 ]
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -155,4 +156,13 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "Documentation Educa API",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
+}
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis", 6379)],
+        },
+    },
 }

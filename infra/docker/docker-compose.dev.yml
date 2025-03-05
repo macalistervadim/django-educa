@@ -21,7 +21,7 @@ services:
         poetry run python manage.py makemigrations &&
         poetry run python manage.py migrate &&
         poetry run python manage.py test &&
-        poetry run python manage.py runserver 0.0.0.0:8000
+        poetry run daphne -b 0.0.0.0 -p 8000 backend.config.asgi:application
       "
     depends_on:
       - redis

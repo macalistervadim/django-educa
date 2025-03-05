@@ -11,7 +11,6 @@ settings_module = os.getenv(
     "backend.config.settings.development",
 )
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", settings_module)
-
 django_asgi_app = get_asgi_application()
 
 application = ProtocolTypeRouter(
