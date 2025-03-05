@@ -1,13 +1,17 @@
 import os
+import sys
 from pathlib import Path
 
 import dotenv
+from django.urls import reverse_lazy
 
 dotenv.load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
+
+TESTING = "test" in sys.argv
 
 
 def load_bool(key: str, default: bool) -> bool:
@@ -33,6 +37,7 @@ INSTALLED_APPS = [
     "backend.apps.courses.apps.CoursesConfig",
     "backend.apps.accounts.apps.AccountsConfig",
     "backend.apps.homepage.apps.HomepageConfig",
+    "backend.apps.students.apps.StudentsConfig",
     "unfold",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -41,6 +46,11 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_cleanup.apps.CleanupConfig",
+    "embed_video",
+    "redisboard",
+    "drf_spectacular",
+    "drf_spectacular_sidecar",
+    "rest_framework",
 ]
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -121,6 +131,8 @@ MEDIA_ROOT = BASE_DIR / "src" / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+LOGIN_REDIRECT_URL = reverse_lazy("students:student_course_list")
+
 JAZZMIN_SETTINGS = {
     "site_title": "Educa Admin",
     "site_header": "Edica Admin",
@@ -147,4 +159,25 @@ JAZZMIN_SETTINGS = {
             "new_window": True,
         },
     ],
+}
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://redis:6379/0",
+    },
+}
+
+REST_FRAMEWORK = {
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly",
+    ],
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Educa API",
+    "DESCRIPTION": "Documentation Educa API",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
 }

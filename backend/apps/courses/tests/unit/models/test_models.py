@@ -1,6 +1,5 @@
-import unittest
 from datetime import datetime
-from typing import Any, Generic, TypeVar
+from typing import Any
 
 import django.core.exceptions
 import django.shortcuts
@@ -11,6 +10,7 @@ from django.test import TestCase
 from django.utils import timezone
 
 import backend.apps.courses.models as c_models
+import backend.apps.courses.tests.unit.models.core as core
 
 
 class TestsSubjectModel(TestCase):
@@ -69,43 +69,7 @@ class TestsSubjectModel(TestCase):
         )
 
 
-class BaseSetUpData(TestCase):  # TODO: вынести в файл
-    """
-    Базовый класс setUpData для моделей Course, Module
-    """
-
-    owner: User
-    subject: c_models.Subject
-    course: c_models.Course
-    owner_data: dict[str, str]
-    subject_data: dict[str, str]
-    course_data: dict[str, Any]
-
-    @classmethod
-    def setUpTestData(cls) -> None:
-        cls.owner_data = {
-            "username": "user",
-            "email": "user@mail.ru",
-        }
-        cls.owner = User.objects.create_user(**cls.owner_data)
-
-        cls.subject_data = {
-            "title": "Python Programming",
-            "slug": "python-programming",
-        }
-        cls.subject = c_models.Subject.objects.create(**cls.subject_data)
-
-        cls.course_data = {
-            "owner": cls.owner,
-            "subject": cls.subject,
-            "title": "Python",
-            "slug": "python",
-            "overview": "A comprehensive Python course.",
-        }
-        cls.course = c_models.Course.objects.create(**cls.course_data)
-
-
-class TestsCourseModel(BaseSetUpData):
+class TestsCourseModel(core.BaseSetUpData):
     def test_course_creation(self) -> None:
         """Тест создания объекта Course."""
         self.assertEqual(c_models.Course.objects.count(), 1)
@@ -187,7 +151,7 @@ class TestsCourseModel(BaseSetUpData):
         self.assertTrue(course.created <= timezone.now())
 
 
-class TestModuleModel(BaseSetUpData):
+class TestModuleModel(core.BaseSetUpData):
     module: c_models.Module
     module_data: dict[str, Any]
 
@@ -238,136 +202,13 @@ class TestModuleModel(BaseSetUpData):
         self.assertEqual(repr(self.module), expected_repr)
 
 
-T = TypeVar("T", bound="c_models.ItemBase")
-
-
-@unittest.skip(
-    "BaseContentTest is an abstract class and should not be run directly.",
-)
-class BaseContentTest(Generic[T], TestCase):  # TODO: вынести в файл
-    """
-    Базовый класс для моделей наследованных от ItemBase
-    """
-
-    owner: User
-    owner_data: dict[str, str]
-    model_data: dict[str, Any]
-    model_class: type[T]
-    additional_field: str | None = None
-    additional_value: Any = None
-    instance: T
-
-    class Meta:
-        abstract = True
-
-    @classmethod
-    def setUpTestData(cls) -> None:
-        cls.owner_data = {
-            "username": "user",
-            "email": "user@mail.ru",
-        }
-        cls.owner = User.objects.create_user(**cls.owner_data)
-
-        cls.model_data = {
-            "owner": cls.owner,
-            "title": "test",
-        }
-
-        if cls.additional_field and cls.additional_value:
-            cls.model_data[cls.additional_field] = cls.additional_value
-
-        cls.instance = cls.model_class.objects.create(**cls.model_data)
-
-    def test_common_fields(self) -> None:
-        """
-        Тест основных полей моделей
-        """
-        self.assertEqual(self.instance.owner, self.owner)
-        self.assertEqual(self.instance.title, self.model_data["title"])
-        self.assertIsInstance(self.instance.created, datetime)
-        self.assertIsInstance(self.instance.updated, datetime)
-
-    def test_additional_field(self) -> None:
-        """
-        Тест доп. полей - ImageField, FileField...
-        """
-        if self.additional_field and self.additional_value:
-            if isinstance(self.additional_value, SimpleUploadedFile):
-                if self.additional_value.name is not None:
-                    expected_file_name = self.additional_value.name.split("/")[
-                        -1
-                    ].split("_")[0]
-                else:
-                    self.fail(
-                        "additional_value.name is None, but expected a string",
-                    )
-
-                actual_file_name_attr = getattr(
-                    self.instance,
-                    self.additional_field,
-                ).name
-                if actual_file_name_attr is not None:
-                    actual_file_name = actual_file_name_attr.split("/")[
-                        -1
-                    ].split("_")[0]
-                else:
-                    self.fail(
-                        f"{self.additional_field}.name"
-                        f" is None, but expected a string",
-                    )
-
-                self.assertEqual(actual_file_name, expected_file_name)
-            elif isinstance(self.additional_value, str):
-                self.assertEqual(
-                    getattr(self.instance, self.additional_field),
-                    self.additional_value,
-                )
-            else:
-                self.fail(
-                    f"Unexpected type for additional_value: {
-                        type(self.additional_value).__name__
-                    }",
-                )
-
-    def test_str_method(self) -> None:
-        """
-        Тест метода __str__.
-        """
-        self.assertEqual(str(self.instance), self.model_data["title"])
-
-    def test_repr_method(self) -> None:
-        """
-        Тест метода __repr__.
-        """
-        additional_field_value = ""
-        if self.additional_field and self.additional_value:
-            if isinstance(self.additional_value, SimpleUploadedFile):
-                additional_field_value = f", {self.additional_field}={
-                    repr(getattr(self.instance, self.additional_field))
-                }"
-            else:
-                additional_field_value = f", {self.additional_field}={
-                    repr(getattr(self.instance, self.additional_field))
-                }"
-
-        correct_repr = (
-            f"{self.model_class.__name__}("
-            f"owner={repr(self.owner)}, "
-            f"title={repr(self.model_data['title'])}, "
-            f"created={repr(self.instance.created)}, "
-            f"updated={repr(self.instance.updated)}"
-            f"{additional_field_value})"
-        )
-        self.assertEqual(repr(self.instance), correct_repr)
-
-
-class TestTextModel(BaseContentTest):
+class TestTextModel(core.BaseContentTest):
     model_class = c_models.Text
     additional_field = "content"
     additional_value = "something"
 
 
-class TestFileModel(BaseContentTest):
+class TestFileModel(core.BaseContentTest):
     model_class = c_models.File
     additional_field = "file"
     additional_value = SimpleUploadedFile(
@@ -377,7 +218,7 @@ class TestFileModel(BaseContentTest):
     )
 
 
-class TestImageModel(BaseContentTest):
+class TestImageModel(core.BaseContentTest):
     model_class = c_models.Image
     additional_field = "file"
     additional_value = SimpleUploadedFile(
@@ -387,7 +228,7 @@ class TestImageModel(BaseContentTest):
     )
 
 
-class TestVideoModel(BaseContentTest):
+class TestVideoModel(core.BaseContentTest):
     model_class = c_models.Video
     additional_field = "url"
     additional_value = "https://example.com/video"

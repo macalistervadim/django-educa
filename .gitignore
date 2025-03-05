@@ -184,3 +184,9 @@ src/media/
 
 # ruff 
 .ruff_cache/
+
+# vscode
+.vscode/
+
+#staticfiles
+staticfiles/
