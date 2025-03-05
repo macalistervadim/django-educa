@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "backend.apps.accounts.apps.AccountsConfig",
     "backend.apps.homepage.apps.HomepageConfig",
     "backend.apps.students.apps.StudentsConfig",
+    "backend.apps.chat.apps.ChatConfig",
     "unfold",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -51,6 +52,7 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "drf_spectacular_sidecar",
     "rest_framework",
+    "channels",
 ]
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -81,6 +83,7 @@ TEMPLATES = [
 
 ROOT_URLCONF = "backend.config.urls"
 WSGI_APPLICATION = "backend.config.wsgi.application"
+ASGI_APPLICATION = "backend.config.asgi.application"
 
 DATABASES = {
     "default": {
@@ -132,34 +135,6 @@ MEDIA_ROOT = BASE_DIR / "src" / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 LOGIN_REDIRECT_URL = reverse_lazy("students:student_course_list")
-
-JAZZMIN_SETTINGS = {
-    "site_title": "Educa Admin",
-    "site_header": "Edica Admin",
-    "site_brand": "Educa",
-    "welcome_sign": "Добро пожаловать в Educa!",
-    "copyright": "Educa",
-    "show_sidebar": True,
-    "navigation_expanded": True,
-    "icons": {
-        "auth": "fas fa-users-cog",
-        "auth.user": "fas fa-user",
-        "auth.Group": "fas fa-users",
-    },
-    "topmenu_links": [
-        {
-            "name": "🏠 Главная",
-            "url": "admin:index",
-            "permissions": ["auth.view_user"],
-        },
-        {"name": "Курсы", "url": "/admin/courses/"},
-        {
-            "name": "💬 Поддержка",
-            "url": "https://github.com/macalistervadim/django-educa",
-            "new_window": True,
-        },
-    ],
-}
 
 CACHES = {
     "default": {
