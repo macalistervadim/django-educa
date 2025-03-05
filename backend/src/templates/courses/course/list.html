@@ -50,6 +50,9 @@
         </p>
       {% endwith %}
     {% endfor %}
+    <p>
+      <a href="{% url 'students:student_course_list' %}" class="button">View enrolled courses</a>
+    </p>
   </div>
 {% endblock content %}
 

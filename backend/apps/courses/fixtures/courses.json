@@ -1,0 +1,348 @@
+[
+{
+  "model": "courses.subject",
+  "pk": 1,
+  "fields": {
+    "title": "Mathematic",
+    "slug": "mathematic"
+  }
+},
+{
+  "model": "courses.subject",
+  "pk": 2,
+  "fields": {
+    "title": "English",
+    "slug": "english"
+  }
+},
+{
+  "model": "courses.subject",
+  "pk": 3,
+  "fields": {
+    "title": "Programming",
+    "slug": "programming"
+  }
+},
+{
+  "model": "courses.course",
+  "pk": 1,
+  "fields": {
+    "owner": 1,
+    "subject": 1,
+    "title": "Mathematic 1-4 classes",
+    "slug": "mathematic-1-4-classes",
+    "overview": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+    "created": "2025-03-05T07:20:36.246Z",
+    "students": [
+      1
+    ]
+  }
+},
+{
+  "model": "courses.course",
+  "pk": 2,
+  "fields": {
+    "owner": 1,
+    "subject": 3,
+    "title": "Junior Python Developer",
+    "slug": "junior-python-developer",
+    "overview": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+    "created": "2025-03-05T07:21:29.901Z",
+    "students": []
+  }
+},
+{
+  "model": "courses.course",
+  "pk": 3,
+  "fields": {
+    "owner": 1,
+    "subject": 2,
+    "title": "Basic English",
+    "slug": "basic-english",
+    "overview": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+    "created": "2025-03-05T07:21:58.139Z",
+    "students": [
+      1
+    ]
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 1,
+  "fields": {
+    "course": 1,
+    "title": "Start",
+    "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+    "order": 0
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 2,
+  "fields": {
+    "course": 1,
+    "title": "Middle",
+    "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+    "order": 1
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 3,
+  "fields": {
+    "course": 1,
+    "title": "End",
+    "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+    "order": 2
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 4,
+  "fields": {
+    "course": 2,
+    "title": "Functions",
+    "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+    "order": 0
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 5,
+  "fields": {
+    "course": 2,
+    "title": "ORM",
+    "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+    "order": 1
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 6,
+  "fields": {
+    "course": 2,
+    "title": "Django",
+    "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+    "order": 2
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 7,
+  "fields": {
+    "course": 3,
+    "title": "Start",
+    "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+    "order": 0
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 8,
+  "fields": {
+    "course": 3,
+    "title": "Middle",
+    "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+    "order": 1
+  }
+},
+{
+  "model": "courses.module",
+  "pk": 9,
+  "fields": {
+    "course": 3,
+    "title": "End",
+    "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+    "order": 2
+  }
+},
+{
+  "model": "courses.content",
+  "pk": 1,
+  "fields": {
+    "module": 1,
+    "content_type": 7,
+    "object_id": 1,
+    "order": 0
+  }
+},
+{
+  "model": "courses.content",
+  "pk": 2,
+  "fields": {
+    "module": 2,
+    "content_type": 7,
+    "object_id": 2,
+    "order": 0
+  }
+},
+{
+  "model": "courses.content",
+  "pk": 3,
+  "fields": {
+    "module": 3,
+    "content_type": 7,
+    "object_id": 3,
+    "order": 0
+  }
+},
+{
+  "model": "courses.content",
+  "pk": 4,
+  "fields": {
+    "module": 9,
+    "content_type": 7,
+    "object_id": 4,
+    "order": 0
+  }
+},
+{
+  "model": "courses.content",
+  "pk": 5,
+  "fields": {
+    "module": 8,
+    "content_type": 7,
+    "object_id": 5,
+    "order": 0
+  }
+},
+{
+  "model": "courses.content",
+  "pk": 6,
+  "fields": {
+    "module": 7,
+    "content_type": 7,
+    "object_id": 6,
+    "order": 0
+  }
+},
+{
+  "model": "courses.content",
+  "pk": 7,
+  "fields": {
+    "module": 4,
+    "content_type": 7,
+    "object_id": 7,
+    "order": 0
+  }
+},
+{
+  "model": "courses.content",
+  "pk": 8,
+  "fields": {
+    "module": 5,
+    "content_type": 7,
+    "object_id": 8,
+    "order": 0
+  }
+},
+{
+  "model": "courses.content",
+  "pk": 9,
+  "fields": {
+    "module": 6,
+    "content_type": 7,
+    "object_id": 9,
+    "order": 0
+  }
+},
+{
+  "model": "courses.text",
+  "pk": 1,
+  "fields": {
+    "owner": 1,
+    "title": "Start",
+    "created": "2025-03-05T07:23:44.204Z",
+    "updated": "2025-03-05T07:23:44.204Z",
+    "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+  }
+},
+{
+  "model": "courses.text",
+  "pk": 2,
+  "fields": {
+    "owner": 1,
+    "title": "Middle",
+    "created": "2025-03-05T07:23:53.575Z",
+    "updated": "2025-03-05T07:23:53.575Z",
+    "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+  }
+},
+{
+  "model": "courses.text",
+  "pk": 3,
+  "fields": {
+    "owner": 1,
+    "title": "End",
+    "created": "2025-03-05T07:23:57.796Z",
+    "updated": "2025-03-05T07:23:57.796Z",
+    "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+  }
+},
+{
+  "model": "courses.text",
+  "pk": 4,
+  "fields": {
+    "owner": 1,
+    "title": "End",
+    "created": "2025-03-05T07:24:21.302Z",
+    "updated": "2025-03-05T07:24:32.483Z",
+    "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+  }
+},
+{
+  "model": "courses.text",
+  "pk": 5,
+  "fields": {
+    "owner": 1,
+    "title": "Middle",
+    "created": "2025-03-05T07:24:38.476Z",
+    "updated": "2025-03-05T07:24:38.476Z",
+    "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+  }
+},
+{
+  "model": "courses.text",
+  "pk": 6,
+  "fields": {
+    "owner": 1,
+    "title": "Start",
+    "created": "2025-03-05T07:24:45.526Z",
+    "updated": "2025-03-05T07:24:45.526Z",
+    "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+  }
+},
+{
+  "model": "courses.text",
+  "pk": 7,
+  "fields": {
+    "owner": 1,
+    "title": "Functions",
+    "created": "2025-03-05T07:25:01.491Z",
+    "updated": "2025-03-05T07:25:01.491Z",
+    "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+  }
+},
+{
+  "model": "courses.text",
+  "pk": 8,
+  "fields": {
+    "owner": 1,
+    "title": "ORM",
+    "created": "2025-03-05T07:25:07.266Z",
+    "updated": "2025-03-05T07:25:07.266Z",
+    "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+  }
+},
+{
+  "model": "courses.text",
+  "pk": 9,
+  "fields": {
+    "owner": 1,
+    "title": "Django",
+    "created": "2025-03-05T07:25:13.590Z",
+    "updated": "2025-03-05T07:25:13.590Z",
+    "content": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book."
+  }
+}
+]
