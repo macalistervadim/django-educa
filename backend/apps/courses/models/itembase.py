@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from django.template.loader import render_to_string
 
 
 class ItemBase(models.Model):
@@ -25,6 +26,12 @@ class ItemBase(models.Model):
             f"title={self.title!r}, "
             f"created={self.created!r}, "
             f"updated={self.updated!r}"
+        )
+
+    def render(self) -> str:
+        return render_to_string(
+            f"courses/content/{self._meta.model_name}.html",
+            {"item": self},
         )
 
 

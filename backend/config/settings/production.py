@@ -35,6 +35,13 @@ CORS_ALLOW_HEADERS = [
     "cross-origin-opener-policy",
 ]
 
+
+DEBUG_TOOLBAR_CONFIG = {
+    "INTERCEPT_REDIRECTS": False,
+    "SHOW_TOOLBAR_CALLBACK": lambda request: False,
+    "IS_RUNNING_TESTS": False,
+}
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
