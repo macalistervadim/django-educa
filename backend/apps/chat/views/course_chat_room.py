@@ -4,7 +4,7 @@ from django.shortcuts import render
 
 
 @login_required
-def course_char_room(request: HttpRequest, course_id: int) -> HttpResponse:
+def course_chat_room(request: HttpRequest, course_id: int) -> HttpResponse:
     try:
         if not request.user.is_authenticated:
             return HttpResponseForbidden()
