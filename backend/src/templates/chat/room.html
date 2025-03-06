@@ -23,17 +23,24 @@
   const requestUser = JSON.parse(
     document.getElementById('request-user').textContent
   );
-  const url = 'ws://127.0.0.1:8000/ws/chat/room/' + courseId + '/';
-
+  const url = 'ws://' + window.location.host +
+              '/ws/chat/room/' + courseId + '/';
   const chatSocket = new WebSocket(url);
-  chatSocket.onopen = function(event) {
-    console.log('WebSocket connection established');
-  };
 
   chatSocket.onmessage = function(event) {
     const data = JSON.parse(event.data);
     const chat = document.getElementById('chat');
-    chat.innerHTML += '<div class="message">' + data.message + '</div>';
+
+    const dateOptions = {hour: 'numeric', minute: 'numeric', hour12: true};
+    const datetime = new Date(data.datetime).toLocaleString('en', dateOptions);
+    const isMe = data.user === requestUser;
+    const source = isMe ? 'me' : 'other';
+    const name = isMe ? 'Me' : data.user;
+
+    chat.innerHTML += '<div class="message ' + source + '">' +
+                      '<strong>' + name + '</strong> ' +
+                      '<span class="date">' + datetime + '</span><br>' +
+                      data.message + '</div>';
     chat.scrollTop = chat.scrollHeight;
   };
 
@@ -46,14 +53,10 @@
 
   submitButton.addEventListener('click', function(event) {
     const message = input.value;
-    if (message) {
-      if (chatSocket.readyState === WebSocket.OPEN) {
-        // отправить сообщение, если соединение открыто
-        chatSocket.send(JSON.stringify({'message': message}));
-      } else {
-        console.error('WebSocket is not open. Current state:', chatSocket.readyState);
-      }
-      // очистить поле ввода
+    if(message) {
+      // send message in JSON format
+      chatSocket.send(JSON.stringify({'message': message}));
+      // clear input
       input.value = '';
       input.focus();
     }
