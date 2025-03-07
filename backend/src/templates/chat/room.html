@@ -3,12 +3,32 @@
 {% block title %}Chat room for "{{ course.title }}"{% endblock %}
 
 {% block content %}
-  <div id="chat">
-  </div>
-  <div id="chat-input">
-    <input id="chat-message-input" type="text">
-    <input id="chat-message-submit" type="submit" value="Send">
-  </div>
+<section class="flex flex-col items-center justify-center w-full h-screen bg-gray-100 dark:bg-gray-900">
+    <div class="w-full max-w-3xl h-screen flex flex-col bg-white dark:bg-gray-800 shadow-lg rounded-lg">
+        <!-- Заголовок чата -->
+        <div class="p-4 bg-green-700 text-white font-semibold text-lg rounded-t-lg">
+            Chat Room - {{ course.title }}
+        </div>
+
+        <!-- Контейнер сообщений -->
+        <div id="chat" class="flex-1 overflow-auto p-4 space-y-4">
+            <!-- Сообщения появятся здесь -->
+        </div>
+
+        <!-- Поле ввода -->
+        <div class="p-4 bg-gray-200 dark:bg-gray-700 rounded-b-lg sticky bottom-0 w-full">
+            <div class="flex items-center space-x-2">
+                <input id="chat-message-input" 
+                       class="flex-1 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:outline-none" 
+                       placeholder="Write a message..." required>
+                <button id="chat-message-submit" 
+                        class="px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800">
+                    Send
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}
 
 {% block include_js %}
@@ -17,57 +37,58 @@
 {% endblock %}
 
 {% block domready %}
-  const courseId = JSON.parse(
-    document.getElementById('course-id').textContent
-  );
-  const requestUser = JSON.parse(
-    document.getElementById('request-user').textContent
-  );
-  const url = 'ws://' + window.location.host +
-              '/ws/chat/room/' + courseId + '/';
+  const courseId = JSON.parse(document.getElementById('course-id').textContent);
+  const requestUser = JSON.parse(document.getElementById('request-user').textContent);
+  const url = 'ws://' + window.location.host + '/ws/chat/room/' + courseId + '/';
   const chatSocket = new WebSocket(url);
+  const chat = document.getElementById('chat');
+  const input = document.getElementById('chat-message-input');
+  const submitButton = document.getElementById('chat-message-submit');
 
   chatSocket.onmessage = function(event) {
     const data = JSON.parse(event.data);
-    const chat = document.getElementById('chat');
-
-    const dateOptions = {hour: 'numeric', minute: 'numeric', hour12: true};
+    const dateOptions = { hour: 'numeric', minute: 'numeric', hour12: false };
     const datetime = new Date(data.datetime).toLocaleString('en', dateOptions);
     const isMe = data.user === requestUser;
-    const source = isMe ? 'me' : 'other';
-    const name = isMe ? 'Me' : data.user;
 
-    chat.innerHTML += '<div class="message ' + source + '">' +
-                      '<strong>' + name + '</strong> ' +
-                      '<span class="date">' + datetime + '</span><br>' +
-                      data.message + '</div>';
-    chat.scrollTop = chat.scrollHeight;
+    const messageElement = document.createElement('div');
+    messageElement.classList.add('p-3', 'rounded-lg', 'max-w-[80%]', 'break-words', 'shadow-md', 'w-fit');
+
+    if (isMe) {
+        messageElement.classList.add('bg-green-500', 'text-white', 'self-end', 'ml-auto');
+    } else {
+        messageElement.classList.add('bg-gray-300', 'dark:bg-gray-600', 'text-black', 'dark:text-white', 'self-start');
+    }
+
+
+    messageElement.innerHTML = `
+      <strong>${isMe ? 'Me' : data.user}</strong> 
+      <span class="text-xs opacity-75 ml-2">${datetime}</span><br>
+      ${data.message}
+    `;
+
+    chat.appendChild(messageElement);
+    chat.scrollTop = chat.scrollHeight; // Прокрутка вниз
   };
 
   chatSocket.onclose = function(event) {
     console.error('Chat socket closed unexpectedly');
   };
 
-  const input = document.getElementById('chat-message-input');
-  const submitButton = document.getElementById('chat-message-submit');
-
-  submitButton.addEventListener('click', function(event) {
-    const message = input.value;
-    if(message) {
-      // send message in JSON format
-      chatSocket.send(JSON.stringify({'message': message}));
-      // clear input
+  function sendMessage() {
+    const message = input.value.trim();
+    if (message) {
+      chatSocket.send(JSON.stringify({ 'message': message, 'user': requestUser, 'datetime': new Date().toISOString() }));
       input.value = '';
       input.focus();
     }
-  });
+  }
 
+  submitButton.addEventListener('click', sendMessage);
   input.addEventListener('keypress', function(event) {
     if (event.key === 'Enter') {
-      // cancel the default action, if needed
       event.preventDefault();
-      // trigger click event on button
-      submitButton.click();
+      sendMessage();
     }
   });
 

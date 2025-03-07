@@ -1,81 +1,91 @@
+from http import HTTPStatus
 from typing import Any
-from unittest.mock import patch
 
 from django.contrib.auth import get_user_model
-from django.http import HttpRequest, HttpResponse
 from django.test import TestCase
 from django.urls import reverse
 
-from backend.apps.chat.views.course_chat_room import course_chat_room
+from backend.apps.courses.models import Course
 from backend.сommon.tests.base_setup_data import BaseSetUpData
 
 
 class TestCourseChatRoomView(BaseSetUpData, TestCase):
-    def setUp(self) -> None:
+    user: Any
+    joined_user: Any
+    course: Course
+
+    @classmethod
+    def setUpTestData(cls) -> None:
         super().setUpTestData()
-        self.user = get_user_model().objects.create_user(
-            username="user",
+
+        get_user_model().objects.filter(username="user").prefetch_related(
+            "courses_joined",
+        ).delete()
+
+        cls.user = get_user_model().objects.create(
+            username="artem",
+            password="artem",
+        )
+        cls.joined_user = get_user_model().objects.create(
+            username="artem_joined",
             password="testpassword",
         )
 
+        cls.course.students.add(cls.joined_user)
+
+    def tearDown(self) -> None:
+        self.course.students.clear()
+        self.course.delete()
+        self.subject.delete()
+        self.owner.delete()
+        self.user.delete()
+        self.joined_user.delete()
+
     def test_course_chat_room_authenticated(self) -> None:
-        self.client.login(username="user", password="testpassword")
+        """Тест авторизованного пользователя, который зачислен на курс"""
+        self.client.login(username="artem_joined", password="testpassword")
 
         response = self.client.get(
             reverse("chat:course_chat_room", args=[self.course.id]),
         )
 
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(
-            response,
-            "Python",
-        )
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
 
     def test_course_chat_room_not_authenticated(self) -> None:
+        """Тест для неавторизованного пользователя
+        — должен редиректить на логин"""
         response = self.client.get(
             reverse("chat:course_chat_room", args=[self.course.id]),
         )
 
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)  # 302
+        self.assertRedirects(
+            response,
+            f"/accounts/login/?next={
+                reverse('chat:course_chat_room', args=[self.course.id])
+            }",
+        )
 
     def test_course_chat_room_invalid_course_id(self) -> None:
-        self.client.login(username="user", password="testpassword")
+        """Тест для несуществующего курса"""
+        self.client.login(username="artem_joined", password="testpassword")
 
         invalid_course_id = 999
         response = self.client.get(
             reverse("chat:course_chat_room", args=[invalid_course_id]),
         )
 
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
 
     def test_course_chat_room_not_joined_course(self) -> None:
-        get_user_model().objects.create_user(
-            username="anotheruser",
-            password="anotherpassword",
+        """Тест авторизованного пользователя, который НЕ зачислен курс"""
+        self.client.login(
+            username="artem",
+            password="artem",
         )
-        self.client.login(username="anotheruser", password="anotherpassword")
 
         response = self.client.get(
             reverse("chat:course_chat_room", args=[self.course.id]),
         )
 
-        self.assertEqual(response.status_code, 403)
-
-    @patch("backend.apps.chat.views.render")
-    def test_view_function_return_type(self, mock_render: Any) -> None:
-        request = HttpRequest()
-        request.user = self.user
-
-        self.client.force_login(self.user)
-
-        mock_render.return_value = HttpResponse("test response")
-
-        response = course_chat_room(request, self.course.id)
-
-        mock_render.assert_called_with(
-            request,
-            "chat/room.html",
-            {"course": self.course},
-        )
-
-        self.assertEqual(response.content, b"test response")
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)

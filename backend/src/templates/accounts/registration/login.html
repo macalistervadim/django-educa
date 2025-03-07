@@ -3,21 +3,75 @@
 {% block title %}Log-in{% endblock %}
 
 {% block content %}
-  <h1>Log-in</h1>
-  <div class="module">
-    
-    {% if form.errors %}
-      <p>Your username and passowrd didn't match. Please try again.</p>
-    {% else %}
-      <p>Please, use the following form to log-in:</p>
-    {% endif %}
-    <div class="login-form">
-      <form action="{% url 'accounts:login' %}" method="post">
-        {{ form.as_p }}
-        {% csrf_token %}
-        <input type="hidden" name="next" value="{{ next }}" />
-        <p><input type="submit" value="Log-in"></p>
-      </form>
-    </div>
+<section class="bg-gray-50 dark:bg-gray-900">
+  <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+      <div class="w-full max-w-md bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+          <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+              <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white mb-4">
+                  Sign in to your account
+              </h1>
+
+              <!-- Display errors above the form -->
+              {% if form.non_field_errors %}
+                  <div class="bg-red-100 border border-red-400 text-red-700 p-3 mb-4 rounded">
+                      <ul>
+                          {% for error in form.non_field_errors %}
+                              <li><strong>{{ error }}</strong></li>
+                          {% endfor %}
+                      </ul>
+                  </div>
+              {% endif %}
+
+              <form action="{% url 'accounts:login' %}" method="post" class="space-y-6">
+                  {% csrf_token %}
+                  <input type="hidden" name="next" value="{{ next }}" />
+
+                  <div class="space-y-4">
+                      <label for="id_username" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">Username</label>
+                      <input type="text" name="username" id="id_username" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Username" value="{{ form.username.value|default:'' }}" required>
+                      {% if form.username.errors %}
+                          <div class="text-red-600 text-sm mt-1">
+                              {% for error in form.username.errors %}
+                                  <p>{{ error }}</p>
+                              {% endfor %}
+                          </div>
+                      {% endif %}
+                  </div>
+
+                  <div class="space-y-4">
+                      <label for="id_password" class="block text-sm font-medium text-gray-900 dark:text-white mb-2">Password</label>
+                      <input type="password" name="password" id="id_password" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="••••••••" value="{{ form.password.value|default:'' }}" required>
+                      {% if form.password.errors %}
+                          <div class="text-red-600 text-sm mt-1">
+                              {% for error in form.password.errors %}
+                                  <p>{{ error }}</p>
+                              {% endfor %}
+                          </div>
+                      {% endif %}
+                  </div>
+
+                  <div class="flex items-center justify-between mt-4 mb-6">
+                      <div class="flex items-start">
+                          <div class="flex items-center h-5">
+                            <input checked id="green-checkbox" type="checkbox" value="" class="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded-sm focus:ring-green-500 dark:focus:ring-green-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                          </div>
+                          <div class="ml-3 text-sm">
+                            <label for="green-checkbox" class="text-gray-500 dark:text-gray-300">Remember me</label>
+                          </div>
+                      </div>
+                      <a href="#" class="text-sm font-medium text-green-600 hover:underline dark:text-green-500">Forgot password?</a>
+                  </div>
+
+                  <button type="submit" class="w-full text-white bg-green-600 hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-gray-700 dark:focus:ring-green-800 mb-4">
+                      Log-in
+                  </button>
+
+                  <p class="text-sm font-light text-gray-500 dark:text-gray-400 text-center">
+                      Don’t have an account yet? <a href="#" class="font-medium text-green-600 hover:underline dark:text-primary-500">Sign up</a>
+                  </p>
+              </form>
+          </div>
+      </div>
   </div>
+</section>
 {% endblock %}
