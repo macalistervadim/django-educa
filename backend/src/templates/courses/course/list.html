@@ -6,56 +6,52 @@
   {% else %}
     All courses
   {% endif %}
-{% endblock %}
+{% endblock title %}
 
 {% block content %}
-  <h1 class="text-3xl font-bold mb-6">
+  <h1>
     {% if subject %}
       {{ subject.title }} courses
     {% else %}
       All courses
     {% endif %}
   </h1>
-
-  <div class="mb-8">
-    <h3 class="text-xl font-semibold">Subjects</h3>
-    <ul id="modules" class="space-y-4 mt-4">
-      <li {% if not subject %}class="bg-teal-500 text-white p-3 rounded"{% endif %}>
-        <a href="{% url 'courses:course_list' %}" class="block">All subjects</a>
+  <div class="contents">
+    <h3>Subjects</h3>
+    <ul id="modules">
+      <li {% if not subject %}class="selected"{% endif %}>
+        <a href="{% url 'courses:course_list' %}"></a>
       </li>
       {% for s in subjects %}
-      <li {% if subject and s == subject %}class="bg-teal-500 text-white p-3 rounded"{% endif %}>
-        <a href="{% url 'courses:course_list_subject' s.slug %}" class="block">
-          {{ s.title }}
-          <br>
-          <span class="text-teal-300">
-            {{ s.total_courses }} course{{ s.total_courses|pluralize }}
-          </span>
-        </a>
-      </li>
+        <li {% if subject and s == subject %}class="selected"{% endif %}>
+          <a href="{% url 'courses:course_list_subject' s.slug %}">
+            {{ s.title }}
+            <br>
+            <span>
+              {{ s.total_courses }} course{{ s.total_courses|pluralize }}
+            </span>
+          </a>
+        </li>
       {% endfor %}
     </ul>
   </div>
-
-  <div class="space-y-6">
+  <div class="module">
     {% for course in courses %}
-    {% with subject=course.subject %}
-      <div class="p-6 bg-gray-800 rounded-lg shadow-lg">
-        <h3 class="text-2xl font-bold">
-          <a href="{% url 'courses:course_detail' course.slug %}" class="text-teal-500 hover:text-teal-700">
+      {% with subject=course.subject %}
+        <h3>
+          <a href="{% url 'courses:course_detail' course.slug %}">
             {{ course.title }}
           </a>
         </h3>
-        <p class="text-lg mt-2">
-          <a href="{% url 'courses:course_list_subject' subject.slug %}" class="text-teal-300 hover:text-teal-500">{{ subject }}</a> - 
-          {{ course.total_modules }} modules. Instructor: {{ course.owner.get_full_name }}
+        <p>
+          <a href="{% url 'courses:course_list_subject' subject.slug %}">{{ subject }}</a>.
+          {{ course.total_modules }} modules.
+          Instructor: {{ course.owner.get_full_name }}
         </p>
-      </div>
-    {% endwith %}
+      {% endwith %}
     {% endfor %}
-    
-    <p class="mt-8">
-      <a href="{% url 'students:student_course_list' %}" class="bg-teal-500 hover:bg-teal-700 text-white py-2 px-4 rounded">View enrolled courses</a>
+    <p>
+      <a href="{% url 'students:student_course_list' %}" class="button">View enrolled courses</a>
     </p>
   </div>
-{% endblock %}
+{% endblock content %}
