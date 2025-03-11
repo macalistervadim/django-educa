@@ -7,10 +7,13 @@ from django.test import TestCase
 from django.urls import reverse
 
 import backend.apps.courses.models as c_models
-import backend.apps.courses.tests.integration.views.core as c_views_core
+from backend.сommon.tests.base_setup_data import (
+    BaseSetUpData,
+    BaseSetUpDataContentClasses,
+)
 
 
-class TestManageCourseListView(c_views_core.BaseSetUpTestData, TestCase):
+class TestManageCourseListView(BaseSetUpData, TestCase):
     @classmethod
     def setUpTestData(cls) -> None:
         super().setUpTestData()
@@ -38,7 +41,7 @@ class TestManageCourseListView(c_views_core.BaseSetUpTestData, TestCase):
         self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
 
 
-class TestCourseCreateView(c_views_core.BaseSetUpTestData, TestCase):
+class TestCourseCreateView(BaseSetUpData, TestCase):
     @classmethod
     def setUpTestData(cls) -> None:
         super().setUpTestData()
@@ -57,7 +60,7 @@ class TestCourseCreateView(c_views_core.BaseSetUpTestData, TestCase):
         self.assertTrue(
             c_models.Course.objects.filter(
                 owner=self.owner,
-                title="Course 1",
+                title=self.course.title,
             ).exists(),
         )
 
@@ -84,7 +87,7 @@ class TestCourseCreateView(c_views_core.BaseSetUpTestData, TestCase):
         self.assertEqual(response.status_code, 403)
 
 
-class TestCourseUpdateView(c_views_core.BaseSetUpTestData, TestCase):
+class TestCourseUpdateView(BaseSetUpData, TestCase):
     updated_course_data: dict[str, Any]
 
     @classmethod
@@ -134,7 +137,7 @@ class TestCourseUpdateView(c_views_core.BaseSetUpTestData, TestCase):
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
 
-class TestCourseDeleteView(c_views_core.BaseSetUpTestData, TestCase):
+class TestCourseDeleteView(BaseSetUpData, TestCase):
     @classmethod
     def setUpTestData(cls) -> None:
         super().setUpTestData()
@@ -179,7 +182,7 @@ class TestCourseDeleteView(c_views_core.BaseSetUpTestData, TestCase):
 
 
 class TestContentCreateUpdateView(
-    c_views_core.BaseSetUpDataContentClasses,
+    BaseSetUpDataContentClasses,
     TestCase,
 ):
     @classmethod
@@ -301,7 +304,7 @@ class TestContentCreateUpdateView(
 
 
 class TestContentDeleteView(
-    c_views_core.BaseSetUpDataContentClasses,
+    BaseSetUpDataContentClasses,
     TestCase,
 ):
     @classmethod
@@ -373,7 +376,7 @@ class TestContentDeleteView(
         self.assertEqual(c_models.Content.objects.count(), 1)
 
 
-class TestModuleContentListView(c_views_core.BaseSetUpTestData, TestCase):
+class TestModuleContentListView(BaseSetUpData, TestCase):
     module: c_models.Module
 
     @classmethod
@@ -440,7 +443,7 @@ class TestModuleContentListView(c_views_core.BaseSetUpTestData, TestCase):
         self.assertEqual(response.status_code, HTTPStatus.FORBIDDEN)
 
 
-class TestModuleOrderView(c_views_core.BaseSetUpTestData, TestCase):
+class TestModuleOrderView(BaseSetUpData, TestCase):
     module1: c_models.Module
     module2: c_models.Module
 

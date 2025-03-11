@@ -10,7 +10,11 @@ from django.test import TestCase
 from django.utils import timezone
 
 import backend.apps.courses.models as c_models
-import backend.apps.courses.tests.unit.models.core as core
+from backend.сommon.tests.base_content_model_test import BaseContentTest
+from backend.сommon.tests.base_setup_data import (
+    BaseSetUpData,
+    BaseSetUpDataContentClasses,
+)
 
 
 class TestsSubjectModel(TestCase):
@@ -69,7 +73,7 @@ class TestsSubjectModel(TestCase):
         )
 
 
-class TestsCourseModel(core.BaseSetUpData):
+class TestsCourseModel(BaseSetUpData):
     def test_course_creation(self) -> None:
         """Тест создания объекта Course."""
         self.assertEqual(c_models.Course.objects.count(), 1)
@@ -151,7 +155,7 @@ class TestsCourseModel(core.BaseSetUpData):
         self.assertTrue(course.created <= timezone.now())
 
 
-class TestModuleModel(core.BaseSetUpData):
+class TestModuleModel(BaseSetUpData):
     module: c_models.Module
     module_data: dict[str, Any]
 
@@ -202,13 +206,13 @@ class TestModuleModel(core.BaseSetUpData):
         self.assertEqual(repr(self.module), expected_repr)
 
 
-class TestTextModel(core.BaseContentTest):
+class TestTextModel(BaseContentTest):
     model_class = c_models.Text
     additional_field = "content"
     additional_value = "something"
 
 
-class TestFileModel(core.BaseContentTest):
+class TestFileModel(BaseContentTest):
     model_class = c_models.File
     additional_field = "file"
     additional_value = SimpleUploadedFile(
@@ -218,7 +222,7 @@ class TestFileModel(core.BaseContentTest):
     )
 
 
-class TestImageModel(core.BaseContentTest):
+class TestImageModel(BaseContentTest):
     model_class = c_models.Image
     additional_field = "file"
     additional_value = SimpleUploadedFile(
@@ -228,78 +232,21 @@ class TestImageModel(core.BaseContentTest):
     )
 
 
-class TestVideoModel(core.BaseContentTest):
+class TestVideoModel(BaseContentTest):
     model_class = c_models.Video
     additional_field = "url"
     additional_value = "https://example.com/video"
 
 
-class TestContentModel(TestCase):
-    owner_data: dict[str, str]
-    owner: User
-    subject_data: dict[str, str]
-    subject: c_models.Subject
-    course_data: dict[str, Any]
-    course: c_models.Course
-    module_data: dict[str, Any]
-    module: c_models.Module
-    text_data: dict[str, Any]
-    text_model: c_models.Text
+class TestContentModel(BaseSetUpDataContentClasses, TestCase):
     text_content_type: ContentType
-    content: c_models.Content
 
     @classmethod
     def setUpTestData(cls) -> None:
-        cls.owner_data = {
-            "username": "user",
-            "email": "user@mail.ru",
-        }
-        cls.owner = User.objects.create_user(**cls.owner_data)
+        super().setUpTestData()
 
-        cls.subject_data = {
-            "title": "Python Programming",
-            "slug": "python-programming",
-        }
-        cls.subject = c_models.Subject.objects.create(
-            **cls.subject_data,
-        )
-
-        cls.course_data = {
-            "owner": cls.owner,
-            "subject": cls.subject,
-            "title": "Python",
-            "slug": "python",
-            "overview": "A comprehensive Python course.",
-        }
-        cls.course = c_models.Course.objects.create(
-            **cls.course_data,
-        )
-
-        cls.module_data = {
-            "course": cls.course,
-            "title": "Math",
-            "description": "desc",
-        }
-        cls.module = c_models.Module.objects.create(
-            **cls.module_data,
-        )
-
-        cls.text_data = {
-            "owner": cls.owner,
-            "title": "Test Text",
-            "content": "Some content",
-        }
-        cls.text_model = c_models.Text.objects.create(
-            **cls.text_data,
-        )
         cls.text_content_type = ContentType.objects.get_for_model(
             c_models.Text,
-        )
-
-        cls.content = c_models.Content.objects.create(
-            module=cls.module,
-            content_type=cls.text_content_type,
-            object_id=cls.text_model.pk,
         )
 
     def test_creation_content(self) -> None:
@@ -311,8 +258,8 @@ class TestContentModel(TestCase):
         if content is not None:
             self.assertEqual(content.module, self.module)
             self.assertEqual(content.content_type, self.text_content_type)
-            self.assertEqual(content.object_id, self.text_model.pk)
-            self.assertEqual(content.item, self.text_model)
+            self.assertEqual(content.object_id, self.text_content.pk)
+            self.assertEqual(content.item, self.text_content)
 
     def test_str_method(self) -> None:
         """
@@ -320,7 +267,7 @@ class TestContentModel(TestCase):
         """
         self.assertEqual(
             str(self.content),
-            f"{self.text_model.pk} - {self.text_model}",
+            f"{self.text_content.pk} - {self.text_content}",
         )
 
     def test_repr_method(self) -> None:
@@ -331,8 +278,8 @@ class TestContentModel(TestCase):
             f"Content("
             f"module={self.module!r}, "
             f"content_type={self.text_content_type!r}, "
-            f"object_id={self.text_model.pk}, "
-            f"item={self.text_model!r}, "
+            f"object_id={self.text_content.pk}, "
+            f"item={self.text_content!r}, "
             f"order={self.content.order!r})"
         )
         self.assertEqual(repr(self.content), expected_repr)
@@ -346,7 +293,7 @@ class TestContentModel(TestCase):
             content = c_models.Content(
                 module=self.module,
                 content_type=invalid_content_type,
-                object_id=self.text_model.pk,
+                object_id=self.text_content.pk,
             )
             content.full_clean()
 
@@ -361,7 +308,7 @@ class TestContentModel(TestCase):
         """
         Тест на связь через GenericForeignKey.
         """
-        self.assertEqual(self.content.item, self.text_model)
+        self.assertEqual(self.content.item, self.text_content)
 
     def test_delete_module_cascades(self) -> None:
         """
@@ -377,5 +324,5 @@ class TestContentModel(TestCase):
         """
         Тест на каскадное удаление при удалении связанного объекта.
         """
-        self.text_model.delete()
+        self.text_content.delete()
         self.assertEqual(c_models.Text.objects.count(), 0)
