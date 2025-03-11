@@ -4,11 +4,11 @@
 {% block title %}
 My courses
 {% endblock title %}
-    
+
 {% block content %}
   <h1>My courses</h1>
   <div class="module">
-    
+
     {% for courses in object_list %}
       <div class="course-info">
         <h3>{{ courses.title }}</h3>
@@ -29,4 +29,3 @@ My courses
     </p>
   </div>
 {% endblock content %}
-    
