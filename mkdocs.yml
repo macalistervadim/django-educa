@@ -62,3 +62,5 @@ markdown_extensions:
   - meta
   - toc:
       permalink: true
+
+site_dir: docs
