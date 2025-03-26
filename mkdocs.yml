@@ -4,6 +4,7 @@ site_author: macalistervadim
 
 repo_url: https://github.com/macalistervadim/django-educa
 repo_name: macalistervadim/django-educa
+site_url: https://macalistervadim.github.io/django-educa/
 
 # Здесь указываем, какие языки поддерживаются
 languages:
@@ -63,4 +64,3 @@ markdown_extensions:
   - toc:
       permalink: true
 
-site_dir: docs
