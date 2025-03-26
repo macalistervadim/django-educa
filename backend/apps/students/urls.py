@@ -13,30 +13,30 @@ urlpatterns = [
     path(
         "register/",
         student_registration.StudentRegistrationView.as_view(),
-        name="student_registration",  # TODO: test
+        name="student_registration",
     ),
     path(
         "enroll-course/",
         student_enroll_course.StudentEnrollCourseView.as_view(),
-        name="student_enroll_course",  # TODO: test
+        name="student_enroll_course",
     ),
     path(
         "courses/",
         student_course_view.StudentCourseListView.as_view(),
-        name="student_course_list",  # TODO: test
+        name="student_course_list",
     ),
     path(
         "course/<pk>/",
         cache_page(60 * 15)(
             student_course_view.StudentCourseDetailView.as_view(),
         ),
-        name="student_course_detail",  # TODO: test
+        name="student_course_detail",
     ),
     path(
         "course/<pk>/<module_id>/",
         cache_page(60 * 15)(
             student_course_view.StudentCourseDetailView.as_view(),
         ),
-        name="student_course_detail_module",  # TODO: test
+        name="student_course_detail_module",
     ),
 ]

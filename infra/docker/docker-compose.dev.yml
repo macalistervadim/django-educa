@@ -29,7 +29,7 @@ services:
       - database
 
   database:
-    image: postgres:13
+    image: postgres:13-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -41,7 +41,7 @@ services:
       - app_network
 
   redis:
-    image: redis:alpine
+    image: redis:7-alpine
     ports:
       - "6379:6379"
     networks:
