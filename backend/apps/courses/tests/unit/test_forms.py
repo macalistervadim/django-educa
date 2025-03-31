@@ -1,36 +1,17 @@
-from typing import Any
-
-from django.contrib.auth.models import User
 from django.forms import BaseInlineFormSet
 from django.test import TestCase
 
 import backend.apps.courses.forms as c_forms
 import backend.apps.courses.models as c_models
+from backend.сommon.tests.base_setup_data import BaseSetUpData
 
 
-class ModuleFormSetTest(TestCase):
-    module: c_models.Module
-    course: c_models.Course
-    owner: User
-    subject: c_models.Subject
+class ModuleFormSetTest(BaseSetUpData, TestCase):
     formset: type[BaseInlineFormSet]
-    course_data: dict[str, Any]
 
     @classmethod
     def setUpTestData(cls) -> None:
-        cls.owner = User.objects.create_user(
-            username="testuser",
-            password="testpass",
-        )
-        cls.subject = c_models.Subject.objects.create(title="Python")
-        cls.course_data = {
-            "owner": cls.owner,
-            "subject": cls.subject,
-            "title": "Course 1",
-            "slug": "course-1",
-            "overview": "A brief description.",
-        }
-        cls.course = c_models.Course.objects.create(**cls.course_data)
+        super().setUpTestData()
 
     def test_valid_formset(self) -> None:
         """

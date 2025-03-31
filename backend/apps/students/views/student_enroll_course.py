@@ -6,7 +6,7 @@ from django.views.generic.edit import FormView
 from backend.apps.students.forms import CourseEnrollForm
 
 
-class StudentEnrollCourseView(LoginRequiredMixin, FormView):   # TODO: test
+class StudentEnrollCourseView(LoginRequiredMixin, FormView):
     course = None
     form_class = CourseEnrollForm
 

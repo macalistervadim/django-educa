@@ -7,7 +7,7 @@ from django.views.generic.list import ListView
 from backend.apps.courses.models import Course
 
 
-class StudentCourseListView(ListView):  # TODO: test
+class StudentCourseListView(ListView):
     model = Course
     template_name = "students/course/list.html"
 
@@ -26,7 +26,7 @@ class StudentCourseListView(ListView):  # TODO: test
         return context
 
 
-class StudentCourseDetailView(DetailView):  # TODO: test
+class StudentCourseDetailView(DetailView):
     model = Course
     template_name = "students/course/detail.html"
 

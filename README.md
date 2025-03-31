@@ -69,13 +69,25 @@ This project is licensed under the MIT License. See the [LICENSE](LICENCE.md) fi
 
 ## Screenshots 📸
 
-**Home Page**
+**Home**
 
-![docs/images/main.png](docs/images/main.png)
+![docs/images/main_page.png](docs/images/main_page.png)
 
-**Course Page**
+**Chat**
 
-![docs/images/courses.png](docs/images/courses.png)
+![docs/images/chat.png](docs/images/chat.png)
+
+**View course**
+
+![docs/images/view_course.png](docs/images/view_course.png)
+
+**Manage course**
+
+![docs/images/manage_course.png](docs/images/manage_course.png)
+
+**Sign in**
+
+![docs/images/sign_in.png](docs/images/sign_in.png)
 
 ---
 

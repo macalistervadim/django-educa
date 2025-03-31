@@ -1,3 +1,5 @@
+from typing import Any
+
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -41,3 +43,7 @@ class Course(models.Model):
             f"overview={self.overview!r}, "
             f"created={self.created!r})"
         )
+
+    def delete(self, *args: Any, **kwargs: Any) -> tuple[int, dict[str, int]]:
+        self.students.clear()
+        return super().delete(*args, **kwargs)

@@ -1,11 +1,12 @@
 from base64 import b64encode
 
-from django.contrib.auth.models import User
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.test import APITestCase
+from rest_framework.response import Response
+from rest_framework.test import APIClient, APITestCase
 
-from backend.apps.courses.models import Course, Subject
+from backend.apps.courses.models import Subject
+from backend.сommon.tests.base_setup_data import BaseSetUpData
 
 
 class SubjectListViewTests(APITestCase):
@@ -23,38 +24,19 @@ class SubjectListViewTests(APITestCase):
         self.assertEqual(response.data[1]["title"], "Science")
 
 
-class CourseViewSetTests(APITestCase):
+class CourseViewSetTests(BaseSetUpData, APITestCase):
     @classmethod
     def setUpTestData(cls) -> None:
-        cls.owner_data = {
-            "username": "user",
-            "email": "user@mail.ru",
-            "password": "testpass",
-        }
-        cls.owner = User.objects.create_user(**cls.owner_data)
-
-        cls.subject_data = {
-            "title": "Python Programming",
-            "slug": "python-programming",
-        }
-        cls.subject = Subject.objects.create(**cls.subject_data)
-
-        cls.course_data = {
-            "owner": cls.owner,
-            "subject": cls.subject,
-            "title": "Python",
-            "slug": "python",
-            "overview": "A comprehensive Python course.",
-        }
-        cls.course = Course.objects.create(**cls.course_data)
+        super().setUpTestData()
+        cls.client = APIClient()
 
     def test_enroll_in_course(self) -> None:
         url = reverse("courses-enroll", args=[self.course.id])
 
-        credentials = b64encode(b"user:testpass").decode("utf-8")
-        self.client.credentials(HTTP_AUTHORIZATION=f"Basic {credentials}")
+        credentials = b64encode(b"user:testpassword").decode("utf-8")
+        self.client.defaults["HTTP_AUTHORIZATION"] = f"Basic {credentials}"
 
-        response = self.client.post(url)
+        response: Response = self.client.post(url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(self.course.students.filter(id=self.owner.id).exists())

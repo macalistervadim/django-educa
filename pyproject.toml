@@ -1,40 +1,47 @@
-[tool.poetry]
-name = "src"
+[project]
+name = "django-educa"
 version = "0.1.0"
-description = ""
-authors = ["macalistervadim <macalistervadim@ya.ru>"]
+description = "Add your description here"
 readme = "README.md"
+requires-python = ">=3.12, <3.13"
+license = "MIT"
 
-[tool.poetry.dependencies]
-python = "^3.12"
-django = "5.1.5"
-pillow = "^11.1.0"
-python-dotenv = "^1.0.1"
-psycopg2-binary = "^2.9.10"
-django-cleanup = "^9.0.0"
-django-cors-headers = "^4.6.0"
-gunicorn = "^23.0.0"
-django-rest-framework = "^0.1.0"
-django-unfold = "^0.49.1"
-django-braces = "^1.16.0"
-django-embed-video = "^1.4.10"
-django-debug-toolbar = "^4.4.6"
-redis = "^5.2.1"
-django-redisboard = "^8.4.0"
-djangorestframework = "^3.15.2"
-drf-spectacular = "^0.28.0"
-drf-spectacular-sidecar = "^2025.3.1"
+dependencies = [
+    "django ==5.1.5",
+    "pillow >=11.1.0",
+    "python-dotenv >=1.0.1",
+    "psycopg2-binary >=2.9.10",
+    "django-cleanup >=9.0.0",
+    "django-cors-headers >=4.6.0",
+    "gunicorn >=23.0.0",
+    "django-rest-framework >=0.1.0",
+    "django-unfold >=0.49.1",
+    "django-braces >=1.16.0",
+    "django-embed-video >=1.4.10",
+    "django-debug-toolbar >=4.4.6",
+    "redis >=5.2.1",
+    "django-redisboard >=8.4.0",
+    "djangorestframework >=3.15.2",
+    "drf-spectacular >=0.28.0",
+    "drf-spectacular-sidecar >=2025.3.1",
+    "channels >=4.2.0",
+    "daphne >=4.1.2",
+    "channels-redis >=4.2.1",
+    "mkdocs-material >=9.6.9",
+]
 
-[tool.poetry.group.dev.dependencies]
-django-debug-toolbar = "^4.4.6"
-mypy = "^1.14.1"
-django-stubs = "^5.1.1"
-ruff = "^0.9.4"
-pre-commit = "^4.1.0"
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.9.3",
+    "mypy>=1.15.0",
+    "pre-commit>=4.1.0",
+    "django-stubs>=5.1.3",
+    "django-debug-toolbar>=4.4.6",
+]
 
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[tool.setuptools]
+packages = ["backend"]
+
 
 [tool.ruff]
 exclude = [
@@ -45,7 +52,6 @@ exclude = [
 ]
 line-length = 79
 indent-width = 4
-
 [tool.ruff.lint]
 select = ["E", "W", "C", "F", "N", "COM", "I", "Q", "U", "N", "A", "M"]
 ignore = ["F405"]

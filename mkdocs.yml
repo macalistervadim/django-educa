@@ -1,0 +1,66 @@
+site_name: Django Educa Docs
+site_description: Documentation for Educa
+site_author: macalistervadim
+
+repo_url: https://github.com/macalistervadim/django-educa
+repo_name: macalistervadim/django-educa
+site_url: https://macalistervadim.github.io/django-educa/
+
+# Здесь указываем, какие языки поддерживаются
+languages:
+  - en
+  - ru
+
+theme:
+  name: material
+  language: en
+  # Включаем переводы интерфейса (будет использована возможность переключения языков)
+  i18n:
+    default_language: en
+    languages:
+      en: English
+      ru: Русский
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-night
+        name: Включить темную тему
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Включить светлую тему
+
+  features:
+    - navigation.instant
+    - navigation.sections
+    - navigation.tabs
+    - toc.integrate
+    - content.code.annotate
+    - content.tabs.link
+    - search.suggest
+    - search.highlight
+
+# Структура навигации для языков
+nav:
+  - Home:
+      - en: en/index.md
+      - ru: ru/index.md
+  - About:
+      - en: en/about.md
+      - ru: ru/about.md
+  - Installation:
+      - en: en/installation.md
+      - ru: ru/installation.md
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - footnotes
+  - meta
+  - toc:
+      permalink: true
+

@@ -8,9 +8,11 @@ import backend.apps.courses.models as c_models
 import backend.apps.courses.views.content_create_update as c_content_manage_views  # noqa: E501
 import backend.apps.courses.views.manage_course as c_manage_course_views
 import backend.apps.courses.views.module_content_list as c_content_list_views
+from backend.apps.courses.views import course_list
+from backend.сommon.tests.base_setup_data import BaseSetUpDataContentClasses
 
 
-class CoursesUrlsTests(TestCase):  # TODO: пофиксить, вынести в core общий код
+class CoursesUrlsTests(TestCase):
     owner: User
     owner_data: dict[str, str]
 
@@ -87,49 +89,10 @@ class CoursesUrlsTests(TestCase):  # TODO: пофиксить, вынести в
         self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
 
 
-class ModuleContentUrlsTests(TestCase):
-    user: User
-    module: c_models.Module
-    course: c_models.Course
-    user_data: dict[str, str]
-    subject: c_models.Subject
-
+class ModuleContentUrlsTests(BaseSetUpDataContentClasses, TestCase):
     @classmethod
     def setUpTestData(cls) -> None:
-        cls.user_data = {
-            "username": "test_user1",
-            "email": "user1@mail.com",
-            "password": "password123",
-        }
-        cls.user = User.objects.create_user(**cls.user_data)
-        permissions_codenames = [
-            "delete_course",
-            "change_course",
-            "add_course",
-        ]
-        permissions = Permission.objects.filter(
-            codename__in=permissions_codenames,
-        )
-        cls.user.user_permissions.add(*permissions)
-
-        cls.subject = c_models.Subject.objects.create(
-            title="Java",
-            slug="java",
-        )
-
-        cls.course = c_models.Course.objects.create(
-            owner=cls.user,
-            subject=cls.subject,
-            title="Course to delete123",
-            slug="course-to-delete123",
-            overview="Course description123.",
-        )
-
-        cls.module = c_models.Module.objects.create(
-            course=cls.course,
-            title="Test Module123",
-            description="Test Description123",
-        )
+        super().setUpTestData()
 
     def setUp(self) -> None:
         self.client.force_login(self.user)
@@ -187,43 +150,43 @@ class ModuleContentUrlsTests(TestCase):
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
 
-# class TestCourseListUrls(TestCase):  # FIXME
-#     def test_course_list_url(self) -> None:
-#         """
-#         Тест доступности GET запроса к урлу списка курсов
-#         """
-#         url = reverse("courses:course_list")
-#         self.assertEqual(url, reverse("courses:course_list"))
+class TestCourseListUrls(TestCase):
+    def test_course_list_url(self) -> None:
+        """
+        Тест доступности GET запроса к урлу списка курсов
+        """
+        url = reverse("courses:course_list")
+        self.assertEqual(url, reverse("courses:course_list"))
 
-#         resolved = resolve(url)
-#         self.assertEqual(
-#             resolved.func.__name__,
-#             course_list.CourseListView.as_view().__name__,
-#         )
+        resolved = resolve(url)
+        self.assertEqual(
+            resolved.func.__name__,
+            course_list.CourseListView.as_view().__name__,
+        )
 
-#         response = self.client.get(url)
-#         self.assertTemplateUsed(response, "courses/course/list.html")
+        response = self.client.get(url)
+        self.assertTemplateUsed(response, "courses/course/list.html")
 
-#     def test_course_list_url_with_subject(self) -> None:
-#         """
-#         Тест доступности GET запроса к урлу списка курсов с
-#         переданным subject
-#         """
-#         subject = c_models.Subject.objects.create(
-#             title="Test Subject",
-#             slug="test-subject",
-#         )
-#         url = reverse("courses:course_list_subject", args=[subject.slug])
-#         self.assertEqual(
-#             url,
-#             reverse("courses:course_list_subject", args=[subject.slug]),
-#         )
+    def test_course_list_url_with_subject(self) -> None:
+        """
+        Тест доступности GET запроса к урлу списка курсов с
+        переданным subject
+        """
+        subject = c_models.Subject.objects.create(
+            title="Test Subject",
+            slug="test-subject",
+        )
+        url = reverse("courses:course_list_subject", args=[subject.slug])
+        self.assertEqual(
+            url,
+            reverse("courses:course_list_subject", args=[subject.slug]),
+        )
 
-#         resolved = resolve(url)
-#         self.assertEqual(
-#             resolved.func.__name__,
-#             course_list.CourseListView.as_view().__name__,
-#         )
+        resolved = resolve(url)
+        self.assertEqual(
+            resolved.func.__name__,
+            course_list.CourseListView.as_view().__name__,
+        )
 
-#         response = self.client.get(url)
-#         self.assertTemplateUsed(response, "courses/course/list.html")
+        response = self.client.get(url)
+        self.assertTemplateUsed(response, "courses/course/list.html")

@@ -1,5 +1,4 @@
 import os
-import sys
 from pathlib import Path
 
 import dotenv
@@ -9,10 +8,7 @@ dotenv.load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
-
-TESTING = "test" in sys.argv
-
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "not-secret-key")
 
 def load_bool(key: str, default: bool) -> bool:
     return os.getenv(key, str(default)).lower() in (
@@ -38,6 +34,9 @@ INSTALLED_APPS = [
     "backend.apps.accounts.apps.AccountsConfig",
     "backend.apps.homepage.apps.HomepageConfig",
     "backend.apps.students.apps.StudentsConfig",
+    "daphne",
+    "channels",
+    "backend.apps.chat.apps.ChatConfig",
     "unfold",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -52,6 +51,7 @@ INSTALLED_APPS = [
     "drf_spectacular_sidecar",
     "rest_framework",
 ]
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -81,14 +81,15 @@ TEMPLATES = [
 
 ROOT_URLCONF = "backend.config.urls"
 WSGI_APPLICATION = "backend.config.wsgi.application"
+ASGI_APPLICATION = "backend.config.asgi.application"
 
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("POSTGRES_DB"),
-        "USER": os.getenv("POSTGRES_USER"),
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-        "HOST": os.getenv("POSTGRES_HOST", "database"),
+        "NAME": os.getenv("POSTGRES_DB", "educa"),
+        "USER": os.getenv("POSTGRES_USER", "postgres"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "pass123"),
+        "HOST": os.getenv("POSTGRES_HOST", "localhost"),
         "PORT": os.getenv("POSTGRES_PORT", "5432"),
     },
 }
@@ -133,34 +134,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 LOGIN_REDIRECT_URL = reverse_lazy("students:student_course_list")
 
-JAZZMIN_SETTINGS = {
-    "site_title": "Educa Admin",
-    "site_header": "Edica Admin",
-    "site_brand": "Educa",
-    "welcome_sign": "Добро пожаловать в Educa!",
-    "copyright": "Educa",
-    "show_sidebar": True,
-    "navigation_expanded": True,
-    "icons": {
-        "auth": "fas fa-users-cog",
-        "auth.user": "fas fa-user",
-        "auth.Group": "fas fa-users",
-    },
-    "topmenu_links": [
-        {
-            "name": "🏠 Главная",
-            "url": "admin:index",
-            "permissions": ["auth.view_user"],
-        },
-        {"name": "Курсы", "url": "/admin/courses/"},
-        {
-            "name": "💬 Поддержка",
-            "url": "https://github.com/macalistervadim/django-educa",
-            "new_window": True,
-        },
-    ],
-}
-
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
@@ -180,4 +153,13 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "Documentation Educa API",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
+}
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis", 6379)],
+        },
+    },
 }
