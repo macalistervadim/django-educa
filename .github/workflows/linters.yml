@@ -32,7 +32,7 @@ jobs:
           uv pip install -e ".[dev]"
 
       - name: Run Ruff
-        run: poetry run ruff check
+        run: uv run ruff check
 
       - name: Run MyPy
-        run: poetry run mypy backend/apps
+        run: uv run mypy backend/apps
