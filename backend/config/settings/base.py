@@ -1,5 +1,4 @@
 import os
-import sys
 from pathlib import Path
 
 import dotenv
@@ -9,10 +8,7 @@ dotenv.load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
-
-TESTING = "test" in sys.argv
-
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "not-secret-key")
 
 def load_bool(key: str, default: bool) -> bool:
     return os.getenv(key, str(default)).lower() in (
@@ -90,10 +86,10 @@ ASGI_APPLICATION = "backend.config.asgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("POSTGRES_DB"),
-        "USER": os.getenv("POSTGRES_USER"),
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD"),
-        "HOST": os.getenv("POSTGRES_HOST", "database"),
+        "NAME": os.getenv("POSTGRES_DB", "educa"),
+        "USER": os.getenv("POSTGRES_USER", "postgres"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "pass123"),
+        "HOST": os.getenv("POSTGRES_HOST", "localhost"),
         "PORT": os.getenv("POSTGRES_PORT", "5432"),
     },
 }

@@ -1,0 +1,20 @@
+services:
+  backend:
+    build:
+      context: ../../
+      dockerfile: infra/docker/Dockerfile
+    working_dir: /app/backend
+    volumes:
+      - ../../:/app
+    env_file:
+      - ../../.env
+    command: >
+      bash -c "
+        uv run python manage.py migrate &&
+        uv run python manage.py test
+      "
+
+
+networks:
+  app_network:
+    driver: bridge

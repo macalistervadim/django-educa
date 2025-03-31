@@ -20,7 +20,7 @@ INTERNAL_IPS = ["127.0.0.1", "localhost", "0.0.0.0", "host.docker.internal"]
 def show_toolbar(request: Any) -> Any:
     from django.conf import settings
 
-    return settings.DEBUG and not settings.TESTING
+    return settings.DEBUG
 
 
 DEBUG_TOOLBAR_CONFIG = {
