@@ -6,7 +6,6 @@ repo_url: https://github.com/macalistervadim/django-educa
 repo_name: macalistervadim/django-educa
 site_url: https://macalistervadim.github.io/django-educa/
 
-# Здесь указываем, какие языки поддерживаются
 languages:
   - en
   - ru
@@ -14,7 +13,6 @@ languages:
 theme:
   name: material
   language: en
-  # Включаем переводы интерфейса (будет использована возможность переключения языков)
   i18n:
     default_language: en
     languages:
@@ -26,13 +24,13 @@ theme:
       accent: indigo
       toggle:
         icon: material/weather-night
-        name: Включить темную тему
+        name: dark theme
     - scheme: slate
       primary: indigo
       accent: indigo
       toggle:
         icon: material/weather-sunny
-        name: Включить светлую тему
+        name: light theme
 
   features:
     - navigation.instant
@@ -44,14 +42,10 @@ theme:
     - search.suggest
     - search.highlight
 
-# Структура навигации для языков
 nav:
   - Home:
       - en: en/index.md
       - ru: ru/index.md
-  - About:
-      - en: en/about.md
-      - ru: ru/about.md
   - Installation:
       - en: en/installation.md
       - ru: ru/installation.md
