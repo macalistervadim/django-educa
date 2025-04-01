@@ -1,0 +1,6 @@
+services:
+  mkdocs:
+    build:
+      context: ../../
+      dockerfile: infra/docker/Dockerfile
+    command: ["sh", "-c", "mkdocs build"]
