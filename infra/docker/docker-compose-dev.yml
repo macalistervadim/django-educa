@@ -5,7 +5,8 @@ services:
       dockerfile: infra/docker/Dockerfile
     working_dir: /app/backend
     volumes:
-      - ../../:/app
+      - ../../backend:/app/backend
+      - ../../.env:/app/.env
     ports:
       - "8000:8000"
     env_file: ../../.env

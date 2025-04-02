@@ -20,7 +20,6 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-50 dark:bg-gray-800">
-  <!-- Обёртка для sticky footer -->
   <div class="min-h-screen flex flex-col">
     <header>
       <nav class="bg-gray-50 border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-gray-800">
@@ -57,7 +56,7 @@
               <div class="hidden justify-between items-center w-full lg:flex lg:w-auto lg:order-1" id="mobile-menu-2">
                   <ul class="flex flex-col mt-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0">
                       <li>
-                          <a href="/" class="block py-2 pr-4 pl-3 text-gray-800 hover:underline rounded lg:p-0 dark:text-gray-100" aria-current="page">
+                          <a href="{% url 'homepage:homepage' %}" class="block py-2 pr-4 pl-3 text-gray-800 hover:underline rounded lg:p-0 dark:text-gray-100" aria-current="page">
                             Home
                           </a>
                       </li>
@@ -74,6 +73,11 @@
                       <li>
                           <a href="#" class="block py-2 pr-4 pl-3 text-gray-800 hover:underline rounded lg:p-0 dark:text-gray-100">
                             Contact
+                          </a>
+                      </li>
+                      <li>
+                          <a href="{% url 'api-root' %}" class="block py-2 pr-4 pl-3 text-gray-800 hover:underline rounded lg:p-0 dark:text-gray-100">
+                            API
                           </a>
                       </li>
                   </ul>
@@ -94,16 +98,19 @@
         <p class="my-6 text-gray-500 dark:text-gray-400">Free open source online learning platform</p>
         <ul class="flex flex-wrap justify-center items-center mb-6 text-gray-800 dark:text-gray-100 space-x-4">
           <li>
-            <a href="#" class="hover:underline">Home</a>
+            <a href="{% url "homepage:homepage" %}" class="hover:underline">Home</a>
           </li>
           <li>
-            <a href="#" class="hover:underline">Courses</a>
+            <a href="{% url 'courses:course_list' %}" class="hover:underline">Courses</a>
           </li>
           <li>
             <a href="#" class="hover:underline">Feature</a>
           </li>
           <li>
             <a href="#" class="hover:underline">Contact</a>
+          </li>
+          <li>
+            <a href="{% url 'api-root' %}">API</a>
           </li>
         </ul>
         <span class="text-sm text-gray-500 sm:text-center dark:text-gray-400">
