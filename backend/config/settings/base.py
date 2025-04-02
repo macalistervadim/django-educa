@@ -30,11 +30,13 @@ def load_list(key: str, default: str | list) -> list:
 
 ALLOWED_HOSTS = load_list("DJANGO_ALLOWED_HOSTS", "*")
 
+
 INSTALLED_APPS = [
     "backend.apps.courses.apps.CoursesConfig",
     "backend.apps.accounts.apps.AccountsConfig",
     "backend.apps.homepage.apps.HomepageConfig",
     "backend.apps.students.apps.StudentsConfig",
+    "backend.apps.feedback.apps.FeedbackConfig",
     "daphne",
     "channels",
     "backend.apps.chat.apps.ChatConfig",
