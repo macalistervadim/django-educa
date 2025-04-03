@@ -229,13 +229,23 @@ LOGGING = {
         "file": {
             "level": "ERROR",
             "class": "logging.FileHandler",
-            "filename": "errors.log",
+            "filename": os.path.join(
+                BASE_DIR,
+                "logs",
+                "backend",
+                "errors.log",
+            ),
             "formatter": "verbose",
         },
         "rotating_file": {
             "level": "DEBUG",
             "class": "logging.handlers.RotatingFileHandler",
-            "filename": os.path.join(BASE_DIR, "django.log"),
+            "filename": os.path.join(
+                BASE_DIR,
+                "logs",
+                "backend",
+                "django.log",
+            ),
             "maxBytes": 1024 * 1024 * 5,  # 5MB
             "backupCount": 5,
             "formatter": "verbose",

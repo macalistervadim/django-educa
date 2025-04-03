@@ -1,45 +1,45 @@
-# 🚀 Launching the Suncov Project in Development Environment
+# 🚀 Запуск проекта Educa в среде разработки
 
-The process of launching the project is divided into two scenarios: without Docker and with Docker. Choose the appropriate option based on your preferences.
+Процесс запуска проекта разделен на два сценария: без Docker и с Docker. Выберите подходящий вариант в зависимости от ваших предпочтений.
 
-## 🚀 Launching the Project without Docker
+## 🚀 Запуск проекта без Docker
 
-### 1. Requirements
-Before starting the project, make sure you have the following tools installed:
+### 1. Требования
+Перед запуском проекта убедитесь, что у вас установлены следующие инструменты:
 
-- Python 3.12 or higher [Download Python](https://www.python.org/downloads/)
+- Python 3.12 или выше [Скачать Python](https://www.python.org/downloads/)
 
-### 2. Clone the Repository
-Clone the project using Git:
+### 2. Клонирование репозитория
+Клонируйте проект с помощью Git:
 
 ```bash
 git clone https://github.com/macalistervadim/django-educa
 cd django-educa
 ```
 
-### 3. Install Dependencies
-To install dependencies, use Poetry:
+### 3. Установка зависимостей
+Для установки зависимостей используйте Poetry:
 
 ```bash
 pip install poetry
 ```
-Now install all project dependencies:
+Теперь установите все зависимости проекта:
 
 ```bash
 poetry install
 ```
 
-### 4. Configure Environment Variables
-To ensure the project works correctly, configure the environment variables. To do this:
+### 4. Настройка переменных окружения
+Для корректной работы проекта настройте переменные окружения. Для этого:
 
-- Create a .env file in the root directory of the project.
-- Copy the variable values from .env.example to .env.
-- Use the settings from the .env file for development, and .env.prod for the production environment.
+- Создайте файл .env в корневой директории проекта.
+- Скопируйте значения переменных из .env.example в .env.
+- Используйте настройки из файла .env для разработки, а .env.prod — для продакшена.
 
-Make sure the .env file contains the correct parameters for database connection and other variables.
+Убедитесь, что файл .env содержит корректные параметры для подключения к базе данных и другие переменные.
 
-### 5. Configure the Database
-For local development, configure the database connection in the development.py file. If using SQLite, the settings will look like this:
+### 5. Настройка базы данных
+Для локальной разработки настройте подключение к базе данных в файле development.py. Если используется SQLite, настройки будут выглядеть так:
 
 ```python
 DATABASES = {
@@ -50,123 +50,123 @@ DATABASES = {
 }
 ```
 
-To use PostgreSQL, configure the connection by specifying the correct parameters in .env.
+Для использования PostgreSQL настройте подключение, указав правильные параметры в .env.
 
-### 6. Database Migrations
-After configuring the database, run the migrations:
+### 6. Миграции базы данных
+После настройки базы данных выполните миграции:
 
 ```bash
 poetry run python manage.py migrate
 ```
 
-This will create the necessary tables in the database.
+Это создаст необходимые таблицы в базе данных.
 
-### 7. Compile Messages (i18n)
-Compile translations using the command:
+### 7. Компиляция сообщений (i18n)
+Скомпилируйте переводы с помощью команды:
 
 ```bash
 poetry run python manage.py compilemessages
 ```
 
-### 8. Load Fixtures (Initial Data)
-To load fixtures (initial data), run the command:
+### 8. Загрузка фикстур (начальных данных)
+Для загрузки фикстур выполните команду:
 
 ```bash
 poetry run python manage.py loaddata backend/src/fixtures/data.json
 ```
 
-### 9. Launch the Project
-After completing the above steps, start the server:
+### 9. Запуск проекта
+После выполнения всех шагов запустите сервер:
 
 ```bash
 poetry run python manage.py runserver
 ```
 
-The project should now be accessible at: http://127.0.0.1:8000/
+Проект должен быть доступен по адресу: http://127.0.0.1:8000/
 
-## 🚀 Launching the Project with Docker
+## 🚀 Запуск проекта с Docker
 
-### 1. Requirements
-To launch the project using Docker, make sure you have the following tools installed:
+### 1. Требования
+Для запуска проекта с Docker убедитесь, что у вас установлены следующие инструменты:
 
-- Docker [Install Docker](https://docs.docker.com/get-started/)
+- Docker [Установить Docker](https://docs.docker.com/get-started/)
 
-### 2. Clone the Repository
-Clone the project using Git:
+### 2. Клонирование репозитория
+Клонируйте проект с помощью Git:
 
 ```bash
 git clone https://github.com/macalistervadim/django-educa
 cd django-educa
 ```
 
-### 3. Configure Environment Variables
-As with the non-Docker scenario, create a .env file and add the environment variables from .env.example. Depending on the mode (development or production), use the corresponding files: .env or .env.prod.
+### 3. Настройка переменных окружения
+Как и в сценарии без Docker, создайте файл .env и добавьте переменные окружения из .env.example. В зависимости от режима (разработка или продакшен) используйте соответствующие файлы: .env или .env.prod.
 
-### 4. Launch Containers
-For local launch, use the docker-compose.dev.yml file. This will create all necessary containers for development (including the database, server, and other services):
+### 4. Запуск контейнеров
+Для локального запуска используйте файл docker-compose.dev.yml. Это создаст все необходимые контейнеры для разработки (включая базу данных, сервер и другие сервисы):
 
 ```bash
 docker-compose -f infra/docker/docker-compose.dev.yml up
 ```
 
-For the production version, use the standard docker-compose.yml:
+Для продакшен-версии используйте стандартный docker-compose.yml:
 
 ```bash
 docker-compose -f infra/docker/docker-compose.yml up
 ```
 
-### 5. Database Migrations
-To apply migrations in the containers, run the following command:
+### 5. Миграции базы данных
+Чтобы применить миграции в контейнерах, выполните следующую команду:
 
 ```bash
 export PYTHONPATH=/app &&
 docker-compose exec backend poetry run python manage.py migrate
 ```
 
-This command will run the database migrations inside the container, connecting to PostgreSQL if configured in your .env.
+Эта команда выполнит миграции базы данных внутри контейнера, подключаясь к PostgreSQL, если он настроен в вашем .env.
 
-### 6. Compile Messages (i18n)
-Compile translations using the command:
+### 6. Компиляция сообщений (i18n)
+Скомпилируйте переводы с помощью команды:
 
 ```bash
 export PYTHONPATH=/app &&
 docker-compose exec backend poetry run python manage.py compilemessages
 ```
 
-### 7. Load Fixtures (Initial Data)
-To load fixtures, run the command:
+### 7. Загрузка фикстур (начальных данных)
+Для загрузки фикстур выполните команду:
 
 ```bash
 export PYTHONPATH=/app &&
 docker-compose exec backend poetry run python manage.py loaddata backend/src/fixtures/data.json
 ```
 
-### 8. Launch the Project
-After completing all settings and migrations, start the Django server:
+### 8. Запуск проекта
+После выполнения всех настроек и миграций запустите сервер Django:
 
 ```bash
 export PYTHONPATH=/app &&
 docker-compose exec backend poetry run python manage.py runserver
 ```
 
-The project will now be accessible at http://127.0.0.1:8000/.
+Проект будет доступен по адресу http://127.0.0.1:8000/.
 
-## Notes 📌
+## Заметки 📌
 
-To use the Django admin panel, use the following credentials:
+Для использования панели администратора Django используйте следующие учетные данные:
 
 ```python
-login: admin
-password: admin
+логин: admin
+пароль: admin
 ```
 
-If you encounter issues with dependencies or settings, ensure you follow the instructions in the .env file and have correctly configured all environment variables.
+Если вы столкнулись с проблемами с зависимостями или настройками, убедитесь, что вы следовали инструкциям в файле .env и правильно настроили все переменные окружения.
 
-Docker and Docker Compose allow you to quickly and easily launch the project in an isolated environment, avoiding conflicts with local dependencies.
+Docker и Docker Compose позволяют быстро и легко запустить проект в изолированной среде, избегая конфликтов с локальными зависимостями.
 
-## Additional Resources 📚
+## Дополнительные ресурсы 📚
 
-- [Django Documentation](https://docs.djangoproject.com/en/5.1/)
-- [DRF Documentation](https://www.django-rest-framework.org)
-- [Docker Documentation](https://docs.docker.com/get-started/)
-- [Docker Compose Documentation](https://docs.docker.com/compose/)
+- [Документация Django](https://docs.djangoproject.com/en/5.1/)
+- [Документация DRF](https://www.django-rest-framework.org)
+- [Документация Docker](https://docs.docker.com/get-started/)
+- [Документация Docker Compose](https://docs.docker.com/compose/)

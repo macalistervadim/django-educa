@@ -1,86 +1,86 @@
-# Добро пожаловать в документацию проекта Django Educa 🎓
+# Welcome to the Django Educa Project Documentation 🎓
 
 ![Django](https://img.shields.io/badge/Django-5-green)
 ![Python](https://img.shields.io/badge/Python|3.12-blue)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 ![Linters](https://github.com/macalistervadim/django-educa/actions/workflows/linters.yml/badge.svg)
 
-**Django Educa** - это образовательная платформа, созданная на Django. Она позволяет создавать курсы, модули и контент для обучения. Проект включает модели для управления курсами, модулями, текстовым, видео и файловым контентом.
+**Django Educa** is an educational platform built with Django. It allows you to create courses, modules, and learning content. The project includes models for managing courses, modules, text, video, and file-based content.
 
 ---
 
-## Возможности ✨
+## Features ✨
 
-- **Система управления контентом (CMS):** Мощная CMS для управления курсами, модулями и контентом.
-- **Админ-панель:** Встроенная админ-панель Django для удобного управления контентом.
-- **Создание курсов:** Создание и управление курсами с заголовками, описаниями и обзорами.
-- **Управление модулями:** Организация курсов в модули для структурированного обучения.
-- **Полиморфный контент:** Поддержка различных типов контента, включая текст, видео и файлы.
-- **Аутентификация пользователей:** Безопасная система аутентификации и авторизации пользователей.
-- **Интеграция с Docker:** Простая настройка и развертывание с использованием Docker.
-- **Автоматизация рабочего процесса:** Использование Poetry для управления зависимостями и автоматизации.
-- **Качество кода:** Интеграция с Black, Flake8 и MyPy для чистого и поддерживаемого кода.
-
----
-
-## Технологии ⚙️
-
-Проект разработан с использованием современных технологий:
-
-- **Django 5** — веб-фреймворк для Python, обеспечивающий быстрый старт и гибкость.
-- **Python 3.12** — основной язык программирования.
-- **PostgreSQL** — система управления базами данных для хранения информации.
-- **Docker** — для контейнеризации приложения и упрощения процесса развертывания.
-- **Poetry** — инструмент для управления зависимостями и упаковки Python проектов.
-- **Gunicorn** — высокопроизводительный WSGI сервер для запуска Django приложения в продакшене.
-- **Nginx** — веб-сервер для обработки запросов, проксирования их на Gunicorn и обеспечения безопасности с SSL.
+- **Content Management System (CMS):** A powerful CMS for managing courses, modules, and content.
+- **Admin Panel:** Built-in Django admin panel for convenient content management.
+- **Course Creation:** Create and manage courses with titles, descriptions, and overviews.
+- **Module Management:** Organize courses into modules for structured learning.
+- **Polymorphic Content:** Support for various content types, including text, video, and files.
+- **User Authentication:** Secure user authentication and authorization system.
+- **Docker Integration:** Easy setup and deployment using Docker.
+- **Workflow Automation:** Use Poetry for dependency management and automation.
+- **Code Quality:** Integration with Black, Flake8, and MyPy for clean and maintainable code.
 
 ---
 
-## Установка и настройка
+## Technologies ⚙️
 
-Для установки приложения и его запуска на вашем сервере, следуйте [инструкциям](installation.md).
+The project is developed using modern technologies:
+
+- **Django 5** — a web framework for Python that ensures a fast start and flexibility.
+- **Python 3.12** — the primary programming language.
+- **PostgreSQL** — a database management system for storing information.
+- **Docker** — for containerizing the application and simplifying the deployment process.
+- **Poetry** — a tool for dependency management and packaging Python projects.
+- **Gunicorn** — a high-performance WSGI server for running Django applications in production.
+- **Nginx** — a web server for handling requests, proxying them to Gunicorn, and ensuring security with SSL.
 
 ---
 
-## ER Диаграмма 📊
+## Installation and Setup
 
-Ниже представлена ER диаграмма базы данных проекта:
+To install and run the application on your server, follow the [instructions](installation.md).
+
+---
+
+## ER Diagram 📊
+
+Below is the ER diagram of the project's database:
 
 ![docs/ER.png](../ER.png)
 
 ---
 
-## Лицензия 📜
+## License 📜
 
-Этот проект распространяется под лицензией MIT. Подробнее см. в файле [LICENSE](../../LICENCE.md).
+This project is distributed under the MIT license. For more details, see the [LICENSE](../../LICENCE.md) file.
 
 ---
 
-## Скриншоты 📸
+## Screenshots 📸
 
-**Главная страница**
+**Homepage**
 
 ![docs/images/main_page.png](../images/main_page.png)
 
-**Чат**
+**Chat**
 
 ![docs/images/chat.png](../images/chat.png)
 
-**Просмотр курса**
+**Course View**
 
 ![docs/images/view_course.png](../images/view_course.png)
 
-**Управление курсом**
+**Course Management**
 
 ![docs/images/manage_course.png](../images/manage_course.png)
 
-**Вход в систему**
+**Sign In**
 
 ![docs/images/sign_in.png](../images/sign_in.png)
 
 ---
 
-## Благодарности 🙏
+## Acknowledgments 🙏
 
-Спасибо всем, кто поддерживает этот проект!
+Thank you to everyone who supports this project!

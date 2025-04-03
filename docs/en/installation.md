@@ -1,4 +1,4 @@
-# 🚀 Launching the Suncov Project in Development Environment
+# 🚀 Launching the Educa Project in Development Environment
 
 The process of launching the project is divided into two scenarios: without Docker and with Docker. Choose the appropriate option based on your preferences.
 
