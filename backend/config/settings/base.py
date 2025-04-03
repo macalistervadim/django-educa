@@ -47,12 +47,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django_cleanup.apps.CleanupConfig",
     "embed_video",
     "redisboard",
     "drf_spectacular",
     "drf_spectacular_sidecar",
     "rest_framework",
+    "social_django",
+    "django_cleanup.apps.CleanupConfig",
 ]
 
 MIDDLEWARE = [
@@ -166,6 +167,34 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+    "social_core.backends.google.GoogleOAuth2",
+    "social_core.backends.github.GithubOAuth2",
+)
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv(
+    "SOCIAL_AUTH_GOOGLE_OAUTH2_KEY",
+    "your_google_client_id",
+)
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv(
+    "SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET",
+    "your_google_client_secret",
+)
+
+SOCIAL_AUTH_GITHUB_KEY = os.getenv(
+    "SOCIAL_AUTH_GITHUB_KEY",
+    "your_github_client_id",
+)
+SOCIAL_AUTH_GITHUB_SECRET = os.getenv(
+    "SOCIAL_AUTH_GITHUB_SECRET",
+    "your_github_client_secret",
+)
+
+LOGOUT_REDIRECT_URL = "/"
+
+SOCIAL_AUTH_USER_MODEL = "auth.User"
 
 LOGGING = {
     "version": 1,

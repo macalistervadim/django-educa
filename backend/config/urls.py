@@ -17,6 +17,7 @@ urlpatterns = [
     path("api/", include("backend.api.v1.urls")),
     path("chat/", include("backend.apps.chat.urls")),
     path("feedback/", include("backend.apps.feedback.urls")),
+    path("auth/", include("social_django.urls", namespace="social")),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
         "api/schema/swagger-ui/",

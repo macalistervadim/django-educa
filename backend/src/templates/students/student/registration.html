@@ -73,6 +73,12 @@
                   <p class="text-sm font-light text-gray-500 dark:text-gray-400 text-center">
                       Already have an account? <a href="{% url 'accounts:login' %}" class="font-medium text-green-600 hover:underline dark:text-green-500">Sign in</a>
                   </p>
+                  <button type="button" onclick="window.location.href='{% url 'social:begin' 'google-oauth2' %}'" class="w-full text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+                    Sign up with Google
+                  </button>
+                  <button type="button" onclick="window.location.href='{% url 'social:begin' 'github' %}'" class="w-full text-white bg-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-800 dark:hover:bg-gray-900 dark:focus:ring-gray-700">
+                    Sign up with GitHub
+                  </button>
               </form>
           </div>
       </div>

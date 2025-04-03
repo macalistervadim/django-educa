@@ -28,6 +28,7 @@ dependencies = [
     "daphne >=4.1.2",
     "channels-redis >=4.2.1",
     "mkdocs-material >=9.6.9",
+    "social-auth-app-django>=5.4.3",
 ]
 
 [project.optional-dependencies]
