@@ -29,6 +29,7 @@ dependencies = [
     "channels-redis >=4.2.1",
     "mkdocs-material >=9.6.9",
     "social-auth-app-django>=5.4.3",
+    "hvac>=2.3.0",
 ]
 
 [project.optional-dependencies]

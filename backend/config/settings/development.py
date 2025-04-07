@@ -1,10 +1,6 @@
 from typing import Any
 
-import dotenv
-
 from backend.config.settings.base import *  # noqa: F403
-
-dotenv.load_dotenv()
 
 DEBUG = True
 

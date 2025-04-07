@@ -15,6 +15,27 @@ services:
     ports:
       - "6379:6379"
 
+  vault:
+    image: vault:1.13.0
+    cap_add:
+      - IPC_LOCK
+    ports:
+      - "8200:8200"
+    environment:
+      VAULT_LOG_LEVEL: "info"
+      VAULT_API_ADDR: "http://0.0.0.0:8200"
+      VAULT_ADDR: "http://127.0.0.1:8200"
+      VAULT_LOCAL_CONFIG: '{"storage": {"file": {"path": "/vault/file"}}, "listener": {"tcp": {"address": "0.0.0.0:8200", "tls_disable": true}}, "disable_mlock": true, "ui": true}'
+    volumes:
+      - vault_data:/vault/file
+    command: server
+    restart: unless-stopped
+        
+    
+
 volumes:
+  vault_data:
+      driver: local
   postgres_data:
     driver: local
+  

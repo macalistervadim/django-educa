@@ -1,14 +1,13 @@
 import os
 from pathlib import Path
 
-import dotenv
 from django.urls import reverse_lazy
 
-dotenv.load_dotenv()
+from backend.config.utils.vault_secrets import SecretsManager
+
+secrets = SecretsManager()
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "not-secret-key")
 
 
 def load_bool(key: str, default: bool) -> bool:
@@ -28,7 +27,15 @@ def load_list(key: str, default: str | list) -> list:
     ).split(",")
 
 
-ALLOWED_HOSTS = load_list("DJANGO_ALLOWED_HOSTS", "*")
+SECRET_KEY = secrets.get_secret(
+    "django",
+    "DJANGO_SECRET_KEY",
+    "fallback-secret",
+)
+
+ALLOWED_HOSTS = secrets.get_secret("django", "DJANGO_ALLOWED_HOSTS", "").split(
+    ",",
+)
 
 
 INSTALLED_APPS = [
@@ -90,11 +97,15 @@ ASGI_APPLICATION = "backend.config.asgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("POSTGRES_DB", "educa"),
-        "USER": os.getenv("POSTGRES_USER", "postgres"),
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "pass123"),
-        "HOST": os.getenv("POSTGRES_HOST", "localhost"),
-        "PORT": os.getenv("POSTGRES_PORT", "5432"),
+        "NAME": secrets.get_secret("django", "POSTGRES_DB", "educa"),
+        "USER": secrets.get_secret("django", "POSTGRES_USER", "postgres"),
+        "PASSWORD": secrets.get_secret(
+            "django",
+            "POSTGRES_PASSWORD",
+            "pass123",
+        ),
+        "HOST": secrets.get_secret("django", "POSTGRES_HOST", "database"),
+        "PORT": secrets.get_secret("django", "POSTGRES_PORT", "5432"),
     },
 }
 
@@ -174,22 +185,19 @@ AUTHENTICATION_BACKENDS = (
     "social_core.backends.github.GithubOAuth2",
 )
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv(
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = secrets.get_secret(
+    "django",
     "SOCIAL_AUTH_GOOGLE_OAUTH2_KEY",
-    "your_google_client_id",
 )
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv(
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = secrets.get_secret(
+    "django",
     "SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET",
-    "your_google_client_secret",
 )
 
-SOCIAL_AUTH_GITHUB_KEY = os.getenv(
-    "SOCIAL_AUTH_GITHUB_KEY",
-    "your_github_client_id",
-)
-SOCIAL_AUTH_GITHUB_SECRET = os.getenv(
+SOCIAL_AUTH_GITHUB_KEY = secrets.get_secret("django", "SOCIAL_AUTH_GITHUB_KEY")
+SOCIAL_AUTH_GITHUB_SECRET = secrets.get_secret(
+    "django",
     "SOCIAL_AUTH_GITHUB_SECRET",
-    "your_github_client_secret",
 )
 
 LOGOUT_REDIRECT_URL = "/"
