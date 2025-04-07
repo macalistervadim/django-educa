@@ -25,17 +25,42 @@ services:
       VAULT_LOG_LEVEL: "info"
       VAULT_API_ADDR: "http://0.0.0.0:8200"
       VAULT_ADDR: "http://127.0.0.1:8200"
-      VAULT_LOCAL_CONFIG: '{"storage": {"file": {"path": "/vault/file"}}, "listener": {"tcp": {"address": "0.0.0.0:8200", "tls_disable": true}}, "disable_mlock": true, "ui": true}'
+      VAULT_LOCAL_CONFIG: '{
+        "storage": {
+          "file": {
+            "path": "/vault/file"
+          }
+        },
+        "listener": {
+          "tcp": {
+            "address": "0.0.0.0:8200",
+            "tls_disable": true
+          }
+        },
+        "disable_mlock": true,
+        "ui": true,
+        "audit": {
+          "file": {
+            "path": "/vault/logs/audit.log",
+            "roll_size": "500MB",
+            "roll_duration": "24h",
+            "format": "json"
+          }
+        }
+      }'
     volumes:
       - vault_data:/vault/file
+      - vault_logs:/vault/logs
+      - ./logs/vault:/vault/logs
     command: server
     restart: unless-stopped
-        
     
 
 volumes:
   vault_data:
-      driver: local
+    driver: local
+  vault_logs: 
+    driver: local
   postgres_data:
     driver: local
   
