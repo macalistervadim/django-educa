@@ -60,10 +60,12 @@ INSTALLED_APPS = [
     "drf_spectacular_sidecar",
     "rest_framework",
     "social_django",
+    "django_prometheus",
     "django_cleanup.apps.CleanupConfig",
 ]
 
 MIDDLEWARE = [
+    "django_prometheus.middleware.PrometheusBeforeMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -71,6 +73,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django_prometheus.middleware.PrometheusAfterMiddleware",
 ]
 
 TEMPLATES_DIRS = BASE_DIR / "src" / "templates"
