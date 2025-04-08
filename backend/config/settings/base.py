@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "storages",
     "django.contrib.staticfiles",
     "embed_video",
     "redisboard",
@@ -141,12 +142,42 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR / "src" / "staticfiles"
+AWS_ACCESS_KEY_ID = "minioadmin"
+AWS_SECRET_ACCESS_KEY = "minioadmin"
+AWS_STORAGE_BUCKET_NAME = "django"
+AWS_LOGS_BUCKET_NAME = "logs"
+AWS_S3_ENDPOINT_URL = "http://s3:9000"
+AWS_S3_REGION_NAME = "us-east-1"
+AWS_S3_SIGNATURE_VERSION = "s3v4"
+AWS_QUERYSTRING_AUTH = False
+AWS_DEFAULT_ACL = None
+AWS_S3_VERIFY = False
+AWS_S3_USE_SSL = False
+AWS_S3_SECURE_URLS = False
+AWS_S3_FILE_OVERWRITE = False
+AWS_S3_OBJECT_PARAMETERS = {
+    "CacheControl": "max-age=86400",
+}
+
+AWS_S3_CUSTOM_DOMAIN = "localhost:9000/django"
+AWS_S3_URL_PROTOCOL = "http:"
+
+STORAGES = {
+    "default": {
+        "BACKEND": "backend.config.storage.MediaStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "backend.config.storage.StaticStorage",
+    },
+}
+
 STATICFILES_DIRS = [BASE_DIR / "src" / "static"]
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "src" / "media"
+STATIC_URL = f"http://localhost:9000/{AWS_STORAGE_BUCKET_NAME}/static/"
+MEDIA_URL = f"http://localhost:9000/{AWS_STORAGE_BUCKET_NAME}/media/"
+
+MEDIA_ROOT = None
+
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -223,6 +254,17 @@ LOGGING = {
             "{module} {message} {filename}:{lineno}",
             "style": "{",
         },
+        "json": {
+            "format": (
+                '{"timestamp": "%(asctime)s", '
+                '"level": "%(levelname)s", '
+                '"module": "%(module)s", '
+                '"message": "%(message)s", '
+                '"file": "%(pathname)s", '
+                '"line": %(lineno)d}'
+            ),
+            "datefmt": "%Y-%m-%d %H:%M:%S",
+        },
     },
     "handlers": {
         "console": {
@@ -259,10 +301,21 @@ LOGGING = {
             "backupCount": 5,
             "formatter": "verbose",
         },
+        "elastic": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": os.path.join(
+                BASE_DIR,
+                "logs",
+                "backend",
+                "django.log",
+            ),
+            "formatter": "json",
+        },
     },
     "loggers": {
         "django": {
-            "handlers": ["console", "rotating_file"],
+            "handlers": ["elastic"],
             "level": "INFO",  # Продакшн: INFO
             "propagate": True,
         },

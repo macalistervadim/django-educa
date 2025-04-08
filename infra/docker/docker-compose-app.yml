@@ -51,7 +51,7 @@ services:
     volumes:
       - vault_data:/vault/file
       - vault_logs:/vault/logs
-      - ./logs/vault:/vault/logs
+      - ../logs/vault:/vault/logs
     command: server
     restart: unless-stopped
     
@@ -70,8 +70,47 @@ services:
       - grafana_data:/var/lib/grafana
     depends_on:
       - prometheus
-    
+  
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.2
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
 
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.12.2
+    volumes:
+      - ../logstash/pipeline:/usr/share/logstash/pipeline
+      - ../../backend/logs/backend:/logs
+    depends_on:
+      - elasticsearch
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.12.2
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    depends_on:
+      - elasticsearch
+  
+  s3:
+    image: minio/minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"  
+  
 volumes:
   vault_data:
     driver: local
@@ -81,4 +120,9 @@ volumes:
     driver: local
   grafana_data:
     driver: local
-  
+  elasticsearch_data:
+    driver: local
+  logstash_data:
+    driver: local
+  minio_data:
+    driver: local

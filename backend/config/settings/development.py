@@ -35,9 +35,3 @@ CORS_ALLOWED_ORIGINS = load_list(
 )
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.dummy.DummyCache",
-    },
-}
