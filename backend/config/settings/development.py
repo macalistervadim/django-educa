@@ -27,11 +27,5 @@ DEBUG_TOOLBAR_CONFIG = {
 
 TEMPLATES[0]["OPTIONS"]["debug"] = True  # type: ignore
 
-INSTALLED_APPS += ["corsheaders"]
-MIDDLEWARE.insert(1, "corsheaders.middleware.CorsMiddleware")
-CORS_ALLOWED_ORIGINS = load_list(
-    "DJANGO_CORS_ALLOWED_ORIGINS",
-    ["http://localhost:3000"],
-)
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"

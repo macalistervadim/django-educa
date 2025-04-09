@@ -6,3 +6,8 @@ scrape_configs:
     static_configs:
       - targets: ['backend:8000']
     metrics_path: '/metrics/'
+
+  - job_name: 'minio'
+    metrics_path: '/minio/v2/metrics/cluster'
+    static_configs:
+      - targets: ['s3:9000']

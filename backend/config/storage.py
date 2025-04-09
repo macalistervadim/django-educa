@@ -20,12 +20,3 @@ class MediaStorage(StorageBase):
     file_overwrite = False
     querystring_auth = False
     secure_urls = False
-
-
-class LogsStorage(StorageBase):
-    bucket_name = settings.AWS_LOGS_BUCKET_NAME
-    location = ""
-    default_acl = "private"
-    file_overwrite = True
-    querystring_auth = True
-    secure_urls = False

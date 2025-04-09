@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "backend.apps.feedback.apps.FeedbackConfig",
     "daphne",
     "channels",
+    "corsheaders",
     "backend.apps.chat.apps.ChatConfig",
     "unfold",
     "django.contrib.admin",
@@ -67,6 +68,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django_prometheus.middleware.PrometheusBeforeMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -145,7 +147,6 @@ USE_TZ = True
 AWS_ACCESS_KEY_ID = "minioadmin"
 AWS_SECRET_ACCESS_KEY = "minioadmin"
 AWS_STORAGE_BUCKET_NAME = "django"
-AWS_LOGS_BUCKET_NAME = "logs"
 AWS_S3_ENDPOINT_URL = "http://s3:9000"
 AWS_S3_REGION_NAME = "us-east-1"
 AWS_S3_SIGNATURE_VERSION = "s3v4"
@@ -154,13 +155,12 @@ AWS_DEFAULT_ACL = None
 AWS_S3_VERIFY = False
 AWS_S3_USE_SSL = False
 AWS_S3_SECURE_URLS = False
-AWS_S3_FILE_OVERWRITE = False
+AWS_S3_FILE_OVERWRITE = True
+AWS_S3_PATH_STYLE = True
+AWS_S3_ADDRESSING_STYLE = "path"
 AWS_S3_OBJECT_PARAMETERS = {
     "CacheControl": "max-age=86400",
 }
-
-AWS_S3_CUSTOM_DOMAIN = "localhost:9000/django"
-AWS_S3_URL_PROTOCOL = "http:"
 
 STORAGES = {
     "default": {
@@ -171,12 +171,19 @@ STORAGES = {
     },
 }
 
+STATICFILES_STORAGE = "backend.config.storage.StaticStorage"
+DEFAULT_FILE_STORAGE = "backend.config.storage.MediaStorage"
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+
 STATICFILES_DIRS = [BASE_DIR / "src" / "static"]
 
-STATIC_URL = f"http://localhost:9000/{AWS_STORAGE_BUCKET_NAME}/static/"
-MEDIA_URL = f"http://localhost:9000/{AWS_STORAGE_BUCKET_NAME}/media/"
+AWS_S3_CUSTOM_DOMAIN = "localhost"
+AWS_S3_URL_PROTOCOL = "http:"
 
-MEDIA_ROOT = None
+STATIC_URL = f"{AWS_S3_URL_PROTOCOL}//{AWS_S3_CUSTOM_DOMAIN}/static/"
+MEDIA_URL = f"{AWS_S3_URL_PROTOCOL}//{AWS_S3_CUSTOM_DOMAIN}/media/"
 
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
@@ -320,42 +327,42 @@ LOGGING = {
             "propagate": True,
         },
         "django.request": {
-            "handlers": ["file"],
+            "handlers": ["elastic"],
             "level": "ERROR",
             "propagate": False,
         },
         "django.security": {
-            "handlers": ["file"],
+            "handlers": ["elastic"],
             "level": "WARNING",
             "propagate": False,
         },
         "backend.apps.courses": {
-            "handlers": ["console", "rotating_file"],
+            "handlers": ["elastic"],
             "level": "DEBUG",
             "propagate": False,
         },
         "backend.apps.accounts": {
-            "handlers": ["console", "rotating_file"],
+            "handlers": ["elastic"],
             "level": "DEBUG",
             "propagate": False,
         },
         "backend.apps.homepage": {
-            "handlers": ["console", "rotating_file"],
+            "handlers": ["elastic"],
             "level": "DEBUG",
             "propagate": False,
         },
         "backend.apps.students": {
-            "handlers": ["console", "rotating_file"],
+            "handlers": ["elastic"],
             "level": "DEBUG",
             "propagate": False,
         },
         "django.db.backends": {
-            "handlers": ["console"],
+            "handlers": ["elastic"],
             "level": "ERROR",
             "propagate": False,
         },
         "django.middleware": {
-            "handlers": ["console"],
+            "handlers": ["elastic"],
             "level": "WARNING",
             "propagate": False,
         },
