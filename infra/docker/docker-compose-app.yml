@@ -127,7 +127,79 @@ services:
       - ../logs/nginx:/var/log/nginx 
     depends_on:
       - s3
+  
+  rabbitmq:
+    restart: always
+    image: "rabbitmq:3-management"
+    environment:
+      RABBITMQ_DEFAULT_USER: "rabbitmq"
+      RABBITMQ_DEFAULT_PASS: "rabbitmq"
+      RABBITMQ_DEFAULT_VHOST: "/"
+      RABBITMQ_DEFAULT_PERMISSIONS: ".* .* .*"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: [ "CMD", "rabbitmq-diagnostics", "-q", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     
+  celery_worker:
+    restart: always
+    build:
+      context: ../../
+      dockerfile: infra/docker/Dockerfile
+    working_dir: /app
+    volumes:
+      - ../../backend:/app/backend
+    environment:
+      DJANGO_SETTINGS_MODULE: "backend.config.settings.development"
+      CELERY_BROKER_URL: "amqp://rabbitmq:rabbitmq@rabbitmq:5672/"
+      CELERY_RESULT_BACKEND: "redis://redis:6379/0"
+    command: celery -A backend.config.celery worker --loglevel=info -Q email -E --concurrency=4
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_started
+
+  celery_beat:
+    restart: always
+    build:
+      context: ../../
+      dockerfile: infra/docker/Dockerfile
+    working_dir: /app
+    volumes:
+      - ../../backend:/app/backend
+    environment:
+      DJANGO_SETTINGS_MODULE: "backend.config.settings.development"
+      CELERY_BROKER_URL: "amqp://rabbitmq:rabbitmq@rabbitmq:5672/"
+      CELERY_RESULT_BACKEND: "redis://redis:6379/0"
+    command: celery -A backend.config.celery beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    depends_on:
+      - celery_worker
+
+  flower:
+    restart: always
+    build:
+      context: ../../
+      dockerfile: infra/docker/Dockerfile
+    working_dir: /app
+    volumes:
+      - ../../backend:/app/backend
+    environment:
+      DJANGO_SETTINGS_MODULE: "backend.config.settings.development"
+      CELERY_BROKER_URL: "amqp://rabbitmq:rabbitmq@rabbitmq:5672/"
+      CELERY_RESULT_BACKEND: "redis://redis:6379/0"
+    ports:
+      - "5556:5555"
+    command: celery -A backend.config.celery flower --broker_api="http://rabbitmq:15672/api/" --address=0.0.0.0 --basic_auth=rabbitmq:rabbitmq --persistent=True
+    depends_on:
+      - celery_worker
+      - celery_beat
+      - rabbitmq
+      
 volumes:
   vault_data:
   vault_logs: 

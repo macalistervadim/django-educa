@@ -1,4 +1,11 @@
-.venv
-venv
-__pycache__
-*.pyc
+.venv/
+venv/
+**/__pycache__/
+**/*.pyc
+.git/
+.gitignore
+.env
+.idea/
+.vscode/
+*.log
+logs/

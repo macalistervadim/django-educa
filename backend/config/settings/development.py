@@ -27,5 +27,8 @@ DEBUG_TOOLBAR_CONFIG = {
 
 TEMPLATES[0]["OPTIONS"]["debug"] = True  # type: ignore
 
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+

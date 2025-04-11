@@ -33,6 +33,10 @@ dependencies = [
     "django-prometheus>=2.3.1",
     "boto3>=1.37.29",
     "django-storages>=1.14.6",
+    "celery>=5.5.1",
+    "django-celery-results>=2.5.1",
+    "flower>=2.0.1",
+    "locust>=2.34.1",
 ]
 
 [project.optional-dependencies]
@@ -62,3 +66,8 @@ select = ["E", "W", "C", "F", "N", "COM", "I", "Q", "U", "N", "A", "M"]
 ignore = ["F405"]
 fixable = ["ALL"]
 unfixable = []
+
+[dependency-groups]
+dev = [
+    "locust>=2.34.1",
+]

@@ -14,13 +14,13 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 INSTALLED_APPS += ["corsheaders"]
 MIDDLEWARE.insert(0, "corsheaders.middleware.CorsMiddleware")
-CORS_ALLOWED_ORIGINS = load_list(
+CORS_ALLOWED_ORIGINS = secrets.get_secret(
+    "django",
     "DJANGO_CORS_ALLOWED_ORIGINS",
-    ["https://my-domain.ru"],
 )
-CSRF_TRUSTED_ORIGINS = load_list(
+CSRF_TRUSTED_ORIGINS = secrets.get_secret(
+    "django",
     "DJANGO_CSRF_TRUSTED_ORIGINS",
-    ["https://my-domain.ru"],
 )
 CORS_ALLOW_HEADERS = [
     "content-type",
@@ -31,9 +31,11 @@ CORS_ALLOW_HEADERS = [
     "cross-origin-opener-policy",
 ]
 
-
-DEBUG_TOOLBAR_CONFIG = {
-    "INTERCEPT_REDIRECTS": False,
-    "SHOW_TOOLBAR_CALLBACK": lambda request: False,
-    "IS_RUNNING_TESTS": False,
-}
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = secrets.get_secret("email", "EMAIL_HOST")
+EMAIL_PORT = secrets.get_secret("email", "EMAIL_PORT")
+EMAIL_USE_TLS = secrets.get_secret("email", "EMAIL_USE_TLS")
+EMAIL_USE_SSL = secrets.get_secret("email", "EMAIL_USE_SSL")
+EMAIL_HOST_USER = secrets.get_secret("email", "EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = secrets.get_secret("email", "EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = secrets.get_secret("email", "DEFAULT_FROM_EMAIL")
