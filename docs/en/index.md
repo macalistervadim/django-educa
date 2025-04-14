@@ -1,86 +1,53 @@
-# Welcome to the Django Educa Project Documentation 🎓
+# Django Educa - Modern Educational Platform
 
-![Django](https://img.shields.io/badge/Django-5-green)
-![Python](https://img.shields.io/badge/Python|3.12-blue)
-![License](https://img.shields.io/badge/License-MIT-yellow)
-![Linters](https://github.com/macalistervadim/django-educa/actions/workflows/linters.yml/badge.svg)
+## Project Overview
 
-**Django Educa** is an educational platform built with Django. It allows you to create courses, modules, and learning content. The project includes models for managing courses, modules, text, video, and file-based content.
+Django Educa is a modern educational platform built with Django 5 and Python 3.12. The platform provides a comprehensive solution for online learning with advanced content management capabilities and user interaction features.
 
----
+## Key Features
 
-## Features ✨
+### Architectural Solutions
+- Monolith with dedicated infrastructure services
+- Asynchronous communication via Celery and RabbitMQ
+- Multi-level caching using Redis
+- Fault-tolerant data storage in PostgreSQL
 
-- **Content Management System (CMS):** A powerful CMS for managing courses, modules, and content.
-- **Admin Panel:** Built-in Django admin panel for convenient content management.
-- **Course Creation:** Create and manage courses with titles, descriptions, and overviews.
-- **Module Management:** Organize courses into modules for structured learning.
-- **Polymorphic Content:** Support for various content types, including text, video, and files.
-- **User Authentication:** Secure user authentication and authorization system.
-- **Docker Integration:** Easy setup and deployment using Docker.
-- **Workflow Automation:** Use Poetry for dependency management and automation.
-- **Code Quality:** Integration with Black, Flake8, and MyPy for clean and maintainable code.
+### Technology Stack
+- **Backend**: Django 5, Python 3.12
+- **Data Storage**: PostgreSQL, Redis, MinIO (S3-compatible storage)
+- **Request Proxying**: Nginx
+- **Queues and Workers**: Celery, RabbitMQ
+- **Monitoring**: Prometheus, Grafana
+- **Logging**: ELK Stack (Elasticsearch, Logstash, Kibana)
+- **Security**: Vault (secrets management)
 
----
+### Functionality
+- Course Management System (CMS)
+- Support for various content types (text, video, files)
+- Interactive WebSocket-based chat
+- OAuth2 authentication (Google, GitHub)
+- REST API with automatic documentation
 
-## Technologies ⚙️
+## Minimum Requirements
 
-The project is developed using modern technologies:
+- Docker and Docker Compose
+- 4GB RAM
+- 40GB free disk space
+- Processor with virtualization support
 
-- **Django 5** — a web framework for Python that ensures a fast start and flexibility.
-- **Python 3.12** — the primary programming language.
-- **PostgreSQL** — a database management system for storing information.
-- **Docker** — for containerizing the application and simplifying the deployment process.
-- **Poetry** — a tool for dependency management and packaging Python projects.
-- **Gunicorn** — a high-performance WSGI server for running Django applications in production.
-- **Nginx** — a web server for handling requests, proxying them to Gunicorn, and ensuring security with SSL.
+## Quick Start
 
----
+See the [installation guide](./development/setup.md)
 
-## Installation and Setup
+## Architecture
+The platform is built on modern architectural patterns:
 
-To install and run the application on your server, follow the [instructions](installation.md).
+- Multi-layer architecture: separation into presentation, business logic, and data layers
+- Event-driven architecture: asynchronous event processing via Celery
+- Monolith with containerized infrastructure: main application is a Django monolith, surrounded by separate services (PostgreSQL, Redis, MinIO, Vault, etc.) deployed in separate Docker containers
+- API-first design: fully documented REST API
 
----
+## License
+This project is licensed under the MIT License. See the [LICENCE](../LICENCE.md) file for details.
 
-## ER Diagram 📊
-
-Below is the ER diagram of the project's database:
-
-![docs/ER.png](../ER.png)
-
----
-
-## License 📜
-
-This project is distributed under the MIT license. For more details, see the [LICENSE](../../LICENCE.md) file.
-
----
-
-## Screenshots 📸
-
-**Homepage**
-
-![docs/images/main_page.png](../images/main_page.png)
-
-**Chat**
-
-![docs/images/chat.png](../images/chat.png)
-
-**Course View**
-
-![docs/images/view_course.png](../images/view_course.png)
-
-**Course Management**
-
-![docs/images/manage_course.png](../images/manage_course.png)
-
-**Sign In**
-
-![docs/images/sign_in.png](../images/sign_in.png)
-
----
-
-## Acknowledgments 🙏
-
-Thank you to everyone who supports this project!
+<hr></hr><div> <sub>Built with ❤️ by Startsev Vadim</sub> </div>

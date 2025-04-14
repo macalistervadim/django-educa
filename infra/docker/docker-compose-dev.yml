@@ -10,4 +10,4 @@ services:
     ports:
       - "8000:8000"
     env_file: ../../.env
-    command: ["uv", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]
+    command: ["daphne", "-b", "0.0.0.0", "-p", "8000", "backend.config.asgi:application"]

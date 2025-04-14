@@ -164,22 +164,6 @@ services:
       redis:
         condition: service_started
 
-  celery_beat:
-    restart: always
-    build:
-      context: ../../
-      dockerfile: infra/docker/Dockerfile
-    working_dir: /app
-    volumes:
-      - ../../backend:/app/backend
-    environment:
-      DJANGO_SETTINGS_MODULE: "backend.config.settings.development"
-      CELERY_BROKER_URL: "amqp://rabbitmq:rabbitmq@rabbitmq:5672/"
-      CELERY_RESULT_BACKEND: "redis://redis:6379/0"
-    command: celery -A backend.config.celery beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
-    depends_on:
-      - celery_worker
-
   flower:
     restart: always
     build:
@@ -197,7 +181,6 @@ services:
     command: celery -A backend.config.celery flower --broker_api="http://rabbitmq:15672/api/" --address=0.0.0.0 --basic_auth=rabbitmq:rabbitmq --persistent=True
     depends_on:
       - celery_worker
-      - celery_beat
       - rabbitmq
       
 volumes:

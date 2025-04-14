@@ -1,13 +1,25 @@
-# Welcome to Django Educa
+# Django Educa
 
-This is the homepage for the Django Educa documentation.
+Современная образовательная платформа на Django 5 и Python 3.12
 
-**ru**
+<img src="https://img.shields.io/badge/Python-3.12-blue.svg" alt="Python"></img> <img src="https://img.shields.io/badge/Django-5.0-green.svg" alt="Django"></img> <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></img> <img src="https://img.shields.io/github/stars/macalistervadim/django-educa.svg" alt="GitHub Stars"></img>
 
-- [Установка проекта](./ru/installation.md)
-- [О проекте](./ru/index.md)
+Django Educa — это современная образовательная платформа, созданная для комфортного онлайн-обучения. Проект сочетает в себе передовые технологии и интуитивно понятный интерфейс.
 
-**en**
 
-- [Installation](./en/installation.md)
-- [About](./en/index.md)
+## 🚀 Основные возможности
+- 📚 Создание и управление онлайн-курсами
+- 👥 Система регистрации и авторизации пользователей
+- 📝 Интерактивные учебные материалы
+- 📊 Отслеживание прогресса обучения
+- 🎓 Система оценивания и сертификации
+
+## 📝 Лицензия
+Проект распространяется под MIT License
+
+
+## 👤 Автор
+Vadim Startsev
+
+GitHub: @macalistervadim
+<hr></hr><div> <sub>Built with ❤️ by Startsev Vadim</sub> </div> 

@@ -238,21 +238,27 @@ AUTHENTICATION_BACKENDS = (
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = secrets.get_secret(
     "django",
     "SOCIAL_AUTH_GOOGLE_OAUTH2_KEY",
+    "fallback",
 )
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = secrets.get_secret(
     "django",
     "SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET",
+    "fallback",
 )
 
-SOCIAL_AUTH_GITHUB_KEY = secrets.get_secret("oauth", "SOCIAL_AUTH_GITHUB_KEY")
+SOCIAL_AUTH_GITHUB_KEY = secrets.get_secret(
+    "oauth",
+    "SOCIAL_AUTH_GITHUB_KEY",
+    "fallback",
+)
 SOCIAL_AUTH_GITHUB_SECRET = secrets.get_secret(
     "oauth",
     "SOCIAL_AUTH_GITHUB_SECRET",
+    "fallback",
 )
 
 SOCIAL_AUTH_USER_MODEL = "auth.User"
 
-# Celery
 CELERY_BROKER_URL = secrets.get_secret(
     "celery",
     "CELERY_BROKER_URL",
@@ -330,7 +336,7 @@ LOGGING = {
                 "backend",
                 "django.log",
             ),
-            "maxBytes": 1024 * 1024 * 5,  # 5MB
+            "maxBytes": 1024 * 1024 * 5,
             "backupCount": 5,
             "formatter": "verbose",
         },
@@ -349,7 +355,7 @@ LOGGING = {
     "loggers": {
         "django": {
             "handlers": ["elastic"],
-            "level": "INFO",  # Продакшн: INFO
+            "level": "INFO",
             "propagate": True,
         },
         "django.request": {
