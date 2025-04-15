@@ -1,154 +1,152 @@
-# Устранение неполадок
+# Troubleshooting
 
-## Общие проблемы
+## Common Issues
 
-### Django не запускается
-1. Проверить логи контейнера:
+### Django does not start
+1. Check container logs:
 ```bash
 docker-compose -f infra/docker/docker-compose-dev.yml logs backend
 ```
 
-2. Проверить подключение к базе данных:
+2. Check database connection:
 ```bash
 docker-compose -f infra/docker/docker-compose-dev.yml exec backend python manage.py dbshell
 ```
 
-3. Проверить статус миграций:
+3. Check migration status:
 ```bash
 docker-compose -f infra/docker/docker-compose-dev.yml exec backend python manage.py showmigrations
 ```
 
-### Celery не обрабатывает задачи
-1. Проверить статус воркеров:
+### Celery does not process tasks
+1. Check worker status:
 ```bash
 docker-compose -f infra/docker/docker-compose-dev.yml exec backend celery -A config status
 ```
 
-2. Проверить подключение к RabbitMQ:
+2. Check RabbitMQ connection:
 ```bash
 docker-compose -f infra/docker/docker-compose-dev.yml logs rabbitmq
 ```
 
-### Проблемы с кэшированием
-1. Проверить подключение к Redis:
+### Caching issues
+1. Check Redis connection:
 ```bash
 docker-compose -f infra/docker/docker-compose-dev.yml exec redis redis-cli ping
 ```
 
-2. Очистить кэш:
+2. Clear cache:
 ```bash
 docker-compose -f infra/docker/docker-compose-dev.yml exec backend python manage.py clear_cache
 ```
 
-### Ошибки в логах
-1. Проверить логи в Kibana:
-- Открыть `http://localhost:5601`
-- Перейти в "Discover"
-- Выбрать индекс с логами приложения
+### Errors in logs
+1. Check logs in Kibana:
+- Open `http://localhost:5601`
+- Go to "Discover"
+- Select the application log index
 
-2. Проверить метрики в Grafana:
-- Открыть `http://localhost:3000`
-- Перейти в дашборд "Django Performance"
+2. Check metrics in Grafana:
+- Open `http://localhost:3000`
+- Go to the "Django Performance" dashboard
 
-### Проблемы с хранением файлов
-1. Проверить доступность MinIO:
+### File storage issues
+1. Check MinIO availability:
 ```bash
 curl http://localhost:9000/minio/health/live
 ```
 
-2. Проверить права доступа:
+2. Check file permissions:
 ```bash
 docker-compose -f infra/docker/docker-compose-dev.yml exec backend python manage.py collectstatic --dry-run
 ```
 
-## Частые ошибки и решения
+## Common Errors and Solutions
 
 ### ERR_CONNECTION_REFUSED
-1. Проверить статус Nginx:
+1. Check Nginx status:
 ```bash
 docker-compose -f infra/docker/docker-compose-dev.yml ps nginx
 ```
 
-2. Проверить конфигурацию:
+2. Check configuration:
 ```bash
 docker-compose -f infra/docker/docker-compose-dev.yml exec nginx nginx -t
 ```
 
 ### Database connection failed
-1. Проверить статус PostgreSQL:
+1. Check PostgreSQL status:
 ```bash
 docker-compose -f infra/docker/docker-compose-dev.yml ps postgres
 ```
 
-2. Проверить переменные окружения:
+2. Check environment variables:
 ```bash
 docker-compose -f infra/docker/docker-compose-dev.yml exec backend env | grep DATABASE
 ```
 
 ### Redis connection error
-1. Проверить статус Redis:
+1. Check Redis status:
 ```bash
 docker-compose -f infra/docker/docker-compose-dev.yml ps redis
 ```
 
-2. Проверить конфигурацию:
+2. Check configuration:
 ```bash
 docker-compose -f infra/docker/docker-compose-dev.yml exec redis redis-cli info
 ```
 
-## Профилирование и отладка
+## Profiling and Debugging
 
 ### Django Debug Toolbar
-В проекте активирован Django Debug Toolbar при запуске проекта
-в режиме development
+Django Debug Toolbar is enabled when running the project in development mode.
 
-## Мониторинг производительности
+## Performance Monitoring
 
-### Prometheus метрики
-1. Проверка доступности метрик:
+### Prometheus Metrics
+1. Check metrics availability:
 ```bash
 curl http://localhost:9090/metrics
 ```
 
-### Grafana алерты
-1. Настройка оповещений:
-- Открыть `http://localhost:3000/alerting/list`
-- Создать новое правило
-- Настроить условия срабатывания
+### Grafana Alerts
+1. Configure alerts:
+- Open `http://localhost:3000/alerting/list`
+- Create a new rule
+- Set up trigger conditions
 
-## Сброс системы
+## System Reset
 
-### Полный перезапуск
-1. Остановить все контейнеры:
+### Full Restart
+1. Stop all containers:
 ```bash
 docker-compose -f infra/docker/docker-compose-dev.yml down
 ```
 
-2. Удалить волюмы:
+2. Remove volumes:
 ```bash
 docker-compose -f infra/docker/docker-compose-dev.yml down -v
 ```
 
-3. Пересоздать и запустить:
+3. Recreate and start:
 ```bash
 docker-compose -f infra/docker/docker-compose-dev.yml up -d --build
 ```
 
-### Сброс базы данных
-1. Удалить миграции:
+### Database Reset
+1. Remove migrations:
 ```bash
 find . -path "*/migrations/*.py" -not -name "__init__.py" -delete
 ```
 
-2. Пересоздать миграции:
+2. Recreate migrations:
 ```bash
 docker-compose -f infra/docker/docker-compose-dev.yml exec backend python manage.py makemigrations
 ```
 
-3. Применить миграции:
+3. Apply migrations:
 ```bash
 docker-compose -f infra/docker/docker-compose-dev.yml exec backend python manage.py migrate
-```
 ```
 
 <hr></hr><div> <sub>Built with ❤️ by Startsev Vadim</sub> </div> 

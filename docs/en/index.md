@@ -28,12 +28,11 @@ Django Educa is a modern educational platform built with Django 5 and Python 3.1
 - OAuth2 authentication (Google, GitHub)
 - REST API with automatic documentation
 
-## Minimum Requirements
-
-- Docker and Docker Compose
-- 4GB RAM
-- 40GB free disk space
-- Processor with virtualization support
+!!!warning "Minimum Requirements"
+    - Docker and Docker Compose
+    - 4GB RAM
+    - 40GB free disk space
+    - Processor with virtualization support
 
 ## Quick Start
 

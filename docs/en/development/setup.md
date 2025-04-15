@@ -1,123 +1,122 @@
-# Настройка окружения разработки
+# Development Environment Setup
 
-## Требования
+## Requirements
 
-### Системные требования
-- CPU: 4+ ядра
+### System Requirements
+- CPU: 4+ cores
 - RAM: 10+ GB
 - Disk: 40+ GB
-- OS: Linux/macOS/Windows с WSL2
+- OS: Linux/macOS/Windows with WSL2
 
-### Программное обеспечение
+### Software
 - Python 3.12+
 - Docker Desktop 4.25+
 - Docker Compose 2.23+
 
-## Установка
+## Installation
 
-### 1. Клонирование репозитория
+### 1. Clone the Repository
 ```bash
 git clone https://github.com/macalistervadim/django-educa.git
 cd django-educa
 ```
 
-### 2. Сборка и запуск инфраструктуры
+### 2. Build and Start the Infrastructure
 ```bash
-# Запуск базовых сервисов
+# Start core services
 docker-compose -f infra/docker/docker-compose-app.yml up --build -d
 
-# Проверка статуса сервисов
+# Check service status
 docker-compose -f infra/docker/docker-compose-app.yml ps
 
-# Запуск development сервера
+# Start the development server
 docker-compose -f infra/docker/docker-compose-dev.yml up --build -d
 ```
 
-### 3. Инициализация Vault
+### 3. Initialize Vault
 ```bash
-# Инициализация Vault
+# Initialize Vault
 docker-compose -f infra/docker/docker-compose-app.yml exec vault vault operator init
 
-# Распечатывание Vault (выполнить 3 раза с разными ключами)
-docker-compose -f infra/docker/docker-compose-app.yml exec vault vault operator unseal```
+# Unseal Vault (run 3 times with different keys)
+docker-compose -f infra/docker/docker-compose-app.yml exec vault vault operator unseal
 ```
 
-### 4. Настройка переменных окружения
-#### Вариант 1: Использование .env файла 
+### 4. Configure Environment Variables
+#### Option 1: Using a .env File
 ```bash
-# Создание .env файла из примера
+# Create a .env file from the example
 cp .env.example .env
 
-# Отредактируйте .env файл, указав свои значения
+# Edit the .env file with your values
 nano .env
 ```
 
-#### Вариант 2: Использование HashiCorp Vault
+#### Option 2: Using HashiCorp Vault
 ```bash
-# Загрузите секреты через консоль, или через UI интерфейс (ссылки ниже):
+# Load secrets via console or UI (links below):
 docker-compose -f infra/docker/docker-compose-app.yml exec vault vault kv put secret/django \
   DJANGO_SECRET_KEY='your-secret-key' \
   DJANGO_ALLOWED_HOSTS='localhost,127.0.0.1' \
   DJANGO_SETTINGS_MODULE='backend.config.settings.development'
   
-# Создание секретов для AWS/MinIO
+# Create secrets for AWS/MinIO
 docker-compose -f infra/docker/docker-compose-app.yml exec vault vault kv put secret/aws \
   AWS_ACCESS_KEY_ID='minioadmin' \
   AWS_SECRET_ACCESS_KEY='minioadmin'
   
-# Создание секретов для OAuth
+# Create secrets for OAuth
 docker-compose -f infra/docker/docker-compose-app.yml exec vault vault kv put secret/oauth \
   SOCIAL_AUTH_GOOGLE_OAUTH2_KEY='your-key' \
   SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET='your-secret'
   
-# Создание секретов для Celery
+# Create secrets for Celery
 docker-compose -f infra/docker/docker-compose-app.yml exec vault vault kv put secret/celery \
   CELERY_BROKER_URL="url"
   
-# и так далее (смотрите пример из .env.example)
+# And so on (refer to the .env.example file for details)
 ```
 
-### 5. Настройка MinIO
+### 5. Configure MinIO
 ```bash
-# Создание бакета
+# Create a bucket
 docker-compose -f infra/docker/docker-compose-app.yml exec s3 mc mb minio/django
 
-# Установка публичного доступа
+# Set public access
 docker-compose -f infra/docker/docker-compose-app.yml exec s3 mc policy set public minio/django 
 ```
 
-### 6. Применение миграций
+### 6. Apply Migrations
 ```bash
-# Создание и применение миграций
+# Create and apply migrations
 docker-compose -f infra/docker/docker-compose-dev.yml exec backend python manage.py migrate
 ```
 
-### 7. Загрузка фикстур
+### 7. Load Fixtures
 ```bash
-# Загрузка курсов
+# Load courses
 docker-compose -f infra/docker/docker-compose-dev.yml exec backend python manage.py loaddata backend/apps/courses/fixtures/courses.json
 ```
 
-### 8. Сборка статики
+### 8. Collect Static Files
 ```bash
-# Сборка и выгрузка в Minio статических файлов
+# Collect and upload static files to MinIO
 docker-compose -f infra/docker/docker-compose-dev.yml exec backend collectstatic --noinput
 ```
 
-### 9. Создание суперпользователя
+### 9. Create a Superuser
 ```bash
-# Следуйте указаниям в консоли
+# Follow the prompts in the console
 docker-compose -f infra/docker/docker-compose-dev.yml exec backend createsuperuser
 ```
 
-## Проверка установки
-После выполнения всех шагов выше подождите около 5-10 минут для полной установки всех сервисов и проверьте их работоспособность.
-Если заметите нестабильность в работе, используйте инструкцию по устранению [ошибок](../operations/troubleshooting.md) а также попробуйте
-выполнить все шаги выше заново 
+## Installation Verification
+After completing all the steps above, wait about 5-10 minutes for all services to fully initialize and check their functionality.  
+If you notice instability, refer to the [troubleshooting guide](../operations/troubleshooting.md) and try repeating the steps above.
 
-#### Доступ к сервисам:
+#### Service Access:
 - Backend: http://localhost:8000
-- Admin Panel: http://localhost:8000/admin (данные, которые вы указывали при создании суперюзера)
+- Admin Panel: http://localhost:8000/admin (use the credentials you set during superuser creation)
 - API Docs: http://localhost:8000/api/schema/redoc/
 - Swagger UI: http://localhost:8000/api/schema/swagger-ui/
 - Kibana: http://localhost:5601/
@@ -127,5 +126,3 @@ docker-compose -f infra/docker/docker-compose-dev.yml exec backend createsuperus
 - Flower: http://localhost:5556/
 
 <hr></hr><div> <sub>Built with ❤️ by Startsev Vadim</sub> </div> 
-
-

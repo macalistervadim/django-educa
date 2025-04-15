@@ -1,97 +1,97 @@
-# Компоненты архитектуры
+# Architecture Components
 
-## Основные компоненты
+## Core Components
 
 ### Django Backend
-- Основное веб-приложение
-- Обработка HTTP и WebSocket запросов
-- Управление бизнес-логикой
+- Main web application
+- Handling HTTP and WebSocket requests
+- Business logic management
 - REST API endpoints
-- Интеграция с внешними сервисами
+- Integration with external services
 
-### База данных (PostgreSQL)
-- Постоянное хранение данных
-- Транзакционность операций
-- Хранение:
-  - Данные пользователей
-  - Контент курсов
-  - Прогресс обучения
-  - Настройки системы
+### Database (PostgreSQL)
+- Persistent data storage
+- Transactional operations
+- Stores:
+  - User data
+  - Course content
+  - Learning progress
+  - System settings
 
-### Кэширование (Redis)
-- Кэширование данных
-- Хранение сессий
-- WebSocket каналы
-- Очереди задач
-- Временное хранение состояний
+### Caching (Redis)
+- Data caching
+- Session storage
+- WebSocket channels
+- Task queues
+- Temporary state storage
 
-### Хранилище файлов (MinIO)
-- S3-совместимое хранилище
-- Хранение:
-  - Медиафайлы
-  - Учебные материалы
-  - Статические файлы
-  - Загруженный контент
+### File Storage (MinIO)
+- S3-compatible storage
+- Stores:
+  - Media files
+  - Educational materials
+  - Static files
+  - Uploaded content
 
-### Очереди и задачи
-- RabbitMQ: брокер сообщений
-- Celery Worker: обработка асинхронных задач
-- Celery Beat: планировщик задач
-- Flower: мониторинг задач
+### Queues and Tasks
+- RabbitMQ: message broker
+- Celery Worker: asynchronous task processing
+- Celery Beat: task scheduler
+- Flower: task monitoring
 
-### Мониторинг и логирование
-- Prometheus: сбор метрик
-- Grafana: визуализация метрик
+### Monitoring and Logging
+- Prometheus: metrics collection
+- Grafana: metrics visualization
 - ELK Stack:
-  - Elasticsearch: хранение логов
-  - Logstash: обработка логов
-  - Kibana: анализ логов
+  - Elasticsearch: log storage
+  - Logstash: log processing
+  - Kibana: log analysis
 
-### Безопасность
-- Vault: управление секретами
-- OAuth2: внешняя аутентификация
-- Django Security: встроенная защита
+### Security
+- Vault: secrets management
+- OAuth2: external authentication
+- Django Security: built-in protection
 
-### API интеграции
+### API Integrations
 - REST API
 - WebSocket
-- Prometheus метрики
+- Prometheus metrics
 - S3 API
 - AMQP (RabbitMQ)
 
-## Масштабирование
+## Scalability
 
-### Горизонтальное
+### Horizontal
 - Django Backend
 - Celery Workers
 - Redis Replicas
 
-### Вертикальное
+### Vertical
 - PostgreSQL
 - Elasticsearch
 - MinIO Storage
 
-## Отказоустойчивость
+## Fault Tolerance
 
 ### High Availability
-- PostgreSQL репликация
-- Redis кластер
-- RabbitMQ кластер
+- PostgreSQL replication
+- Redis cluster
+- RabbitMQ cluster
 
-### Резервное копирование
-- PostgreSQL бэкапы
-- MinIO снапшоты
-- Vault бэкапы
+### Backups
+- PostgreSQL backups
+- MinIO snapshots
+- Vault backups
 
-## Безопасность
+## Security
 
-### Уровни защиты
+### Protection Levels
 - Nginx WAF
 - Django Security Middleware
-- OAuth2 авторизация
+- OAuth2 authorization
 - Vault secrets
 
-### Мониторинг безопасности
+### Security Monitoring
 - ELK security logging
 - Prometheus alerts
 - Django audit logs

@@ -1,32 +1,32 @@
-# Стандарты кодирования
+# Coding Standards
 
 ## Python
 
-### Форматирование кода
-- Ruff для быстрого линтинга и форматирования
-- Mypy для статической типизации
-- Line length: 79 символов
-- Отступы: 4 пробела
-- Кодировка: UTF-8
+### Code Formatting
+- Ruff for quick linting and formatting
+- Mypy for static typing
+- Line length: 79 characters
+- Indentation: 4 spaces
+- Encoding: UTF-8
 
-### Именование
-- Классы: `PascalCase`
-- Функции и методы: `snake_case`
-- Переменные: `snake_case`
-- Константы: `UPPER_CASE`
-- Приватные атрибуты: `_leading_underscore`
+### Naming Conventions
+- Classes: `PascalCase`
+- Functions and methods: `snake_case`
+- Variables: `snake_case`
+- Constants: `UPPER_CASE`
+- Private attributes: `_leading_underscore`
 
-### Импорты
+### Imports
 ```python
-# Стандартная библиотека
+# Standard library
 import os
 from pathlib import Path
 
-# Сторонние зависимости
+# Third-party dependencies
 from rest_framework import viewsets
 from django.db import models
 
-# Локальные импорты
+# Local imports
 from backend.apps.courses.models import Course
 ```
 
@@ -79,10 +79,10 @@ class CourseViewSet(viewsets.ModelViewSet):
 
 ### REST API
 ### URLs
-- Используйте существительные во множественном числе
-- Версионирование через URL: /api/v1/
-- Вложенные ресурсы через /
-- Фильтры через query parameters
+- Use plural nouns
+- Versioning via URL: /api/v1/
+- Nested resources via /
+- Filters via query parameters
 
 ### Response Codes
 - 200: Success
@@ -93,7 +93,7 @@ class CourseViewSet(viewsets.ModelViewSet):
 - 404: Not Found
 - 500: Server Error
 
-## Тестирование
+## Testing
 ### Unit Tests
 ```python
 class TestCourse(TestCase):
@@ -119,13 +119,13 @@ class TestCourseAPI(APITestCase):
 ```
 
 ## Git
-### Ветки
+### Branches
 
-- production: продакшн-ветка
-- development: разработка 
-- feature/*: новый функционал
-- bugfix/*: исправление ошибок
-- release/*: подготовка релиза
+- production: production branch
+- development: development branch
+- feature/*: new features
+- bugfix/*: bug fixes
+- release/*: release preparation
 
 ### Commits
 ```
@@ -136,27 +136,27 @@ test(rating): add tests for rating system
 refactor: simplify grade calculation
 ```
 
-## Безопасность
+## Security
 
 ### Sensitive Data
-- Не хранить секреты в коде
-- Использовать Vault для секретов
-- Проверять код на утечки данных
+- Do not store secrets in code
+- Use Vault for secrets
+- Scan code for data leaks
 
 ### Input Validation
-- Валидировать все входные данные
-- Использовать подготовленные запросы
-- Экранировать спецсимволы
+- Validate all input data
+- Use prepared statements
+- Escape special characters
 
-## Оптимизация
+## Optimization
 ### Database
-- Использовать индексы
-- Оптимизировать запросы
-- Избегать N+1 проблемы
+- Use indexes
+- Optimize queries
+- Avoid N+1 problem
 
 ### Caching
-- Кэшировать тяжелые запросы
-- Использовать Redis
-- Инвалидировать кэш при изменениях
+- Cache heavy queries
+- Use Redis
+- Invalidate cache on changes
 
 <hr></hr><div> <sub>Built with ❤️ by Startsev Vadim</sub> </div> 

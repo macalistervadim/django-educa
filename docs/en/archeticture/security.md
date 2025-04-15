@@ -1,79 +1,78 @@
-# Безопасность системы
+# System Security
 
-## Обзор
-Django Educa использует многоуровневый подход к обеспечению безопасности:
-- Управление секретами через HashiCorp Vault
-- Аутентификация через OAuth2 (Google, GitHub)
-- HTTPS для защиты данных в транзите
-- Контейнеризация для изоляции компонентов
+## Overview
+Django Educa employs a multi-layered approach to security:
+- Secret management via HashiCorp Vault
+- Authentication through OAuth2 (Google, GitHub)
+- HTTPS for data protection in transit
+- Containerization for component isolation
 
-## Управление секретами
+## Secret Management
 
 ### HashiCorp Vault
 - **Endpoint**: `http://localhost:8200`
-- **UI доступ**: Включен
-- **Хранение**: Файловое с аудитом
-- **Политики**: Ограниченный доступ по сервисам
+- **UI Access**: Enabled
+- **Storage**: File-based with auditing
+- **Policies**: Restricted access per service
 
-### Секреты приложения
-Vault хранит конфиденциальные данные для:
+### Application Secrets
+Vault stores sensitive data for:
 - Django (SECRET_KEY, credentials)
 - PostgreSQL
 - Redis
-- OAuth2 провайдеров
+- OAuth2 providers
 - AWS/MinIO
 
-## Аутентификация
+## Authentication
 
-### OAuth2 провайдеры
+### OAuth2 Providers
 - Google OAuth2
 - GitHub OAuth2
-- Стандартная Django-аутентификация
+- Standard Django authentication
 
-### Сессии и токены
-- Хранение сессий в Redis
-- Secure и HttpOnly cookies
+### Sessions and Tokens
+- Session storage in Redis
+- Secure and HttpOnly cookies
 
-## Разрешения и доступ
+## Permissions and Access
 
-### Django permissions
-- Модельный уровень
-- Объектный уровень
-- Кастомные permissions для курсов
+### Django Permissions
+- Model-level
+- Object-level
+- Custom permissions for courses
 
-### API безопасность
-- Throttling для API endpoints
-- CORS настройки
-- CSRF защита
+### API Security
+- Throttling for API endpoints
+- CORS settings
+- CSRF protection
 
-## Защита данных
+## Data Protection
 
-### Хранение
-- Шифрование секретов в Vault
-- Безопасное хранение паролей (PBKDF2)
-- S3-совместимое хранилище (MinIO)
+### Storage
+- Encryption of secrets in Vault
+- Secure password storage (PBKDF2)
+- S3-compatible storage (MinIO)
 
-### Передача данных
-- HTTPS для внешних соединений
-- Внутренняя сеть Docker для сервисов
-- TLS для Redis и PostgreSQL
+### Data Transmission
+- HTTPS for external connections
+- Internal Docker network for services
+- TLS for Redis and PostgreSQL
 
-## Мониторинг безопасности
+## Security Monitoring
 
-### Аудит
-- Логирование действий в Vault
-- Django security логи
-- Nginx security логи
+### Auditing
+- Action logging in Vault
+- Django security logs
+- Nginx security logs
 
-### Оповещения
-- Email уведомления
+### Alerts
+- Email notifications
 
-## Рекомендации
+## Recommendations
 
-### Развертывание
-- Регулярное обновление зависимостей
-- Сканирование уязвимостей контейнеров
-- Проверка конфигураций на безопасность
-
+### Deployment
+- Regular dependency updates
+- Container vulnerability scanning
+- Security configuration checks
 
 <hr></hr><div> <sub>Built with ❤️ by Startsev Vadim</sub> </div> 

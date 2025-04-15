@@ -1,75 +1,75 @@
-# Система логирования и мониторинга
+# Logging and Monitoring System
 
-## Обзор
-Django Educa использует комплексный подход к логированию и мониторингу, включающий:
-- Централизованный сбор логов через ELK Stack
-- Метрики производительности через Prometheus и Grafana
-- Мониторинг очередей через Flower
-- Nginx-логи для анализа трафика
+## Overview
+Django Educa employs a comprehensive approach to logging and monitoring, including:
+- Centralized log collection via the ELK Stack
+- Performance metrics through Prometheus and Grafana
+- Queue monitoring via Flower
+- Nginx logs for traffic analysis
 
-## Стек технологий
-- **Elasticsearch**: Хранение и индексация логов
-- **Logstash**: Обработка и трансформация логов
-- **Kibana**: Визуализация и анализ логов
-- **Prometheus**: Сбор метрик
-- **Grafana**: Визуализация метрик
-- **Flower**: Мониторинг Celery
+## Technology Stack
+- **Elasticsearch**: Log storage and indexing
+- **Logstash**: Log processing and transformation
+- **Kibana**: Log visualization and analysis
+- **Prometheus**: Metrics collection
+- **Grafana**: Metrics visualization
+- **Flower**: Celery monitoring
 
-## Конфигурация логирования
+## Logging Configuration
 
-### Django логирование
-Система использует многоуровневое логирование с форматированием JSON для ELK:
+### Django Logging
+The system uses multi-level logging with JSON formatting for ELK:
 
-- **INFO**: Общая информация о работе приложения
-- **WARNING**: Предупреждения и некритичные ошибки
-- **ERROR**: Критические ошибки и исключения
-- **DEBUG**: Отладочная информация (только в development)
+- **INFO**: General application information
+- **WARNING**: Warnings and non-critical errors
+- **ERROR**: Critical errors and exceptions
+- **DEBUG**: Debugging information (development only)
 
-### Логи приложений
-Каждое приложение имеет свой logger:
+### Application Logs
+Each application has its own logger:
 - `backend.apps.courses`
 - `backend.apps.accounts`
 - `backend.apps.homepage`
 - `backend.apps.students`
 
-### Nginx логи
-Nginx логи хранятся в директории `/var/log/nginx/`:
-- `access.log`: HTTP-запросы
-- `error.log`: Ошибки сервера
+### Nginx Logs
+Nginx logs are stored in the `/var/log/nginx/` directory:
+- `access.log`: HTTP requests
+- `error.log`: Server errors
 
-## Мониторинг
+## Monitoring
 
-### Prometheus метрики
-Доступны на эндпоинте `/metrics`:
-- HTTP-запросы
-- Время ответа
-- Использование памяти
-- Состояние БД
+### Prometheus Metrics
+Available at the `/metrics` endpoint:
+- HTTP requests
+- Response time
+- Memory usage
+- Database status
 
-### Grafana дашборды
-Основные дашборды:
-- Производительность Django
+### Grafana Dashboards
+Key dashboards:
+- Django Performance
 
-### Мониторинг Celery
-Flower доступен на порту 5556:
-- Активные задачи
-- Статистика выполнения
-- Состояние воркеров
+### Celery Monitoring
+Flower is available on port 5556:
+- Active tasks
+- Execution statistics
+- Worker status
 
-## Доступ
+## Access
 
 ### ELK Stack
 - Kibana: `http://localhost:5601`
 - Elasticsearch: `http://localhost:9200`
 
-### Метрики
+### Metrics
 - Prometheus: `http://localhost:9090`
 - Grafana: `http://localhost:3000`
 - Flower: `http://localhost:5556`
 
-## Хранение логов
-- Ротация логов каждые 24 часа
-- Хранение в течение 30 дней
-- Автоматическое сжатие старых логов
+## Log Retention
+- Log rotation every 24 hours
+- Retention for 30 days
+- Automatic compression of old logs
 
 <hr></hr><div> <sub>Built with ❤️ by Startsev Vadim</sub> </div> 

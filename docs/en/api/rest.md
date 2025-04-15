@@ -1,23 +1,23 @@
 # REST API
 
-## Общая информация
+## General Information
 
-### Базовый URL
+### Base URL
 - Development: `http://localhost:8000/api/v1/`
 
-### Документация API
+### API Documentation
 - Swagger UI: `http://localhost:8000/api/schema/swagger-ui/`
 - ReDoc: `http://localhost:8000/api/schema/redoc/`
 - OpenAPI Schema: `http://localhost:8000/api/schema/`
 
-### Аутентификация
-API поддерживает следующие методы аутентификации:
+### Authentication
+The API supports the following authentication methods:
 - OAuth2 (Google, GitHub)
 - Token Authentication
 - Session Authentication
 
-### Формат ответов
-Все ответы возвращаются в формате JSON:
+### Response Format
+All responses are returned in JSON format:
 ```json
 {
     "status": "success",
@@ -26,7 +26,7 @@ API поддерживает следующие методы аутентифи�
 }
 ```
 
-### Обработка ошибок 
+### Error Handling
 ```json
 {
     "status": "error",
@@ -41,24 +41,23 @@ API поддерживает следующие методы аутентифи�
 }
 ```
 
-### Коды ответов
+!!! tip "Response Codes"
+    - 200: Successful request
+    - 201: Created
+    - 400: Bad request
+    - 401: Unauthorized
+    - 403: Forbidden
+    - 404: Not found
+    - 500: Internal server error
 
-- 200: Успешный запрос
-- 201: Создано
-- 400: Некорректный запрос
-- 401: Не авторизован
-- 403: Доступ запрещен
-- 404: Не найдено
-- 500: Внутренняя ошибка сервера
+### Access Rights
+- Anonymous: read-only access to public courses
+- Student: access to enrolled courses
+- Instructor: manage their own courses
+- Administrator: full access
 
-### Права доступа
-- Анонимный: только чтение публичных курсов
-- Студент: доступ к зачисленным курсам
-- Преподаватель: управление своими курсами
-- Администратор: полный доступ
-
-### Версионирование
-API версионируется через URL path:
-- **/api/v1/** - текущая стабильная версия
+### Versioning
+The API is versioned through the URL path:
+- **/api/v1/** - current stable version
 
 <hr></hr><div> <sub>Built with ❤️ by Startsev Vadim</sub> </div> 

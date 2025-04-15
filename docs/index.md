@@ -6,8 +6,8 @@
 
 Django Educa — это современная образовательная платформа, созданная для комфортного онлайн-обучения. Проект сочетает в себе передовые технологии и интуитивно понятный интерфейс.
 
-
 ## 🚀 Основные возможности
+
 - 📚 Создание и управление онлайн-курсами
 - 👥 Система регистрации и авторизации пользователей
 - 📝 Интерактивные учебные материалы
@@ -15,11 +15,33 @@ Django Educa — это современная образовательная п
 - 🎓 Система оценивания и сертификации
 
 ## 📝 Лицензия
+
 Проект распространяется под MIT License
 
+## Скриншоты
+
+Главна страница
+
+ ![image](./images/main_page.png)
+
+ Вход
+
+ ![image](./images/sign_in.png)
+
+Чат
+
+![image](./images/chat.png)
+
+CMS
+![image](./images/manage_course.png)
+
+Страница с курсом
+![image](./images/view_course.png)
 
 ## 👤 Автор
+
 Vadim Startsev
 
 GitHub: @macalistervadim
-<hr></hr><div> <sub>Built with ❤️ by Startsev Vadim</sub> </div> 
+
+<hr></hr><div> <sub>Built with ❤️ by Startsev Vadim</sub> </div>
