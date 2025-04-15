@@ -1,86 +1,52 @@
-# Добро пожаловать в документацию проекта Django Educa 🎓
+# Django Educa - Modern Educational Platform
 
-![Django](https://img.shields.io/badge/Django-5-green)
-![Python](https://img.shields.io/badge/Python|3.12-blue)
-![License](https://img.shields.io/badge/License-MIT-yellow)
-![Linters](https://github.com/macalistervadim/django-educa/actions/workflows/linters.yml/badge.svg)
+## Project Overview
 
-**Django Educa** - это образовательная платформа, созданная на Django. Она позволяет создавать курсы, модули и контент для обучения. Проект включает модели для управления курсами, модулями, текстовым, видео и файловым контентом.
+Django Educa is a modern educational platform built with Django 5 and Python 3.12. The platform provides a comprehensive solution for online learning with advanced content management capabilities and user interaction features.
 
----
+## Key Features
 
-## Возможности ✨
+### Architectural Solutions
+- Monolith with dedicated infrastructure services
+- Asynchronous communication via Celery and RabbitMQ
+- Multi-level caching using Redis
+- Fault-tolerant data storage in PostgreSQL
 
-- **Система управления контентом (CMS):** Мощная CMS для управления курсами, модулями и контентом.
-- **Админ-панель:** Встроенная админ-панель Django для удобного управления контентом.
-- **Создание курсов:** Создание и управление курсами с заголовками, описаниями и обзорами.
-- **Управление модулями:** Организация курсов в модули для структурированного обучения.
-- **Полиморфный контент:** Поддержка различных типов контента, включая текст, видео и файлы.
-- **Аутентификация пользователей:** Безопасная система аутентификации и авторизации пользователей.
-- **Интеграция с Docker:** Простая настройка и развертывание с использованием Docker.
-- **Автоматизация рабочего процесса:** Использование Poetry для управления зависимостями и автоматизации.
-- **Качество кода:** Интеграция с Black, Flake8 и MyPy для чистого и поддерживаемого кода.
+### Technology Stack
+- **Backend**: Django 5, Python 3.12
+- **Data Storage**: PostgreSQL, Redis, MinIO (S3-compatible storage)
+- **Request Proxying**: Nginx
+- **Queues and Workers**: Celery, RabbitMQ
+- **Monitoring**: Prometheus, Grafana
+- **Logging**: ELK Stack (Elasticsearch, Logstash, Kibana)
+- **Security**: Vault (secrets management)
 
----
+### Functionality
+- Course Management System (CMS)
+- Support for various content types (text, video, files)
+- Interactive WebSocket-based chat
+- OAuth2 authentication (Google, GitHub)
+- REST API with automatic documentation
 
-## Технологии ⚙️
+!!!warning "Minimum Requirements"
+    - Docker and Docker Compose
+    - 4GB RAM
+    - 40GB free disk space
+    - Processor with virtualization support
 
-Проект разработан с использованием современных технологий:
+## Quick Start
 
-- **Django 5** — веб-фреймворк для Python, обеспечивающий быстрый старт и гибкость.
-- **Python 3.12** — основной язык программирования.
-- **PostgreSQL** — система управления базами данных для хранения информации.
-- **Docker** — для контейнеризации приложения и упрощения процесса развертывания.
-- **Poetry** — инструмент для управления зависимостями и упаковки Python проектов.
-- **Gunicorn** — высокопроизводительный WSGI сервер для запуска Django приложения в продакшене.
-- **Nginx** — веб-сервер для обработки запросов, проксирования их на Gunicorn и обеспечения безопасности с SSL.
+See the [installation guide](./development/setup.md)
 
----
+## Architecture
+The platform is built on modern architectural patterns:
 
-## Установка и настройка
+- Multi-layer architecture: separation into presentation, business logic, and data layers
+- Event-driven architecture: asynchronous event processing via Celery
+- Monolith with containerized infrastructure: main application is a Django monolith, surrounded by separate services (PostgreSQL, Redis, MinIO, Vault, etc.) deployed in separate Docker containers
+- API-first design: fully documented REST API
 
-Для установки приложения и его запуска на вашем сервере, следуйте [инструкциям](installation.md).
+## License
+This project is licensed under the MIT License. See the [LICENCE](../LICENCE.md) file for details.
 
----
-
-## ER Диаграмма 📊
-
-Ниже представлена ER диаграмма базы данных проекта:
-
-![docs/ER.png](../ER.png)
-
----
-
-## Лицензия 📜
-
-Этот проект распространяется под лицензией MIT. Подробнее см. в файле [LICENSE](../../LICENCE.md).
-
----
-
-## Скриншоты 📸
-
-**Главная страница**
-
-![docs/images/main_page.png](../images/main_page.png)
-
-**Чат**
-
-![docs/images/chat.png](../images/chat.png)
-
-**Просмотр курса**
-
-![docs/images/view_course.png](../images/view_course.png)
-
-**Управление курсом**
-
-![docs/images/manage_course.png](../images/manage_course.png)
-
-**Вход в систему**
-
-![docs/images/sign_in.png](../images/sign_in.png)
-
----
-
-## Благодарности 🙏
-
-Спасибо всем, кто поддерживает этот проект!
+<hr></hr><div> <sub>Built with ❤️ by Startsev Vadim</sub> </div>

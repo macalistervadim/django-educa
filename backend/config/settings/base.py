@@ -1,59 +1,59 @@
 import os
 from pathlib import Path
 
-import dotenv
 from django.urls import reverse_lazy
 
-dotenv.load_dotenv()
+from backend.config.utils.vault_secrets import SecretsManager
+
+secrets = SecretsManager()
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "not-secret-key")
+SECRET_KEY = secrets.get_secret(
+    "django",
+    "DJANGO_SECRET_KEY",
+    "fallback-secret",
+)
 
-
-def load_bool(key: str, default: bool) -> bool:
-    return os.getenv(key, str(default)).lower() in (
-        "true",
-        "1",
-        "t",
-        "y",
-        "yes",
-    )
-
-
-def load_list(key: str, default: str | list) -> list:
-    return os.getenv(
-        key,
-        ",".join(default) if isinstance(default, list) else default,
-    ).split(",")
-
-
-ALLOWED_HOSTS = load_list("DJANGO_ALLOWED_HOSTS", "*")
+ALLOWED_HOSTS = secrets.get_secret("django", "DJANGO_ALLOWED_HOSTS", "").split(
+    ",",
+)
 
 INSTALLED_APPS = [
     "backend.apps.courses.apps.CoursesConfig",
     "backend.apps.accounts.apps.AccountsConfig",
     "backend.apps.homepage.apps.HomepageConfig",
     "backend.apps.students.apps.StudentsConfig",
+    "backend.apps.feedback.apps.FeedbackConfig",
+    "backend.apps.chat.apps.ChatConfig",
+]
+
+INSTALLED_APPS += [
     "daphne",
     "channels",
-    "backend.apps.chat.apps.ChatConfig",
+    "corsheaders",
     "unfold",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "storages",
     "django.contrib.staticfiles",
-    "django_cleanup.apps.CleanupConfig",
     "embed_video",
     "redisboard",
     "drf_spectacular",
     "drf_spectacular_sidecar",
     "rest_framework",
+    "social_django",
+    "django_prometheus",
+    "django_celery_results",
+    "django_cleanup.apps.CleanupConfig",
 ]
 
 MIDDLEWARE = [
+    "django_prometheus.middleware.PrometheusBeforeMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -61,6 +61,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django_prometheus.middleware.PrometheusAfterMiddleware",
 ]
 
 TEMPLATES_DIRS = BASE_DIR / "src" / "templates"
@@ -87,11 +88,15 @@ ASGI_APPLICATION = "backend.config.asgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("POSTGRES_DB", "educa"),
-        "USER": os.getenv("POSTGRES_USER", "postgres"),
-        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "pass123"),
-        "HOST": os.getenv("POSTGRES_HOST", "localhost"),
-        "PORT": os.getenv("POSTGRES_PORT", "5432"),
+        "NAME": secrets.get_secret("django", "POSTGRES_DB", "educa"),
+        "USER": secrets.get_secret("django", "POSTGRES_USER", "postgres"),
+        "PASSWORD": secrets.get_secret(
+            "django",
+            "POSTGRES_PASSWORD",
+            "pass123",
+        ),
+        "HOST": secrets.get_secret("django", "POSTGRES_HOST", "database"),
+        "PORT": secrets.get_secret("django", "POSTGRES_PORT", "5432"),
     },
 }
 
@@ -124,12 +129,67 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR / "src" / "staticfiles"
-STATICFILES_DIRS = [BASE_DIR / "src" / "static"]
+AWS_ACCESS_KEY_ID = secrets.get_secret(
+    "aws",
+    "AWS_ACCESS_KEY_ID",
+    "minioadmin",
+)
+AWS_SECRET_ACCESS_KEY = secrets.get_secret(
+    "aws",
+    "AWS_SECRET_ACCESS_KEY",
+    "minioadmin",
+)
+AWS_STORAGE_BUCKET_NAME = secrets.get_secret(
+    "aws",
+    "AWS_STORAGE_BUCKET_NAME",
+    "django",
+)
+AWS_S3_ENDPOINT_URL = secrets.get_secret(
+    "aws",
+    "AWS_S3_ENDPOINT_URL",
+    "http://s3:9000",
+)
+AWS_S3_REGION_NAME = secrets.get_secret(
+    "aws",
+    "AWS_S3_REGION_NAME",
+    "us-east-1",
+)
+AWS_S3_SIGNATURE_VERSION = secrets.get_secret(
+    "aws",
+    "AWS_S3_SIGNATURE_VERSION",
+    "s3v4",
+)
+AWS_QUERYSTRING_AUTH = False
+AWS_DEFAULT_ACL = None
+AWS_S3_VERIFY = False
+AWS_S3_USE_SSL = False
+AWS_S3_SECURE_URLS = False
+AWS_S3_FILE_OVERWRITE = True
+AWS_S3_PATH_STYLE = True
+AWS_S3_ADDRESSING_STYLE = "path"
+AWS_S3_OBJECT_PARAMETERS = {
+    "CacheControl": "max-age=86400",
+}
+AWS_S3_CUSTOM_DOMAIN = secrets.get_secret(
+    "aws",
+    "AWS_S3_CUSTOM_DOMAIN",
+    "localhost",
+)
+AWS_S3_URL_PROTOCOL = secrets.get_secret("aws", "AWS_S3_URL_PROTOCOL", "http:")
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "src" / "media"
+STORAGES = {
+    "default": {
+        "BACKEND": "backend.config.storage.MediaStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "backend.config.storage.StaticStorage",
+    },
+}
+STATICFILES_STORAGE = "backend.config.storage.StaticStorage"
+DEFAULT_FILE_STORAGE = "backend.config.storage.MediaStorage"
+STATIC_URL = f"{AWS_S3_URL_PROTOCOL}//{AWS_S3_CUSTOM_DOMAIN}/static/"
+MEDIA_URL = f"{AWS_S3_URL_PROTOCOL}//{AWS_S3_CUSTOM_DOMAIN}/media/"
+STATICFILES_DIRS = [BASE_DIR / "src" / "static"]
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -138,7 +198,11 @@ LOGIN_REDIRECT_URL = reverse_lazy("students:student_course_list")
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": "redis://redis:6379/0",
+        "LOCATION": secrets.get_secret(
+            "django",
+            "DJANGO_CACHE_LOCATION",
+            "redis://redis:6379/0",
+        ),
     },
 }
 
@@ -165,6 +229,52 @@ CHANNEL_LAYERS = {
     },
 }
 
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+    "social_core.backends.google.GoogleOAuth2",
+    "social_core.backends.github.GithubOAuth2",
+)
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = secrets.get_secret(
+    "django",
+    "SOCIAL_AUTH_GOOGLE_OAUTH2_KEY",
+    "fallback",
+)
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = secrets.get_secret(
+    "django",
+    "SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET",
+    "fallback",
+)
+
+SOCIAL_AUTH_GITHUB_KEY = secrets.get_secret(
+    "oauth",
+    "SOCIAL_AUTH_GITHUB_KEY",
+    "fallback",
+)
+SOCIAL_AUTH_GITHUB_SECRET = secrets.get_secret(
+    "oauth",
+    "SOCIAL_AUTH_GITHUB_SECRET",
+    "fallback",
+)
+
+SOCIAL_AUTH_USER_MODEL = "auth.User"
+
+CELERY_BROKER_URL = secrets.get_secret(
+    "celery",
+    "CELERY_BROKER_URL",
+    "mqp://rabbitmq:rabbitmq@rabbitmq:5672/",
+)
+CELERY_RESULT_BACKEND = secrets.get_secret(
+    "celery",
+    "CELERY_RESULT_BACKEND",
+    "django-db",
+)
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = "UTC"
+
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
@@ -183,6 +293,17 @@ LOGGING = {
             "{module} {message} {filename}:{lineno}",
             "style": "{",
         },
+        "json": {
+            "format": (
+                '{"timestamp": "%(asctime)s", '
+                '"level": "%(levelname)s", '
+                '"module": "%(module)s", '
+                '"message": "%(message)s", '
+                '"file": "%(pathname)s", '
+                '"line": %(lineno)d}'
+            ),
+            "datefmt": "%Y-%m-%d %H:%M:%S",
+        },
     },
     "handlers": {
         "console": {
@@ -198,61 +319,82 @@ LOGGING = {
         "file": {
             "level": "ERROR",
             "class": "logging.FileHandler",
-            "filename": "errors.log",
+            "filename": os.path.join(
+                BASE_DIR,
+                "logs",
+                "backend",
+                "errors.log",
+            ),
             "formatter": "verbose",
         },
         "rotating_file": {
             "level": "DEBUG",
             "class": "logging.handlers.RotatingFileHandler",
-            "filename": os.path.join(BASE_DIR, "django.log"),
-            "maxBytes": 1024 * 1024 * 5,  # 5MB
+            "filename": os.path.join(
+                BASE_DIR,
+                "logs",
+                "backend",
+                "django.log",
+            ),
+            "maxBytes": 1024 * 1024 * 5,
             "backupCount": 5,
             "formatter": "verbose",
+        },
+        "elastic": {
+            "level": "INFO",
+            "class": "logging.FileHandler",
+            "filename": os.path.join(
+                BASE_DIR,
+                "logs",
+                "backend",
+                "django.log",
+            ),
+            "formatter": "json",
         },
     },
     "loggers": {
         "django": {
-            "handlers": ["console", "rotating_file"],
-            "level": "INFO",  # Продакшн: INFO
+            "handlers": ["elastic"],
+            "level": "INFO",
             "propagate": True,
         },
         "django.request": {
-            "handlers": ["file"],
+            "handlers": ["elastic"],
             "level": "ERROR",
             "propagate": False,
         },
         "django.security": {
-            "handlers": ["file"],
+            "handlers": ["elastic"],
             "level": "WARNING",
             "propagate": False,
         },
         "backend.apps.courses": {
-            "handlers": ["console", "rotating_file"],
+            "handlers": ["elastic"],
             "level": "DEBUG",
             "propagate": False,
         },
         "backend.apps.accounts": {
-            "handlers": ["console", "rotating_file"],
+            "handlers": ["elastic"],
             "level": "DEBUG",
             "propagate": False,
         },
         "backend.apps.homepage": {
-            "handlers": ["console", "rotating_file"],
+            "handlers": ["elastic"],
             "level": "DEBUG",
             "propagate": False,
         },
         "backend.apps.students": {
-            "handlers": ["console", "rotating_file"],
+            "handlers": ["elastic"],
             "level": "DEBUG",
             "propagate": False,
         },
         "django.db.backends": {
-            "handlers": ["console"],
+            "handlers": ["elastic"],
             "level": "ERROR",
             "propagate": False,
         },
         "django.middleware": {
-            "handlers": ["console"],
+            "handlers": ["elastic"],
             "level": "WARNING",
             "propagate": False,
         },

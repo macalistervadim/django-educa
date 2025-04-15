@@ -2,6 +2,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
+from django_prometheus import exports
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularRedocView,
@@ -9,13 +10,15 @@ from drf_spectacular.views import (
 )
 
 urlpatterns = [
+    path("accounts/", include("backend.apps.accounts.urls")),
     path("", include("backend.apps.homepage.urls")),
     path("admin/", admin.site.urls),
     path("courses/", include("backend.apps.courses.urls")),
-    path("accounts/", include("backend.apps.accounts.urls")),
     path("students/", include("backend.apps.students.urls")),
     path("api/", include("backend.api.v1.urls")),
     path("chat/", include("backend.apps.chat.urls")),
+    path("feedback/", include("backend.apps.feedback.urls")),
+    path("auth/", include("social_django.urls", namespace="social")),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path(
         "api/schema/swagger-ui/",
@@ -27,6 +30,7 @@ urlpatterns = [
         SpectacularRedocView.as_view(url_name="schema"),
         name="redoc",
     ),
+    path("metrics/", exports.ExportToDjangoView, name="prometheus-metrics"),
 ]
 
 

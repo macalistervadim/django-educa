@@ -1,10 +1,6 @@
 from typing import Any
 
-import dotenv
-
 from backend.config.settings.base import *  # noqa: F403
-
-dotenv.load_dotenv()
 
 DEBUG = True
 
@@ -31,17 +27,8 @@ DEBUG_TOOLBAR_CONFIG = {
 
 TEMPLATES[0]["OPTIONS"]["debug"] = True  # type: ignore
 
-INSTALLED_APPS += ["corsheaders"]
-MIDDLEWARE.insert(1, "corsheaders.middleware.CorsMiddleware")
-CORS_ALLOWED_ORIGINS = load_list(
-    "DJANGO_CORS_ALLOWED_ORIGINS",
-    ["http://localhost:3000"],
-)
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.dummy.DummyCache",
-    },
-}
